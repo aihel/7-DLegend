@@ -8,21 +8,119 @@
 body {
   margin: 0;
   font-family: Arial;
-  background: linear-gradient(135deg, #0f172a, #020617);
+  background: linear-gradient(135deg,#020617,#0f172a);
   color: white;
 }
 
+/* Sidebar */
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 190px;
+  height: 100%;
+  background: #0f172a;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+#sidebar img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: block;
+  margin: 10px auto;
+  cursor: pointer;
+}
+
+.channel {
+  background: #1e293b;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 8px;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* Header */
 header {
+  margin-left: 190px;
   background: #1e293b;
   padding: 15px;
   text-align: center;
-  font-size: 20px;
 }
 
+/* Chat */
+#chat {
+  margin-left: 190px;
+  height: calc(100vh - 140px);
+  overflow-y: auto;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.msg {
+  background: #1e293b;
+  padding: 8px;
+  border-radius: 10px;
+  margin: 6px 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.msg img.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.msg img.photo {
+  max-width: 160px;
+  border-radius: 10px;
+  display: block;
+  margin-top: 5px;
+}
+
+/* Input */
+#inputArea {
+  margin-left: 190px;
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 190px);
+  background: #0f172a;
+  padding: 10px;
+  display: flex;
+  gap: 5px;
+  box-sizing: border-box;
+}
+
+#inputArea input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #38bdf8;
+  cursor: pointer;
+}
+
+#voiceBtn {
+  font-size: 18px;
+  padding: 12px 16px;
+}
+
+/* Panels */
 .panel {
   position: fixed;
   inset: 0;
-  background: rgba(2,6,23,0.95);
+  background: rgba(0,0,0,0.85);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,54 +134,9 @@ header {
   text-align: center;
 }
 
-input, select, button {
-  width: 100%;
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-}
+.card input { width: 100%; margin-top: 10px; padding: 10px; }
 
-button { background: #38bdf8; }
-
-#chat {
-  height: 65vh;
-  overflow-y: auto;
-  padding: 10px;
-}
-
-.msg {
-  margin: 6px 0;
-  padding: 8px;
-  border-radius: 10px;
-  background: #334155;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.msg.mod { background: #ef4444; }
-.msg.alex { background: #ec4899; }
-
-.avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-#inputArea {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: #1e293b;
-  padding: 10px;
-  display: flex;
-  gap: 5px;
-}
-
-#inputArea input { flex: 1; }
-
+/* Profile Modal */
 #profileModal {
   position: fixed;
   inset: 0;
@@ -94,7 +147,7 @@ button { background: #38bdf8; }
 }
 
 #profileModal img {
-  width: 200px;
+  width: 220px;
   border-radius: 20px;
 }
 </style>
@@ -102,56 +155,33 @@ button { background: #38bdf8; }
 
 <body>
 
-<header>🌸 7/D Sohbet</header>
-
-<!-- Device Panel -->
-<div id="devicePanel" class="panel">
-  <div class="card">
-    <h3>Cihaz Seç</h3>
-    <button onclick="setDevice('mobile')">Mobil</button>
-    <button onclick="setDevice('pc')">Bilgisayar</button>
-  </div>
-</div>
-
-<!-- Code Panel -->
-<div id="codePanel" class="panel" style="display:none;">
-  <div class="card">
-    <h3>Giriş Kodu</h3>
-    <input id="codeInput">
-    <button onclick="checkCode()">Devam</button>
-  </div>
-</div>
-
-<!-- Room Panel -->
-<div id="roomPanel" class="panel" style="display:none;">
+<div id="loginPanel" class="panel">
   <div class="card">
     <h3>Giriş</h3>
+    <input id="codeInput" placeholder="Kod">
     <input id="nameInput" placeholder="Kullanıcı adı">
-    
-    <select id="avatarPreset">
-      <option value="">Emoji Avatar</option>
-      <option>😀</option><option>😎</option>
-      <option>🐼</option><option>🐸</option>
-    </select>
-
-    <input type="file" id="avatarUpload">
-
-    <select id="roomSelect">
-      <option value="main">Main Sohbet</option>
-      <option value="bilgi">Bilgi Alanı</option>
-      <option value="mod">Moderatör</option>
-    </select>
-
-    <button onclick="enterChat()">Giriş Yap</button>
+    <input type="file" id="pfpInput" accept="image/*">
+    <button onclick="enter()">Giriş Yap</button>
   </div>
 </div>
+
+<div id="sidebar">
+  <img id="myAvatar">
+  <div class="channel" onclick="switchRoom('main')">Main Sohbet</div>
+  <div class="channel" onclick="switchRoom('bilgi')">Bilgilendirme</div>
+  <div class="channel" onclick="switchRoom('operator')">Operatör</div>
+</div>
+
+<header>🌸 7/D Sohbet</header>
 
 <div id="chat"></div>
 
 <div id="inputArea">
   <input id="msgInput" placeholder="Mesaj">
+  <input type="file" id="photoInput" accept="image/*">
+  <button onclick="changeName()">İsim</button>
+  <button id="voiceBtn" onclick="record()">🎤</button>
   <button onclick="send()">Gönder</button>
-  <button onclick="startRecord()">🎤</button>
 </div>
 
 <div id="profileModal" onclick="this.style.display='none'">
@@ -167,20 +197,18 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebas
 import { getDatabase, ref, push, onChildAdded, remove, set, get }
 from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
 
-const firebaseConfig = {
+const app = initializeApp({
   apiKey: "AIzaSyAhypFdqgpSmrWRj7a0tFFMJkVdb9L0WxQ",
-  authDomain: "sovus-1a29f.firebaseapp.com",
   databaseURL: "https://sovus-1a29f-default-rtdb.firebaseio.com/",
   projectId: "sovus-1a29f",
-};
+});
 
-const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 let role = "user";
 let username = "";
-let room = "main";
 let avatar = "";
+let room = "main";
 
 let deviceId = localStorage.getItem("deviceId");
 if (!deviceId) {
@@ -188,57 +216,43 @@ if (!deviceId) {
   localStorage.setItem("deviceId", deviceId);
 }
 
-/* DEVICE */
-window.setDevice = (d) => {
-  localStorage.setItem("deviceType", d);
-  devicePanel.style.display = "none";
-  codePanel.style.display = "flex";
-};
-
-/* CODE */
-window.checkCode = () => {
+window.enter = () => {
   const code = codeInput.value;
+
   if (code === "deop") role = "mod";
-  else if (code === "Alex") role = "alex";
-  else if (code === "kmja") role = "user";
-  else return alert("Kod yanlış");
+  if (code === "Alex") role = "alex";
 
-  codePanel.style.display = "none";
-  roomPanel.style.display = "flex";
-};
-
-/* ENTER */
-window.enterChat = () => {
   username = nameInput.value || "Anonim";
-  room = roomSelect.value;
 
-  if (room === "mod" && role !== "mod")
-    return alert("Yetki yok");
-
-  const preset = avatarPreset.value;
-  const file = avatarUpload.files[0];
-
+  const file = pfpInput.files[0];
   if (file) {
     const reader = new FileReader();
-    reader.onload = () => avatar = reader.result;
+    reader.onload = () => {
+      avatar = reader.result;
+      start();
+    };
     reader.readAsDataURL(file);
-  } else if (preset) {
-    avatar = `https://ui-avatars.com/api/?name=${preset}`;
-  }
-
-  roomPanel.style.display = "none";
-  listen();
+  } else start();
 };
 
+function start() {
+  loginPanel.style.display = "none";
+  myAvatar.src = avatar || "https://ui-avatars.com/api/?name=" + username;
+
+  listen();
+}
+
 function listen() {
+  chat.innerHTML = "";
+
   onChildAdded(ref(db, "rooms/" + room), snap => {
     const d = snap.val();
 
     const div = document.createElement("div");
-    div.className = "msg " + d.role;
+    div.className = "msg";
 
     const img = document.createElement("img");
-    img.src = d.avatar || "https://ui-avatars.com/api/?name=?";
+    img.src = d.avatar;
     img.className = "avatar";
     img.onclick = () => {
       profileImg.src = img.src;
@@ -246,38 +260,69 @@ function listen() {
     };
 
     const span = document.createElement("span");
-    span.textContent = d.name + ": " + d.text;
+    span.textContent = d.name + ": " + (d.text || "");
 
     div.append(img, span);
 
+    if (d.photo) {
+      const p = document.createElement("img");
+      p.src = d.photo;
+      p.className = "photo";
+      div.appendChild(p);
+    }
+
     if (role === "mod") {
       div.onclick = () => {
-        const action = prompt("sil / ban / unban / mute");
-        if (action === "sil") remove(snap.ref);
-        if (action === "ban") set(ref(db, "bans/" + d.deviceId), true);
-        if (action === "unban") remove(ref(db, "bans/" + d.deviceId));
-        if (action === "mute") {
-          set(ref(db, "mutes/" + d.deviceId), Date.now() + 600000);
-        }
+        const a = prompt("sil / ban / unban / mute");
+        if (a === "sil") remove(snap.ref);
+        if (a === "ban") set(ref(db,"bans/"+d.deviceId), true);
+        if (a === "unban") remove(ref(db,"bans/"+d.deviceId));
+        if (a === "mute") set(ref(db,"mutes/"+d.deviceId), Date.now()+600000);
       };
     }
 
     chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
   });
 }
 
-/* SEND */
+window.switchRoom = (r) => {
+  room = r;
+  listen();
+};
+
+window.changeName = () => {
+  const n = prompt("Yeni isim");
+  if (n) username = n;
+};
+
 window.send = async () => {
-  const mute = await get(ref(db, "mutes/" + deviceId));
+  const mute = await get(ref(db,"mutes/"+deviceId));
   if (mute.exists() && mute.val() > Date.now())
     return alert("Susturuldun");
 
+  const photoFile = photoInput.files[0];
+
+  if (photoFile) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      push(ref(db,"rooms/"+room), {
+        name: username,
+        avatar,
+        deviceId,
+        photo: reader.result
+      });
+    };
+    reader.readAsDataURL(photoFile);
+    photoInput.value = "";
+    return;
+  }
+
   if (!msgInput.value.trim()) return;
 
-  push(ref(db, "rooms/" + room), {
+  push(ref(db,"rooms/"+room), {
     name: username,
     text: msgInput.value,
-    role,
     avatar,
     deviceId
   });
@@ -285,34 +330,30 @@ window.send = async () => {
   msgInput.value = "";
 };
 
-/* VOICE */
-let mediaRecorder;
-let chunks = [];
+/* Voice */
+let recorder, chunks=[];
 
-window.startRecord = async () => {
-  const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
-  mediaRecorder = new MediaRecorder(stream);
+window.record = async () => {
+  const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+  recorder = new MediaRecorder(stream);
 
-  mediaRecorder.ondataavailable = e => chunks.push(e.data);
-  mediaRecorder.onstop = () => {
-    const blob = new Blob(chunks);
-    chunks = [];
-
-    push(ref(db, "rooms/" + room), {
+  recorder.ondataavailable = e => chunks.push(e.data);
+  recorder.onstop = () => {
+    push(ref(db,"rooms/"+room), {
       name: username,
       text: "[Sesli Mesaj]",
-      role,
       avatar,
       deviceId
     });
+    chunks=[];
   };
 
-  mediaRecorder.start();
-  setTimeout(() => mediaRecorder.stop(), 60000);
+  recorder.start();
+  setTimeout(()=>recorder.stop(),60000);
 };
 
-msgInput.addEventListener("keypress", e => {
-  if (e.key === "Enter") send();
+msgInput.addEventListener("keypress", e=>{
+  if(e.key==="Enter") send();
 });
 </script>
 
