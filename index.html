@@ -5,299 +5,336 @@
 <title>7/D Sohbet</title>
 
 <style>
-*{ box-sizing:border-box; }
-
 body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:linear-gradient(135deg,#0f172a,#1e1b4b,#312e81);
-  color:white;
-  overflow:hidden;
+ margin:0;
+ font-family:Arial, sans-serif;
+ color:white;
+ overflow:hidden;
+ background:black;
 }
 
-/* TOPBAR */
-
-#topbar{
-  height:55px;
-  background:rgba(2,6,23,.85);
-  display:flex;
-  align-items:center;
-  padding:0 15px;
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid rgba(255,255,255,.05);
+/* RGB ANİMASYON */
+body::before{
+ content:"";
+ position:fixed;
+ inset:0;
+ background:linear-gradient(45deg, red, blue, lime, red);
+ background-size:400% 400%;
+ animation:rgb 12s linear infinite;
+ opacity:.25;
+ z-index:-1;
 }
 
-#menuBtn{
-  font-size:24px;
-  cursor:pointer;
-  transition:.2s;
-}
-#menuBtn:hover{ transform:scale(1.2); color:#f472b6; }
-
-#title{
-  margin-left:12px;
-  font-size:20px;
-  background:linear-gradient(90deg,#f472b6,#38bdf8);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-/* SIDEBAR */
-
-#sidebar{
-  position:fixed;
-  top:0;
-  left:-240px;
-  width:240px;
-  height:100%;
-  background:rgba(2,6,23,.95);
-  transition:.25s;
-  padding:15px;
-  backdrop-filter:blur(12px);
-  z-index:5;
-  border-right:1px solid rgba(255,255,255,.05);
-}
-
-#sidebar.open{ left:0; }
-
-.channel{
-  background:linear-gradient(135deg,#1e293b,#0f172a);
-  padding:12px;
-  border-radius:14px;
-  margin-top:12px;
-  cursor:pointer;
-  text-align:center;
-  transition:.2s;
-  border:1px solid rgba(255,255,255,.05);
-}
-.channel:hover{
-  transform:translateX(5px);
-  border-color:#f472b6;
-}
-
-/* CHAT */
-
-#chat{
-  position:absolute;
-  top:55px;
-  bottom:95px;
-  left:0;
-  right:0;
-  overflow-y:auto;
-  padding:12px;
-}
-
-.msg{
-  background:rgba(30,41,59,.9);
-  padding:10px;
-  border-radius:14px;
-  margin:6px 0;
-  animation:fade .15s ease-out;
-  box-shadow:0 5px 15px rgba(0,0,0,.25);
-}
-
-@keyframes fade{
-  from{ opacity:.3; transform:translateY(5px); }
-  to{ opacity:1; transform:none; }
-}
-
-.admin{ background:#dc2626; }
-.kidemli{ background:#ec4899; }
-
-.avatar{
-  width:30px;
-  height:30px;
-  border-radius:50%;
-  vertical-align:middle;
-  margin-right:6px;
-  transition:.2s;
-}
-.avatar:hover{ transform:scale(1.25); }
-
-/* MEDIA */
-
-.photo{
-  display:block;
-  max-width:180px;
-  margin-top:6px;
-  border-radius:10px;
-}
-
-/* INPUT */
-
-#inputArea{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:rgba(2,6,23,.95);
-  padding:10px;
-  display:flex;
-  gap:6px;
-  border-top:1px solid rgba(255,255,255,.05);
-}
-
-#msgInput{
-  flex:1;
-  padding:12px;
-  border-radius:14px;
-  border:none;
-  outline:none;
-  background:#1e293b;
-  color:white;
-}
-
-button{
-  border:none;
-  border-radius:12px;
-  padding:10px 14px;
-  cursor:pointer;
-  background:linear-gradient(135deg,#38bdf8,#6366f1);
-  color:white;
-  transition:.2s;
-}
-button:hover{ transform:scale(1.05); }
-
-#recBtn{ background:linear-gradient(135deg,#22c55e,#16a34a); }
-
-#trash{
-  position:fixed;
-  bottom:110px;
-  right:25px;
-  font-size:34px;
-  display:none;
+@keyframes rgb{
+ 0%{background-position:0% 50%}
+ 50%{background-position:100% 50%}
+ 100%{background-position:0% 50%}
 }
 
 /* LOGIN */
-
-.panel{
-  position:fixed;
-  inset:0;
-  background:black;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:10;
+#login{
+ position:fixed;
+ inset:0;
+ background:#020617;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ flex-direction:column;
+ gap:10px;
+ z-index:10;
 }
 
-.card{
-  background:linear-gradient(135deg,#1e1b4b,#312e81);
-  padding:25px;
-  border-radius:20px;
-  width:320px;
-  text-align:center;
-  box-shadow:0 10px 40px rgba(0,0,0,.5);
+#login input{
+ width:220px;
+ height:40px;
+ border-radius:10px;
+ border:none;
+ padding:0 10px;
+ font-size:15px;
 }
 
-.card input{ width:100%; margin-top:10px; }
+#login button{
+ width:220px;
+ height:40px;
+ border:none;
+ border-radius:10px;
+ background:#2563eb;
+ color:white;
+ font-size:16px;
+ cursor:pointer;
+}
+
+/* TOPBAR */
+#topbar{
+ height:55px;
+ background:#020617;
+ display:flex;
+ align-items:center;
+ padding:0 15px;
+ box-shadow:0 0 10px black;
+}
+
+#menuBtn{
+ font-size:26px;
+ cursor:pointer;
+}
+
+/* SIDEBAR TAM GİZLİ */
+#sidebar{
+ position:fixed;
+ left:-260px;
+ top:0;
+ width:260px;
+ height:100%;
+ background:#020617;
+ padding:70px 10px;
+ transition:.25s;
+ z-index:5;
+ box-shadow:0 0 15px black;
+ visibility:hidden;
+}
+
+#sidebar.open{
+ left:0;
+ visibility:visible;
+}
+
+.channel{
+ background:#1e293b;
+ padding:12px;
+ border-radius:12px;
+ margin-bottom:10px;
+ cursor:pointer;
+}
+
+/* CHAT */
+#chat{
+ position:absolute;
+ top:55px;
+ bottom:70px;
+ left:0;
+ right:0;
+ overflow-y:auto;
+ padding:10px;
+ display:flex;
+ flex-direction:column;
+ gap:8px;
+}
+
+.msg{
+ max-width:70%;
+ padding:10px 14px;
+ border-radius:16px;
+ font-size:14px;
+ line-height:1.4;
+ word-wrap:break-word;
+ animation:fade .15s ease-out;
+}
+
+.left{ background:#1e293b; align-self:flex-start; }
+.right{ background:#2563eb; align-self:flex-end; }
+
+@keyframes fade{
+ from{opacity:.5;transform:translateY(4px)}
+ to{opacity:1;transform:none}
+}
+
+/* ALT BAR */
+#inputBar{
+ position:fixed;
+ bottom:0;
+ left:0;
+ right:0;
+ height:70px;
+ background:#020617;
+ display:flex;
+ align-items:center;
+ gap:6px;
+ padding:8px;
+ box-shadow:0 0 10px black;
+ box-sizing:border-box;
+}
+
+#text{
+ flex:1;
+ height:40px;
+ border:none;
+ border-radius:10px;
+ padding:0 10px;
+ font-size:16px;
+ outline:none;
+}
+
+button{
+ height:40px;
+ padding:0 14px;
+ border-radius:10px;
+ border:none;
+ background:#1e293b;
+ color:white;
+ cursor:pointer;
+}
+
+#fileInput{ display:none; }
+
+/* PROFİL */
+#avatar{
+ width:70px;
+ height:70px;
+ border-radius:50%;
+ object-fit:cover;
+ background:#1e293b;
+}
 </style>
 </head>
 
 <body>
 
 <!-- LOGIN -->
-<div id="loginPanel" class="panel">
-  <div class="card">
-    <h2>🌸 7/D Sohbet</h2>
-    <input id="nameInput" placeholder="Kullanıcı adı">
-    <input id="codeInput" placeholder="Giriş kodu">
-    <input type="file" id="pfpInput" accept="image/*">
-    <label><input type="checkbox" id="rememberMe"> Beni Hatırla</label><br><br>
-    <button onclick="enter()">Giriş</button>
-  </div>
+<div id="login">
+ <img id="avatar" src="">
+ <input type="file" id="avatarInput" accept="image/*">
+ <input id="nameInput" placeholder="Kullanıcı adı">
+ <input id="codeInput" placeholder="Kod">
+ <button onclick="enter()">Giriş Yap</button>
 </div>
 
-<!-- TOPBAR -->
 <div id="topbar">
-  <div id="menuBtn">☰</div>
-  <div id="title">7/D Sohbet</div>
+ <div id="menuBtn">☰</div>
+ <div style="margin-left:10px">7/D Sohbet</div>
 </div>
 
-<!-- SIDEBAR -->
 <div id="sidebar">
-  <div class="channel" onclick="switchRoom('main')">💬 Main</div>
-  <div class="channel" onclick="switchRoom('bilgi')">📢 Bilgi</div>
-  <div class="channel" onclick="switchRoom('banlist')">⛔ Banlananlar</div>
-  <div class="channel" id="banManageBtn" onclick="showBanPanel()">🛠 Ban Yönetimi</div>
+ <div class="channel" onclick="switchRoom('main')">Main Kanal</div>
+ <div class="channel" onclick="switchRoom('bilgi')">Bilgilendirme</div>
 </div>
 
-<!-- CHAT -->
 <div id="chat"></div>
 
-<!-- INPUT -->
-<div id="inputArea">
-  <input id="msgInput" placeholder="Mesaj">
-  <input type="file" id="photoInput" accept="image/*">
-  <button id="recBtn">🎤</button>
-  <button onclick="send()">Gönder</button>
+<div id="inputBar">
+ <input id="text" placeholder="Mesaj yaz...">
+ <button onclick="send()">Gönder</button>
+ <button onclick="fileInput.click()">📷</button>
+ <button onclick="sendVoice()">🎤</button>
+ <input type="file" id="fileInput" accept="image/*,image/gif">
 </div>
 
-<div id="trash">🗑</div>
+<script>
+let username = "";
+let role = "user";
+let avatarURL = "";
+let room = "main";
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded, set, remove }
-from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
-
-const app = initializeApp({
-  apiKey:"AIzaSyAhypFdqgpSmrWRj7a0tFFMJkVdb9L0WxQ",
-  databaseURL:"https://sovus-1a29f-default-rtdb.firebaseio.com/",
-  projectId:"sovus-1a29f"
-});
-
-const db = getDatabase(app);
-const DEVICE_ID = localStorage.getItem("deviceId") || Math.random().toString(36);
-localStorage.setItem("deviceId", DEVICE_ID);
-
-let username="", role="user", avatar="", room="main";
-
-const CODES = { "kmja":"user", "Alex":"kidemli", "deop":"admin" };
-
-menuBtn.onclick=()=>sidebar.classList.toggle("open");
-chat.onclick=()=>sidebar.classList.remove("open");
-
-window.switchRoom = r=>{
-  room=r;
-  chat.innerHTML="";
+/* PROFİL FOTO */
+avatarInput.onchange = e => {
+ const file = e.target.files[0];
+ const reader = new FileReader();
+ reader.onload = ev => {
+  avatar.src = ev.target.result;
+  avatarURL = ev.target.result;
+ };
+ reader.readAsDataURL(file);
 };
 
-window.enter = ()=>{
-  const name=nameInput.value.trim();
-  const code=codeInput.value.trim();
-  if(!CODES[code]) return alert("Kod hatalı");
+/* LOGIN */
+function enter(){
+ username = nameInput.value.trim();
+ const code = codeInput.value.trim();
 
-  username=name;
-  role=CODES[code];
+ if(!username) return alert("İsim gir");
 
-  if(role!=="admin") banManageBtn.style.display="none";
+ if(code === "deop") role = "admin";
 
-  const file=pfpInput.files[0];
-  if(file){
-    const r=new FileReader();
-    r.onload=()=>{ avatar=r.result; loginPanel.style.display="none"; };
-    r.readAsDataURL(file);
-  } else {
-    avatar="https://ui-avatars.com/api/?name="+username;
-    loginPanel.style.display="none";
-  }
+ login.style.display = "none";
+}
+
+/* Menü */
+menuBtn.onclick = () => {
+ sidebar.classList.toggle("open");
 };
 
-window.send = ()=>{
-  if(photoInput.files[0]){
-    const r=new FileReader();
-    r.onload=()=> push(ref(db,"rooms/"+room),{
-      name:username, role, avatar, photo:r.result, deviceId:DEVICE_ID
-    });
-    r.readAsDataURL(photoInput.files[0]);
-    photoInput.value="";
-    return;
-  }
+chat.onclick = () => sidebar.classList.remove("open");
 
-  push(ref(db,"rooms/"+room),{
-    name:username, role, avatar, text:msgInput.value, deviceId:DEVICE_ID
+/* Kanal */
+function switchRoom(r){
+ room = r;
+ chat.innerHTML="";
+ sidebar.classList.remove("open");
+}
+
+/* Mesaj */
+function send(){
+ if(room === "bilgi" && role !== "admin"){
+  alert("Bilgilendirme kanalına sadece admin yazabilir");
+  return;
+ }
+
+ if(!text.value.trim()) return;
+
+ addMsg({
+  name:username,
+  text:text.value,
+  avatar:avatarURL
+ });
+
+ text.value="";
+}
+
+/* Render */
+function addMsg(m){
+ const div = document.createElement("div");
+ const side = m.name === username ? "right" : "left";
+
+ div.className = "msg " + side;
+
+ const avatarImg = m.avatar
+  ? `<img src="${m.avatar}" style="width:24px;height:24px;border-radius:50%;vertical-align:middle;margin-right:6px">`
+  : "";
+
+ div.innerHTML = avatarImg + "<b>"+m.name+"</b><br>" + m.text;
+
+ chat.appendChild(div);
+ chat.scrollTop = chat.scrollHeight;
+}
+
+/* FOTO / GIF */
+fileInput.onchange = e => {
+ const file = e.target.files[0];
+ const reader = new FileReader();
+
+ reader.onload = ev => {
+  addMsg({
+   name:username,
+   avatar:avatarURL,
+   text:`<img src="${ev.target.result}" style="max-width:200px;border-radius:10px">`
   });
-  msgInput.value="";
+ };
+
+ reader.readAsDataURL(file);
 };
+
+/* VOICE */
+async function sendVoice(){
+ const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+ const recorder = new MediaRecorder(stream);
+ let chunks=[];
+
+ recorder.ondataavailable=e=>chunks.push(e.data);
+
+ recorder.onstop=()=>{
+  const blob=new Blob(chunks);
+  const url=URL.createObjectURL(blob);
+
+  addMsg({
+   name:username,
+   avatar:avatarURL,
+   text:`<audio controls src="${url}"></audio>`
+  });
+ };
+
+ recorder.start();
+ setTimeout(()=>recorder.stop(),15000);
+}
 </script>
 
 </body>
