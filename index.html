@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Amineye Sövüş</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: black;
+    color: white;
+}
+
+video {
+    position: fixed;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -1;
+    opacity: 0.12;
+}
+
+.header {
+    text-align: center;
+    font-size: 24px;
+    background: linear-gradient(90deg, red, cyan, lime);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.users {
+    width: 180px;
+    background: rgba(0,0,0,0.8);
+    padding: 10px;
+    border-right: 1px solid cyan;
+    overflow-y: auto;
+}
+
+.userItem {
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+}
+
+.userItem:hover {
+    background: rgba(0,255,255,0.2);
+}
+
+.chat {
+    flex: 1;
+    padding: 10px;
+}
+
+#messages {
+    height: 55vh;
+    overflow-y: auto;
+    background: rgba(0,0,0,0.7);
+    border-radius: 10px;
+    padding: 8px;
+}
+
+.msg {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px;
+    margin: 6px 0;
+    border-radius: 8px;
+}
+
+.msg img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+}
+
+.user { background: rgba(0,255,255,0.15); }
+.mod { background: rgba(255,0,0,0.2); }
+
+.controls {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.controls input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+}
+
+.like {
+    margin-left: auto;
+    cursor: pointer;
+    opacity: 0.6;
+}
+</style>
+</head>
+
+<body>
+
+<video autoplay loop>
+  <source src="Z_Z.mp4" type="video/mp4">
+</video>
+
+<audio autoplay loop>
+  <source src="aa.m4a" type="audio/mp4">
+</audio>
+
+<div id="loginScreen">
+    <h3>Kod Girişi</h3>
+    <input id="codeInput" placeholder="Kod">
+    <input id="nameInput" placeholder="Kullanıcı Adı">
+    <input type="file" id="photoInput" accept="image/*">
+    <button onclick="login()">Giriş</button>
+</div>
+
+<div id="chatUI" style="display:none;">
+<div class="header">NEON CHAT</div>
+
+<div class="container">
+    <div class="users">
+        <b>Kullanıcılar</b>
+        <div id="userList"></div>
+    </div>
+
+    <div class="chat">
+        <div id="messages"></div>
+
+        <div class="controls">
+            <input id="msgInput" placeholder="Mesaj...">
+            <button onclick="send()">Gönder</button>
+            <button onclick="record()">🎤</button>
+        </div>
+    </div>
+</div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import {
+  getDatabase, ref, push, onChildAdded,
+  set, onDisconnect, onValue, update
+} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAhypFdqgpSmrWRj7a0tFFMJkVdb9L0WxQ",
+  authDomain: "sovus-1a29f.firebaseapp.com",
+  databaseURL: "https://sovus-1a29f-default-rtdb.firebaseio.com/",
+  projectId: "sovus-1a29f",
+  storageBucket: "sovus-1a29f.firebasestorage.app",
+  messagingSenderId: "1087742481360",
+  appId: "1:1087742481360:web:8f28f84bf5c20bd76d1fd5"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const messagesRef = ref(db, "messages");
+const presenceRef = ref(db, "presence");
+
+let role = "user";
+let username = localStorage.getItem("username") || "Anon";
+let photo = localStorage.getItem("photo") || "";
+let userId = localStorage.getItem("userId") || Math.random().toString(36).slice(2);
+
+localStorage.setItem("userId", userId);
+
+window.login = function() {
+    const code = document.getElementById("codeInput").value;
+    const name = document.getElementById("nameInput").value;
+    const file = document.getElementById("photoInput").files[0];
+
+    if (name) {
+        username = name;
+        localStorage.setItem("username", username);
+    }
+
+    if (code === "deop") role = "mod";
+    else if (code === "kmja") role = "user";
+    else return alert("Kod yanlış");
+
+    if (file) {
+        const r = new FileReader();
+        r.onload = e => {
+            photo = e.target.result;
+            localStorage.setItem("photo", photo);
+            finish();
+        };
+        r.readAsDataURL(file);
+    } else finish();
+};
+
+function finish() {
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("chatUI").style.display = "block";
+
+    const userRef = ref(db, "presence/" + userId);
+    set(userRef, { name: username, photo: photo });
+    onDisconnect(userRef).remove();
+}
+
+/* SEND */
+window.send = function() {
+    const input = document.getElementById("msgInput");
+    const text = input.value.trim();
+    if (!text) return;
+
+    push(messagesRef, {
+        name: username,
+        role: role,
+        text: text,
+        photo: photo,
+        likes: 0
+    });
+
+    input.value = "";
+};
+
+/* VOICE MESSAGE */
+window.record = async function() {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const media = new MediaRecorder(stream);
+    const chunks = [];
+
+    media.ondataavailable = e => chunks.push(e.data);
+    media.onstop = () => {
+        const blob = new Blob(chunks);
+        const url = URL.createObjectURL(blob);
+
+        push(messagesRef, {
+            name: username,
+            role: role,
+            voice: url,
+            photo: photo
+        });
+    };
+
+    media.start();
+    setTimeout(() => media.stop(), 2000);
+};
+
+/* REALTIME MESSAGES */
+onChildAdded(messagesRef, snap => {
+    const msg = snap.val();
+    const key = snap.key;
+
+    const div = document.createElement("div");
+    div.className = "msg";
+
+    if (msg.role === "mod") div.classList.add("mod");
+    else div.classList.add("user");
+
+    const img = document.createElement("img");
+    img.src = msg.photo || "";
+
+    const span = document.createElement("span");
+
+    if (msg.voice) {
+        const audio = document.createElement("audio");
+        audio.controls = true;
+        audio.src = msg.voice;
+        span.appendChild(audio);
+    } else {
+        span.innerText = msg.name + ": " + msg.text;
+    }
+
+    const like = document.createElement("span");
+    like.className = "like";
+    like.innerText = "👍 " + (msg.likes || 0);
+
+    like.onclick = () => {
+        update(ref(db, "messages/" + key), {
+            likes: (msg.likes || 0) + 1
+        });
+    };
+
+    div.appendChild(img);
+    div.appendChild(span);
+    div.appendChild(like);
+
+    document.getElementById("messages").appendChild(div);
+});
+
+/* USER LIST */
+onValue(presenceRef, snap => {
+    const list = document.getElementById("userList");
+    list.innerHTML = "";
+
+    snap.forEach(child => {
+        const u = child.val();
+        const div = document.createElement("div");
+        div.className = "userItem";
+        div.innerText = u.name;
+        div.onclick = () => alert("Profil: " + u.name);
+        list.appendChild(div);
+    });
+});
+
+/* ENTER */
+document.addEventListener("keypress", e => {
+    if (e.key === "Enter") send();
+});
+</script>
+
+</body>
+</html>
