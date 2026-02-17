@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Amineye sövüş</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: black;
+    color: white;
+    overflow: hidden;
+}
+
+/* MP4 Background */
+video {
+    position: fixed;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -1;
+    opacity: 0.25;
+}
+
+/* Login */
+#loginScreen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.9);
+}
+
+.login-box {
+    background: black;
+    padding: 30px;
+    border-radius: 16px;
+    width: 320px;
+    border: 2px solid;
+    border-image: linear-gradient(45deg, red, cyan, lime, magenta) 1;
+    box-shadow: 0 0 25px cyan;
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+    from { box-shadow: 0 0 10px cyan; }
+    to { box-shadow: 0 0 25px magenta; }
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: none;
+    font-size: 16px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px;
+    width: 100%;
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    background: linear-gradient(90deg, cyan, magenta, cyan);
+    background-size: 200%;
+    animation: rgbMove 3s linear infinite;
+}
+
+@keyframes rgbMove {
+    from { background-position: 0%; }
+    to { background-position: 200%; }
+}
+
+/* Chat */
+#chatUI {
+    display: none;
+    height: 100vh;
+    padding: 10px;
+}
+
+.header {
+    font-size: 22px;
+    font-weight: bold;
+    background: linear-gradient(90deg, red, cyan, lime);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: rgbMove 6s linear infinite;
+}
+
+#online {
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+#messages {
+    height: 65vh;
+    overflow-y: auto;
+    background: rgba(0,0,0,0.75);
+    border-radius: 14px;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+/* Messages */
+.msg {
+    padding: 8px;
+    margin: 6px 0;
+    border-radius: 10px;
+    animation: pop 0.2s ease;
+}
+
+@keyframes pop {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.user { background: rgba(0,255,255,0.2); }
+.mod { background: rgba(255,0,0,0.35); }
+
+/* Controls */
+.controls {
+    margin-top: 8px;
+    display: flex;
+    gap: 6px;
+}
+
+.controls input {
+    flex: 1;
+    padding: 14px;
+    font-size: 16px;
+    border-radius: 12px;
+}
+
+.controls button {
+    width: 80px;
+    font-size: 13px;
+}
+
+/* Stickers */
+.stickers {
+    margin-top: 6px;
+}
+
+.stickers button {
+    width: auto;
+    padding: 6px 10px;
+    font-size: 18px;
+}
+</style>
+</head>
+
+<body>
+
+<video autoplay loop>
+  <source src="Z_Z.mp4" type="video/mp4">
+</video>
+
+<div id="loginScreen">
+  <div class="login-box">
+    <h3>Kod Girişi</h3>
+    <input id="codeInput" placeholder="Kod">
+    <input id="nameInput" placeholder="Kullanıcı Adı">
+    <button onclick="login()">Giriş</button>
+  </div>
+</div>
+
+<div id="chatUI">
+  <div class="header">NEON SOHBET</div>
+  <div id="online">Aktif: 1</div>
+
+  <div id="messages"></div>
+
+  <div class="controls">
+    <input id="msgInput" placeholder="Mesaj yaz...">
+    <button onclick="send()">Gönder</button>
+  </div>
+
+  <div class="stickers">
+    <button onclick="sticker('😎')">😎</button>
+    <button onclick="sticker('🔥')">🔥</button>
+    <button onclick="sticker('😂')">😂</button>
+    <button onclick="sticker('💀')">💀</button>
+  </div>
+</div>
+
+<script>
+let role = "user";
+let username = "Anon";
+
+function login() {
+    const code = document.getElementById("codeInput").value;
+    username = document.getElementById("nameInput").value || "Anon";
+
+    if (code === "deop") role = "mod";
+    else if (code === "kmja") role = "user";
+    else return alert("Kod yanlış");
+
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("chatUI").style.display = "block";
+
+    systemMsg("Hoşgeldin " + (role === "mod" ? "Moderatör" : "Üye"));
+}
+
+function systemMsg(text) {
+    const div = document.createElement("div");
+    div.className = "msg";
+    div.style.opacity = "0.6";
+    div.innerText = text;
+    document.getElementById("messages").appendChild(div);
+}
+
+function send() {
+    const input = document.getElementById("msgInput");
+    const text = input.value.trim();
+    if (!text) return;
+
+    if (role === "mod" && text === "/temizle") {
+        document.getElementById("messages").innerHTML = "";
+        return;
+    }
+
+    if (role === "mod" && text === "/sil") {
+        const msgs = document.querySelectorAll(".msg");
+        if (msgs.length) msgs[msgs.length - 1].remove();
+        return;
+    }
+
+    const div = document.createElement("div");
+    div.className = "msg " + (role === "mod" ? "mod" : "user");
+    div.innerText = username + ": " + text;
+
+    const box = document.getElementById("messages");
+
+    if (role === "mod") {
+        box.prepend(div); // mod mesajı üstte
+    } else {
+        box.appendChild(div);
+    }
+
+    input.value = "";
+}
+
+function sticker(emoji) {
+    document.getElementById("msgInput").value += emoji;
+}
+
+document.getElementById("msgInput").addEventListener("keypress", e => {
+    if (e.key === "Enter") send();
+});
+</script>
+
+</body>
+</html>TML = `<span class="user">${msg.user}:</span> ${msg.text}`;
+        document.getElementById("messages").appendChild(div);
+    }
+});
+</script>
+
+</body>
+</html>
