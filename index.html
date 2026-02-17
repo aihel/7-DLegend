@@ -13,7 +13,7 @@ body{
  background:black;
 }
 
-/* RGB ANİMASYON */
+/* RGB BACKGROUND */
 body::before{
  content:"";
  position:fixed;
@@ -24,44 +24,10 @@ body::before{
  opacity:.25;
  z-index:-1;
 }
-
 @keyframes rgb{
  0%{background-position:0% 50%}
  50%{background-position:100% 50%}
  100%{background-position:0% 50%}
-}
-
-/* LOGIN */
-#login{
- position:fixed;
- inset:0;
- background:#020617;
- display:flex;
- justify-content:center;
- align-items:center;
- flex-direction:column;
- gap:10px;
- z-index:10;
-}
-
-#login input{
- width:220px;
- height:40px;
- border-radius:10px;
- border:none;
- padding:0 10px;
- font-size:15px;
-}
-
-#login button{
- width:220px;
- height:40px;
- border:none;
- border-radius:10px;
- background:#2563eb;
- color:white;
- font-size:16px;
- cursor:pointer;
 }
 
 /* TOPBAR */
@@ -71,15 +37,11 @@ body::before{
  display:flex;
  align-items:center;
  padding:0 15px;
- box-shadow:0 0 10px black;
 }
 
-#menuBtn{
- font-size:26px;
- cursor:pointer;
-}
+#menuBtn{ font-size:26px; cursor:pointer; }
 
-/* SIDEBAR TAM GİZLİ */
+/* SIDEBAR */
 #sidebar{
  position:fixed;
  left:-260px;
@@ -89,11 +51,9 @@ body::before{
  background:#020617;
  padding:70px 10px;
  transition:.25s;
- z-index:5;
- box-shadow:0 0 15px black;
  visibility:hidden;
+ z-index:5;
 }
-
 #sidebar.open{
  left:0;
  visibility:visible;
@@ -128,18 +88,17 @@ body::before{
  font-size:14px;
  line-height:1.4;
  word-wrap:break-word;
- animation:fade .15s ease-out;
+ animation:fade .12s ease-out;
 }
-
 .left{ background:#1e293b; align-self:flex-start; }
 .right{ background:#2563eb; align-self:flex-end; }
 
 @keyframes fade{
- from{opacity:.5;transform:translateY(4px)}
+ from{opacity:.4;transform:translateY(3px)}
  to{opacity:1;transform:none}
 }
 
-/* ALT BAR */
+/* INPUT BAR */
 #inputBar{
  position:fixed;
  bottom:0;
@@ -151,7 +110,6 @@ body::before{
  align-items:center;
  gap:6px;
  padding:8px;
- box-shadow:0 0 10px black;
  box-sizing:border-box;
 }
 
@@ -162,7 +120,6 @@ body::before{
  border-radius:10px;
  padding:0 10px;
  font-size:16px;
- outline:none;
 }
 
 button{
@@ -177,7 +134,26 @@ button{
 
 #fileInput{ display:none; }
 
-/* PROFİL */
+/* LOGIN */
+#login{
+ position:fixed;
+ inset:0;
+ background:#020617;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ flex-direction:column;
+ gap:10px;
+ z-index:10;
+}
+#login input{
+ width:220px;
+ height:40px;
+ border-radius:10px;
+ border:none;
+ padding:0 10px;
+}
+
 #avatar{
  width:70px;
  height:70px;
@@ -190,13 +166,12 @@ button{
 
 <body>
 
-<!-- LOGIN -->
 <div id="login">
- <img id="avatar" src="">
+ <img id="avatar">
  <input type="file" id="avatarInput" accept="image/*">
  <input id="nameInput" placeholder="Kullanıcı adı">
  <input id="codeInput" placeholder="Kod">
- <button onclick="enter()">Giriş Yap</button>
+ <button onclick="enter()">Giriş</button>
 </div>
 
 <div id="topbar">
@@ -219,121 +194,141 @@ button{
  <input type="file" id="fileInput" accept="image/*,image/gif">
 </div>
 
-<script>
-let username = "";
-let role = "user";
-let avatarURL = "";
-let room = "main";
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getDatabase, ref, push, onChildAdded }
+from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
 
-/* PROFİL FOTO */
-avatarInput.onchange = e => {
- const file = e.target.files[0];
- const reader = new FileReader();
- reader.onload = ev => {
-  avatar.src = ev.target.result;
-  avatarURL = ev.target.result;
- };
- reader.readAsDataURL(file);
+const firebaseConfig = {
+ apiKey: "AIzaSyBVMvgD3u-UT5dAk72pXqLub05qNPjqPW8",
+ authDomain: "dsohbet.firebaseapp.com",
+ databaseURL: "https://dsohbet-default-rtdb.europe-west1.firebasedatabase.app",
+ projectId: "dsohbet",
+ storageBucket: "dsohbet.firebasestorage.app",
+ messagingSenderId: "992790719391",
+ appId: "1:992790719391:web:e043ee4bdd47483910abaa"
 };
 
-/* LOGIN */
-function enter(){
- username = nameInput.value.trim();
- const code = codeInput.value.trim();
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
+window.db = db;
+window.ref = ref;
+window.push = push;
+window.onChildAdded = onChildAdded;
+</script>
+
+<script>
+let username="", role="user", avatarURL="", room="main";
+
+/* Avatar */
+avatarInput.onchange = e=>{
+ const reader=new FileReader();
+ reader.onload=ev=>{
+  avatar.src=ev.target.result;
+  avatarURL=ev.target.result;
+ };
+ reader.readAsDataURL(e.target.files[0]);
+};
+
+function enter(){
+ username=nameInput.value.trim();
+ const code=codeInput.value.trim();
  if(!username) return alert("İsim gir");
 
- if(code === "deop") role = "admin";
+ if(code==="deop") role="admin";
 
- login.style.display = "none";
+ login.style.display="none";
+
+ listenMessages();
 }
 
 /* Menü */
-menuBtn.onclick = () => {
- sidebar.classList.toggle("open");
-};
+menuBtn.onclick=()=>sidebar.classList.toggle("open");
+chat.onclick=()=>sidebar.classList.remove("open");
 
-chat.onclick = () => sidebar.classList.remove("open");
-
-/* Kanal */
 function switchRoom(r){
- room = r;
+ room=r;
  chat.innerHTML="";
  sidebar.classList.remove("open");
 }
 
-/* Mesaj */
+/* Firebase dinleme */
+function listenMessages(){
+ onChildAdded(ref(db,"messages"), snap=>{
+  const m=snap.val();
+  if(m.room===room) render(m);
+ });
+}
+
+/* Mesaj gönder */
 function send(){
- if(room === "bilgi" && role !== "admin"){
-  alert("Bilgilendirme kanalına sadece admin yazabilir");
+ const value=text.value.trim();
+ if(!value) return;
+
+ if(room==="bilgi" && role!=="admin"){
+  alert("Sadece admin yazabilir");
   return;
  }
 
- if(!text.value.trim()) return;
-
- addMsg({
+ push(ref(db,"messages"),{
   name:username,
-  text:text.value,
-  avatar:avatarURL
+  text:value,
+  avatar:avatarURL,
+  room:room
  });
 
  text.value="";
 }
 
 /* Render */
-function addMsg(m){
- const div = document.createElement("div");
- const side = m.name === username ? "right" : "left";
+function render(m){
+ const div=document.createElement("div");
+ const side=m.name===username?"right":"left";
+ div.className="msg "+side;
 
- div.className = "msg " + side;
-
- const avatarImg = m.avatar
+ const avatarImg=m.avatar
   ? `<img src="${m.avatar}" style="width:24px;height:24px;border-radius:50%;vertical-align:middle;margin-right:6px">`
   : "";
 
- div.innerHTML = avatarImg + "<b>"+m.name+"</b><br>" + m.text;
+ div.innerHTML=avatarImg+"<b>"+m.name+"</b><br>"+m.text;
 
  chat.appendChild(div);
- chat.scrollTop = chat.scrollHeight;
+ chat.scrollTop=chat.scrollHeight;
 }
 
-/* FOTO / GIF */
-fileInput.onchange = e => {
- const file = e.target.files[0];
- const reader = new FileReader();
-
- reader.onload = ev => {
-  addMsg({
+/* Foto */
+fileInput.onchange=e=>{
+ const reader=new FileReader();
+ reader.onload=ev=>{
+  push(ref(db,"messages"),{
    name:username,
    avatar:avatarURL,
+   room:room,
    text:`<img src="${ev.target.result}" style="max-width:200px;border-radius:10px">`
   });
  };
-
- reader.readAsDataURL(file);
+ reader.readAsDataURL(e.target.files[0]);
 };
 
-/* VOICE */
+/* Voice */
 async function sendVoice(){
- const stream = await navigator.mediaDevices.getUserMedia({audio:true});
- const recorder = new MediaRecorder(stream);
+ const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+ const rec=new MediaRecorder(stream);
  let chunks=[];
-
- recorder.ondataavailable=e=>chunks.push(e.data);
-
- recorder.onstop=()=>{
-  const blob=new Blob(chunks);
-  const url=URL.createObjectURL(blob);
-
-  addMsg({
+ rec.ondataavailable=e=>chunks.push(e.data);
+ rec.onstop=()=>{
+  const url=URL.createObjectURL(new Blob(chunks));
+  push(ref(db,"messages"),{
    name:username,
    avatar:avatarURL,
+   room:room,
    text:`<audio controls src="${url}"></audio>`
   });
  };
-
- recorder.start();
- setTimeout(()=>recorder.stop(),15000);
+ rec.start();
+ setTimeout(()=>rec.stop(),15000);
 }
 </script>
 
