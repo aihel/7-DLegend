@@ -7,20 +7,20 @@
 <style>
 body{
  margin:0;
- font-family:Arial, sans-serif;
+ font-family:Arial;
+ background:black;
  color:white;
  overflow:hidden;
- background:black;
 }
 
-/* RGB */
+/* RGB arkaplan */
 body::before{
  content:"";
  position:fixed;
  inset:0;
  background:linear-gradient(45deg, red, blue, lime, red);
  background-size:400% 400%;
- animation:rgb 12s linear infinite;
+ animation:rgb 10s linear infinite;
  opacity:.25;
  z-index:-1;
 }
@@ -30,18 +30,46 @@ body::before{
  100%{background-position:0% 50%}
 }
 
-/* TOP */
+#login{
+ position:fixed;
+ inset:0;
+ background:#020617;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:center;
+ gap:10px;
+ z-index:10;
+}
+
+input{
+ height:40px;
+ width:220px;
+ border-radius:10px;
+ border:none;
+ padding:0 10px;
+ font-size:16px;
+}
+
+button{
+ height:40px;
+ padding:0 14px;
+ border-radius:10px;
+ border:none;
+ background:#1e293b;
+ color:white;
+ cursor:pointer;
+}
+
 #topbar{
  height:55px;
  background:#020617;
  display:flex;
  align-items:center;
+ justify-content:space-between;
  padding:0 15px;
 }
 
-#menuBtn{ font-size:26px; cursor:pointer; }
-
-/* CHAT */
 #chat{
  position:absolute;
  top:55px;
@@ -65,15 +93,21 @@ body::before{
  animation:fade .12s ease-out;
 }
 
-.left{ background:#1e293b; align-self:flex-start; border-bottom-left-radius:4px;}
-.right{ background:#2563eb; align-self:flex-end; border-bottom-right-radius:4px;}
+.user{ background:#1e293b; align-self:flex-start; border-bottom-left-radius:4px;}
+.me{ background:#2563eb; align-self:flex-end; border-bottom-right-radius:4px;}
+.admin{ background:#dc2626; align-self:flex-start; }
+
+.msg img{
+ max-width:180px;
+ border-radius:10px;
+ margin-top:5px;
+}
 
 @keyframes fade{
  from{opacity:.4;transform:translateY(3px)}
  to{opacity:1}
 }
 
-/* INPUT */
 #inputBar{
  position:fixed;
  bottom:0;
@@ -96,34 +130,6 @@ body::before{
  font-size:16px;
 }
 
-button{
- height:40px;
- padding:0 14px;
- border-radius:10px;
- border:none;
- background:#1e293b;
- color:white;
- cursor:pointer;
-}
-
-/* LOGIN */
-#login{
- position:fixed;
- inset:0;
- background:#020617;
- display:flex;
- justify-content:center;
- align-items:center;
- flex-direction:column;
- gap:10px;
- z-index:10;
-}
-
-#typing{
- font-size:12px;
- opacity:.6;
- height:14px;
-}
 #adminPanel{
  position:fixed;
  top:60px;
@@ -138,35 +144,36 @@ button{
 
 <body>
 
-<!-- MÜZİK -->
-<audio id="bgm" src="TT.m4a" autoplay></audio>
+<audio id="notify" src="TT.m4a"></audio>
 
 <div id="login">
  <input id="nameInput" placeholder="Kullanıcı adı">
  <input id="codeInput" placeholder="Kod">
+ <input type="file" id="pfpInput" accept="image/*">
  <button onclick="enter()">Giriş</button>
 </div>
 
 <div id="topbar">
- <div style="font-size:18px">7/D Sohbet</div>
+ <div>7/D Sohbet</div>
+ <button id="adminBtn" style="display:none" onclick="toggleAdmin()">⚙</button>
 </div>
 
 <div id="chat"></div>
-<div id="typing"></div>
 
 <div id="adminPanel">
- <button onclick="alert('Ban sistemi hazır')">Ban</button>
- <button onclick="alert('Mute sistemi hazır')">Mute</button>
+ <input id="banName" placeholder="Ban kullanıcı adı">
+ <button onclick="ban()">Banla (10dk)</button>
 </div>
 
 <div id="inputBar">
- <input id="text" placeholder="Mesaj yaz..." oninput="typing()">
+ <input id="text" placeholder="Mesaj...">
+ <input type="file" id="imgInput" accept="image/*,image/gif">
  <button onclick="send()">Gönder</button>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded }
+import { getDatabase, ref, push, onChildAdded, set, get }
 from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
 
 const firebaseConfig = {
@@ -177,75 +184,121 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-window.db=db;
-window.ref=ref;
-window.push=push;
-window.onChildAdded=onChildAdded;
+window.db = getDatabase(app);
+window.ref = ref;
+window.push = push;
+window.onChildAdded = onChildAdded;
+window.set = set;
+window.get = get;
 </script>
 
 <script>
-let username="", role="user";
-
-/* Müzik loop */
-bgm.onended=()=>bgm.play();
+let username="", role="user", pfp="";
 
 /* Giriş */
-function enter(){
+async function enter(){
  username=nameInput.value.trim();
  const code=codeInput.value.trim();
  if(!username) return alert("İsim gir");
 
+ const banSnap = await get(ref(db,"bans/"+username));
+ if(banSnap.exists()){
+   const until = banSnap.val();
+   if(Date.now() < until) return alert("Banlısın");
+ }
+
  if(code==="deop"){
   role="admin";
-  adminPanel.style.display="block";
+  adminBtn.style.display="block";
+ }
+
+ const file = pfpInput.files[0];
+ if(file){
+  const reader=new FileReader();
+  reader.onload=e=>pfp=e.target.result;
+  reader.readAsDataURL(file);
  }
 
  login.style.display="none";
-
  listen();
 }
 
-/* Firebase */
+/* Dinle */
 function listen(){
  onChildAdded(ref(db,"messages"), snap=>{
   render(snap.val());
+  notify.play();
  });
 }
 
 /* Gönder */
 function send(){
  const value=text.value.trim();
- if(!value) return;
+ const file=imgInput.files[0];
 
- push(ref(db,"messages"),{
-  name:username,
-  text:value
- });
+ if(!value && !file) return;
+
+ if(file){
+  const reader=new FileReader();
+  reader.onload=e=>{
+   push(ref(db,"messages"),{
+    name:username,
+    role:role,
+    text:value,
+    img:e.target.result
+   });
+  };
+  reader.readAsDataURL(file);
+ } else {
+  push(ref(db,"messages"),{
+   name:username,
+   role:role,
+   text:value
+  });
+ }
 
  text.value="";
- typingBox("");
+ imgInput.value="";
 }
 
-/* Baloncuk */
+/* Render */
 function render(m){
  const div=document.createElement("div");
- const side=m.name===username?"right":"left";
- div.className="msg "+side;
- div.innerHTML="<b>"+m.name+"</b><br>"+m.text;
+
+ let cls="msg user";
+ if(m.name===username) cls="msg me";
+ if(m.role==="admin") cls="msg admin";
+
+ div.className=cls;
+
+ div.innerHTML="<b>"+m.name+"</b><br>"+(m.text||"");
+
+ if(m.img){
+  const img=document.createElement("img");
+  img.src=m.img;
+  div.appendChild(img);
+ }
+
  chat.appendChild(div);
  chat.scrollTop=chat.scrollHeight;
 }
 
-/* Yazıyor efekti */
-let typingTimer;
-function typing(){
- typingBox(username+" yazıyor...");
- clearTimeout(typingTimer);
- typingTimer=setTimeout(()=>typingBox(""),1000);
+/* Admin panel */
+function toggleAdmin(){
+ adminPanel.style.display =
+  adminPanel.style.display==="block"?"none":"block";
 }
-function typingBox(t){ typing.innerText=t; }
+
+/* Ban */
+function ban(){
+ const target=banName.value.trim();
+ if(!target) return;
+
+ const until = Date.now() + 10*60*1000;
+
+ set(ref(db,"bans/"+target), until);
+ alert("Banlandı: "+target);
+}
 </script>
 
 </body>
