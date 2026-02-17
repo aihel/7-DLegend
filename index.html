@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>7/D Sohbet</title>
+
+<style>
+body{
+ margin:0;
+ font-family:Arial, sans-serif;
+ color:white;
+ overflow:hidden;
+ background:black;
+}
+
+/* RGB ANİMASYON */
+body::before{
+ content:"";
+ position:fixed;
+ inset:0;
+ background:linear-gradient(45deg, red, blue, lime, red);
+ background-size:400% 400%;
+ animation:rgb 12s linear infinite;
+ opacity:.25;
+ z-index:-1;
+}
+
+@keyframes rgb{
+ 0%{background-position:0% 50%}
+ 50%{background-position:100% 50%}
+ 100%{background-position:0% 50%}
+}
+
+/* LOGIN */
+#login{
+ position:fixed;
+ inset:0;
+ background:#020617;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ flex-direction:column;
+ gap:10px;
+ z-index:10;
+}
+
+#login input{
+ width:220px;
+ height:40px;
+ border-radius:10px;
+ border:none;
+ padding:0 10px;
+ font-size:15px;
+}
+
+#login button{
+ width:220px;
+ height:40px;
+ border:none;
+ border-radius:10px;
+ background:#2563eb;
+ color:white;
+ font-size:16px;
+ cursor:pointer;
+}
+
+/* TOPBAR */
+#topbar{
+ height:55px;
+ background:#020617;
+ display:flex;
+ align-items:center;
+ padding:0 15px;
+ box-shadow:0 0 10px black;
+}
+
+#menuBtn{
+ font-size:26px;
+ cursor:pointer;
+}
+
+/* SIDEBAR TAM GİZLİ */
+#sidebar{
+ position:fixed;
+ left:-260px;
+ top:0;
+ width:260px;
+ height:100%;
+ background:#020617;
+ padding:70px 10px;
+ transition:.25s;
+ z-index:5;
+ box-shadow:0 0 15px black;
+ visibility:hidden;
+}
+
+#sidebar.open{
+ left:0;
+ visibility:visible;
+}
+
+.channel{
+ background:#1e293b;
+ padding:12px;
+ border-radius:12px;
+ margin-bottom:10px;
+ cursor:pointer;
+}
+
+/* CHAT */
+#chat{
+ position:absolute;
+ top:55px;
+ bottom:70px;
+ left:0;
+ right:0;
+ overflow-y:auto;
+ padding:10px;
+ display:flex;
+ flex-direction:column;
+ gap:8px;
+}
+
+.msg{
+ max-width:70%;
+ padding:10px 14px;
+ border-radius:16px;
+ font-size:14px;
+ line-height:1.4;
+ word-wrap:break-word;
+ animation:fade .15s ease-out;
+}
+
+.left{ background:#1e293b; align-self:flex-start; }
+.right{ background:#2563eb; align-self:flex-end; }
+
+@keyframes fade{
+ from{opacity:.5;transform:translateY(4px)}
+ to{opacity:1;transform:none}
+}
+
+/* ALT BAR */
+#inputBar{
+ position:fixed;
+ bottom:0;
+ left:0;
+ right:0;
+ height:70px;
+ background:#020617;
+ display:flex;
+ align-items:center;
+ gap:6px;
+ padding:8px;
+ box-shadow:0 0 10px black;
+ box-sizing:border-box;
+}
+
+#text{
+ flex:1;
+ height:40px;
+ border:none;
+ border-radius:10px;
+ padding:0 10px;
+ font-size:16px;
+ outline:none;
+}
+
+button{
+ height:40px;
+ padding:0 14px;
+ border-radius:10px;
+ border:none;
+ background:#1e293b;
+ color:white;
+ cursor:pointer;
+}
+
+#fileInput{ display:none; }
+
+/* PROFİL */
+#avatar{
+ width:70px;
+ height:70px;
+ border-radius:50%;
+ object-fit:cover;
+ background:#1e293b;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+ <img id="avatar" src="">
+ <input type="file" id="avatarInput" accept="image/*">
+ <input id="nameInput" placeholder="Kullanıcı adı">
+ <input id="codeInput" placeholder="Kod">
+ <button onclick="enter()">Giriş Yap</button>
+</div>
+
+<div id="topbar">
+ <div id="menuBtn">☰</div>
+ <div style="margin-left:10px">7/D Sohbet</div>
+</div>
+
+<div id="sidebar">
+ <div class="channel" onclick="switchRoom('main')">Main Kanal</div>
+ <div class="channel" onclick="switchRoom('bilgi')">Bilgilendirme</div>
+</div>
+
+<div id="chat"></div>
+
+<div id="inputBar">
+ <input id="text" placeholder="Mesaj yaz...">
+ <button onclick="send()">Gönder</button>
+ <button onclick="fileInput.click()">📷</button>
+ <button onclick="sendVoice()">🎤</button>
+ <input type="file" id="fileInput" accept="image/*,image/gif">
+</div>
+
+<script>
+let username = "";
+let role = "user";
+let avatarURL = "";
+let room = "main";
+
+/* PROFİL FOTO */
+avatarInput.onchange = e => {
+ const file = e.target.files[0];
+ const reader = new FileReader();
+ reader.onload = ev => {
+  avatar.src = ev.target.result;
+  avatarURL = ev.target.result;
+ };
+ reader.readAsDataURL(file);
+};
+
+/* LOGIN */
+function enter(){
+ username = nameInput.value.trim();
+ const code = codeInput.value.trim();
+
+ if(!username) return alert("İsim gir");
+
+ if(code === "deop") role = "admin";
+
+ login.style.display = "none";
+}
+
+/* Menü */
+menuBtn.onclick = () => {
+ sidebar.classList.toggle("open");
+};
+
+chat.onclick = () => sidebar.classList.remove("open");
+
+/* Kanal */
+function switchRoom(r){
+ room = r;
+ chat.innerHTML="";
+ sidebar.classList.remove("open");
+}
+
+/* Mesaj */
+function send(){
+ if(room === "bilgi" && role !== "admin"){
+  alert("Bilgilendirme kanalına sadece admin yazabilir");
+  return;
+ }
+
+ if(!text.value.trim()) return;
+
+ addMsg({
+  name:username,
+  text:text.value,
+  avatar:avatarURL
+ });
+
+ text.value="";
+}
+
+/* Render */
+function addMsg(m){
+ const div = document.createElement("div");
+ const side = m.name === username ? "right" : "left";
+
+ div.className = "msg " + side;
+
+ const avatarImg = m.avatar
+  ? `<img src="${m.avatar}" style="width:24px;height:24px;border-radius:50%;vertical-align:middle;margin-right:6px">`
+  : "";
+
+ div.innerHTML = avatarImg + "<b>"+m.name+"</b><br>" + m.text;
+
+ chat.appendChild(div);
+ chat.scrollTop = chat.scrollHeight;
+}
+
+/* FOTO / GIF */
+fileInput.onchange = e => {
+ const file = e.target.files[0];
+ const reader = new FileReader();
+
+ reader.onload = ev => {
+  addMsg({
+   name:username,
+   avatar:avatarURL,
+   text:`<img src="${ev.target.result}" style="max-width:200px;border-radius:10px">`
+  });
+ };
+
+ reader.readAsDataURL(file);
+};
+
+/* VOICE */
+async function sendVoice(){
+ const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+ const recorder = new MediaRecorder(stream);
+ let chunks=[];
+
+ recorder.ondataavailable=e=>chunks.push(e.data);
+
+ recorder.onstop=()=>{
+  const blob=new Blob(chunks);
+  const url=URL.createObjectURL(blob);
+
+  addMsg({
+   name:username,
+   avatar:avatarURL,
+   text:`<audio controls src="${url}"></audio>`
+  });
+ };
+
+ recorder.start();
+ setTimeout(()=>recorder.stop(),15000);
+}
+</script>
+
+</body>
+</html>
