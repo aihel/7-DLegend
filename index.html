@@ -13,7 +13,6 @@ body{
   overflow:hidden;
 }
 
-/* TOPBAR */
 #topbar{
   height:50px;
   background:#0f172a;
@@ -26,7 +25,6 @@ body{
 
 #menuBtn{ cursor:pointer; }
 
-/* SIDEBAR */
 #sidebar{
   position:fixed;
   top:0;
@@ -48,6 +46,7 @@ body{
   border-radius:50%;
   display:block;
   margin:10px auto;
+  cursor:pointer;
 }
 
 .channel{
@@ -59,18 +58,6 @@ body{
   text-align:center;
 }
 
-/* ONLINE LIST */
-#onlineBox{
-  margin-top:15px;
-  background:#0f172a;
-  border-radius:10px;
-  padding:8px;
-  font-size:13px;
-  max-height:150px;
-  overflow:auto;
-}
-
-/* CHAT */
 #chat{
   position:absolute;
   top:50px;
@@ -80,7 +67,6 @@ body{
   overflow-y:auto;
   padding:10px;
   box-sizing:border-box;
-  scroll-behavior:smooth;
 }
 
 .msg{
@@ -90,9 +76,10 @@ body{
   margin:6px 0;
   display:flex;
   gap:8px;
-  align-items:flex-start;
   animation:pop .15s ease-out;
 }
+
+.kidemli { background:#ec4899; } /* PEMBE */
 
 @keyframes pop{
   from{ transform:scale(.95); opacity:.5; }
@@ -113,7 +100,6 @@ body{
   margin-top:5px;
 }
 
-/* INPUT */
 #inputArea{
   position:fixed;
   bottom:0;
@@ -141,7 +127,6 @@ button{
   cursor:pointer;
 }
 
-/* LOGIN */
 .panel{
   position:fixed;
   inset:0;
@@ -162,7 +147,6 @@ button{
 
 .card input{ width:100%; margin-top:10px; padding:10px; }
 
-/* TYPING */
 #typing{
   position:fixed;
   bottom:75px;
@@ -170,6 +154,7 @@ button{
   font-size:13px;
   opacity:.7;
 }
+
 audio{ display:none; }
 </style>
 </head>
@@ -178,8 +163,9 @@ audio{ display:none; }
 
 <div id="loginPanel" class="panel">
   <div class="card">
-    <h3>7/D Giriş</h3>
+    <h3>7/D Kodlu Giriş</h3>
     <input id="nameInput" placeholder="Kullanıcı adı">
+    <input id="codeInput" placeholder="Giriş kodu">
     <input type="file" id="pfpInput" accept="image/*">
     <button onclick="enter()">Giriş Yap</button>
   </div>
@@ -194,9 +180,7 @@ audio{ display:none; }
   <img id="myAvatar">
   <div class="channel" onclick="switchRoom('main')">Main</div>
   <div class="channel" onclick="switchRoom('bilgi')">Bilgi</div>
-  <div class="channel" onclick="switchRoom('operator')">Operatör</div>
-
-  <div id="onlineBox"><b>Online</b><div id="onlineList"></div></div>
+  <div class="channel" id="modRoomBtn" onclick="switchRoom('operator')">Operatör</div>
 </div>
 
 <div id="chat"></div>
@@ -215,7 +199,7 @@ audio{ display:none; }
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded, set, onDisconnect, remove, onValue }
+import { getDatabase, ref, push, onChildAdded, remove }
 from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
 
 const app = initializeApp({
@@ -226,19 +210,28 @@ const app = initializeApp({
 
 const db = getDatabase(app);
 
-let username="", avatar="", room="main";
-let deviceId = localStorage.getItem("deviceId");
+let username="", avatar="", room="main", role="user";
 
-if(!deviceId){
-  deviceId=Math.random().toString(36).slice(2);
-  localStorage.setItem("deviceId",deviceId);
-}
+const CODES = {
+  "777":"admin",
+  "mod123":"moderator",
+  "alex":"kidemli",
+  "normal":"user"
+};
 
 /* LOGIN */
 window.enter = () => {
-  if(!nameInput.value.trim()) return alert("İsim gir");
+  const name=nameInput.value.trim();
+  const code=codeInput.value.trim();
 
-  username=nameInput.value;
+  if(!name || !code) return alert("Bilgiler eksik");
+
+  if(!CODES[code]) return alert("Geçersiz kod");
+
+  role = CODES[code];
+  username=name;
+
+  if(role==="user") modRoomBtn.style.display="none";
 
   const file=pfpInput.files[0];
 
@@ -255,13 +248,6 @@ window.enter = () => {
 function start(){
   loginPanel.style.display="none";
   myAvatar.src=avatar;
-
-  const onlineRef = ref(db,"online/"+deviceId);
-
-  set(onlineRef,{ name:username });
-  onDisconnect(onlineRef).remove();
-
-  trackOnline();
   listen();
 }
 
@@ -269,20 +255,12 @@ function start(){
 menuBtn.onclick=()=>sidebar.classList.toggle("open");
 chat.onclick=()=>sidebar.classList.remove("open");
 
-/* ONLINE USERS */
-function trackOnline(){
-  onValue(ref(db,"online"), snap=>{
-    onlineList.innerHTML="";
-    snap.forEach(c=>{
-      const d=document.createElement("div");
-      d.textContent="• "+c.val().name;
-      onlineList.appendChild(d);
-    });
-  });
-}
-
-/* ROOMS */
+/* ROOM SWITCH */
 window.switchRoom = r => {
+  if(r==="operator" && role==="user"){
+    alert("Yetki yok");
+    return;
+  }
   room=r;
   chat.innerHTML="";
   listen();
@@ -295,6 +273,8 @@ function listen(){
 
     const div=document.createElement("div");
     div.className="msg";
+
+    if(d.role==="kidemli") div.classList.add("kidemli");
 
     const img=document.createElement("img");
     img.src=d.avatar;
@@ -317,15 +297,6 @@ function listen(){
       content.appendChild(a);
     }
 
-    /* DELETE OWN MSG */
-    if(d.deviceId===deviceId){
-      const del=document.createElement("span");
-      del.textContent=" 🗑";
-      del.style.cursor="pointer";
-      del.onclick=()=>remove(snap.ref);
-      content.appendChild(del);
-    }
-
     div.append(img,content);
     chat.appendChild(div);
     chat.scrollTop=chat.scrollHeight;
@@ -339,7 +310,7 @@ window.send = () => {
   if(photoInput.files[0]){
     const r=new FileReader();
     r.onload=()=> push(ref(db,"rooms/"+room),{
-      name:username, avatar, photo:r.result, deviceId
+      name:username, avatar, photo:r.result, role
     });
     r.readAsDataURL(photoInput.files[0]);
     photoInput.value="";
@@ -352,19 +323,10 @@ window.send = () => {
     name:username,
     avatar,
     text:msgInput.value,
-    deviceId
+    role
   });
 
   msgInput.value="";
-};
-
-/* TYPING EFFECT */
-let typingTimer;
-
-msgInput.oninput=()=>{
-  typing.textContent=username+" yazıyor...";
-  clearTimeout(typingTimer);
-  typingTimer=setTimeout(()=>typing.textContent="",800);
 };
 
 /* VOICE */
@@ -384,7 +346,7 @@ window.record = async () => {
       avatar,
       voice:r.result,
       text:"Sesli Mesaj",
-      deviceId
+      role
     });
     r.readAsDataURL(blob);
     chunks=[];
