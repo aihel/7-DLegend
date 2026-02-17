@@ -13,7 +13,7 @@ body{
  background:black;
 }
 
-/* RGB BACKGROUND */
+/* RGB */
 body::before{
  content:"";
  position:fixed;
@@ -30,7 +30,7 @@ body::before{
  100%{background-position:0% 50%}
 }
 
-/* TOPBAR */
+/* TOP */
 #topbar{
  height:55px;
  background:#020617;
@@ -40,32 +40,6 @@ body::before{
 }
 
 #menuBtn{ font-size:26px; cursor:pointer; }
-
-/* SIDEBAR */
-#sidebar{
- position:fixed;
- left:-260px;
- top:0;
- width:260px;
- height:100%;
- background:#020617;
- padding:70px 10px;
- transition:.25s;
- visibility:hidden;
- z-index:5;
-}
-#sidebar.open{
- left:0;
- visibility:visible;
-}
-
-.channel{
- background:#1e293b;
- padding:12px;
- border-radius:12px;
- margin-bottom:10px;
- cursor:pointer;
-}
 
 /* CHAT */
 #chat{
@@ -90,15 +64,16 @@ body::before{
  word-wrap:break-word;
  animation:fade .12s ease-out;
 }
-.left{ background:#1e293b; align-self:flex-start; }
-.right{ background:#2563eb; align-self:flex-end; }
+
+.left{ background:#1e293b; align-self:flex-start; border-bottom-left-radius:4px;}
+.right{ background:#2563eb; align-self:flex-end; border-bottom-right-radius:4px;}
 
 @keyframes fade{
  from{opacity:.4;transform:translateY(3px)}
- to{opacity:1;transform:none}
+ to{opacity:1}
 }
 
-/* INPUT BAR */
+/* INPUT */
 #inputBar{
  position:fixed;
  bottom:0;
@@ -110,7 +85,6 @@ body::before{
  align-items:center;
  gap:6px;
  padding:8px;
- box-sizing:border-box;
 }
 
 #text{
@@ -132,8 +106,6 @@ button{
  cursor:pointer;
 }
 
-#fileInput{ display:none; }
-
 /* LOGIN */
 #login{
  position:fixed;
@@ -146,55 +118,52 @@ button{
  gap:10px;
  z-index:10;
 }
-#login input{
- width:220px;
- height:40px;
- border-radius:10px;
- border:none;
- padding:0 10px;
-}
 
-#avatar{
- width:70px;
- height:70px;
- border-radius:50%;
- object-fit:cover;
- background:#1e293b;
+#typing{
+ font-size:12px;
+ opacity:.6;
+ height:14px;
+}
+#adminPanel{
+ position:fixed;
+ top:60px;
+ right:10px;
+ background:#020617;
+ padding:10px;
+ border-radius:12px;
+ display:none;
 }
 </style>
 </head>
 
 <body>
 
+<!-- MÜZİK -->
+<audio id="bgm" src="TT.m4a" autoplay></audio>
+
 <div id="login">
- <img id="avatar">
- <input type="file" id="avatarInput" accept="image/*">
  <input id="nameInput" placeholder="Kullanıcı adı">
  <input id="codeInput" placeholder="Kod">
  <button onclick="enter()">Giriş</button>
 </div>
 
 <div id="topbar">
- <div id="menuBtn">☰</div>
- <div style="margin-left:10px">7/D Sohbet</div>
-</div>
-
-<div id="sidebar">
- <div class="channel" onclick="switchRoom('main')">Main Kanal</div>
- <div class="channel" onclick="switchRoom('bilgi')">Bilgilendirme</div>
+ <div style="font-size:18px">7/D Sohbet</div>
 </div>
 
 <div id="chat"></div>
+<div id="typing"></div>
 
-<div id="inputBar">
- <input id="text" placeholder="Mesaj yaz...">
- <button onclick="send()">Gönder</button>
- <button onclick="fileInput.click()">📷</button>
- <button onclick="sendVoice()">🎤</button>
- <input type="file" id="fileInput" accept="image/*,image/gif">
+<div id="adminPanel">
+ <button onclick="alert('Ban sistemi hazır')">Ban</button>
+ <button onclick="alert('Mute sistemi hazır')">Mute</button>
 </div>
 
-<!-- FIREBASE -->
+<div id="inputBar">
+ <input id="text" placeholder="Mesaj yaz..." oninput="typing()">
+ <button onclick="send()">Gönder</button>
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
 import { getDatabase, ref, push, onChildAdded }
@@ -204,132 +173,79 @@ const firebaseConfig = {
  apiKey: "AIzaSyBVMvgD3u-UT5dAk72pXqLub05qNPjqPW8",
  authDomain: "dsohbet.firebaseapp.com",
  databaseURL: "https://dsohbet-default-rtdb.europe-west1.firebasedatabase.app",
- projectId: "dsohbet",
- storageBucket: "dsohbet.firebasestorage.app",
- messagingSenderId: "992790719391",
- appId: "1:992790719391:web:e043ee4bdd47483910abaa"
+ projectId: "dsohbet"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-window.db = db;
-window.ref = ref;
-window.push = push;
-window.onChildAdded = onChildAdded;
+window.db=db;
+window.ref=ref;
+window.push=push;
+window.onChildAdded=onChildAdded;
 </script>
 
 <script>
-let username="", role="user", avatarURL="", room="main";
+let username="", role="user";
 
-/* Avatar */
-avatarInput.onchange = e=>{
- const reader=new FileReader();
- reader.onload=ev=>{
-  avatar.src=ev.target.result;
-  avatarURL=ev.target.result;
- };
- reader.readAsDataURL(e.target.files[0]);
-};
+/* Müzik loop */
+bgm.onended=()=>bgm.play();
 
+/* Giriş */
 function enter(){
  username=nameInput.value.trim();
  const code=codeInput.value.trim();
  if(!username) return alert("İsim gir");
 
- if(code==="deop") role="admin";
+ if(code==="deop"){
+  role="admin";
+  adminPanel.style.display="block";
+ }
 
  login.style.display="none";
 
- listenMessages();
+ listen();
 }
 
-/* Menü */
-menuBtn.onclick=()=>sidebar.classList.toggle("open");
-chat.onclick=()=>sidebar.classList.remove("open");
-
-function switchRoom(r){
- room=r;
- chat.innerHTML="";
- sidebar.classList.remove("open");
-}
-
-/* Firebase dinleme */
-function listenMessages(){
+/* Firebase */
+function listen(){
  onChildAdded(ref(db,"messages"), snap=>{
-  const m=snap.val();
-  if(m.room===room) render(m);
+  render(snap.val());
  });
 }
 
-/* Mesaj gönder */
+/* Gönder */
 function send(){
  const value=text.value.trim();
  if(!value) return;
 
- if(room==="bilgi" && role!=="admin"){
-  alert("Sadece admin yazabilir");
-  return;
- }
-
  push(ref(db,"messages"),{
   name:username,
-  text:value,
-  avatar:avatarURL,
-  room:room
+  text:value
  });
 
  text.value="";
+ typingBox("");
 }
 
-/* Render */
+/* Baloncuk */
 function render(m){
  const div=document.createElement("div");
  const side=m.name===username?"right":"left";
  div.className="msg "+side;
-
- const avatarImg=m.avatar
-  ? `<img src="${m.avatar}" style="width:24px;height:24px;border-radius:50%;vertical-align:middle;margin-right:6px">`
-  : "";
-
- div.innerHTML=avatarImg+"<b>"+m.name+"</b><br>"+m.text;
-
+ div.innerHTML="<b>"+m.name+"</b><br>"+m.text;
  chat.appendChild(div);
  chat.scrollTop=chat.scrollHeight;
 }
 
-/* Foto */
-fileInput.onchange=e=>{
- const reader=new FileReader();
- reader.onload=ev=>{
-  push(ref(db,"messages"),{
-   name:username,
-   avatar:avatarURL,
-   room:room,
-   text:`<img src="${ev.target.result}" style="max-width:200px;border-radius:10px">`
-  });
- };
- reader.readAsDataURL(e.target.files[0]);
-};
-
-/* Voice */
-async function sendVoice(){
- const stream=await navigator.mediaDevices.getUserMedia({audio:true});
- const rec=new MediaRecorder(stream);
- let chunks=[];
- rec.ondataavailable=e=>chunks.push(e.data);
- rec.onstop=()=>{
-  const url=URL.createObjectURL(new Blob(chunks));
-  push(ref(db,"messages"),{
-   name:username,
-   avatar:avatarURL,
-   room:room,
-   text:`<audio controls src="${url}"></audio>`
-  });
- };
- rec.start();
- setTimeout(()=>rec.stop(),15000);
+/* Yazıyor efekti */
+let typingTimer;
+function typing(){
+ typingBox(username+" yazıyor...");
+ clearTimeout(typingTimer);
+ typingTimer=setTimeout(()=>typingBox(""),1000);
 }
+function typingBox(t){ typing.innerText=t; }
 </script>
 
 </body>
