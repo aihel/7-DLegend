@@ -2,157 +2,609 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>7/D Sohbet</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+<title>7/D Sohbet + Altun.ai</title>
 
 <style>
-body{
- margin:0;
- font-family:Arial;
- background:black;
- color:white;
- overflow:hidden;
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+html, body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+ margin: 0;
+ font-family: Arial;
+ background: black;
+ color: white;
+ overflow: hidden;
+ position: fixed;
+ width: 100%;
+ height: 100%;
 }
 
 /* RGB arkaplan */
-body::before{
- content:"";
- position:fixed;
- inset:0;
- background:linear-gradient(45deg, red, blue, lime, red);
- background-size:400% 400%;
- animation:rgb 12s linear infinite;
- opacity:.25;
- z-index:-1;
-}
-@keyframes rgb{
- 0%{background-position:0% 50%}
- 50%{background-position:100% 50%}
- 100%{background-position:0% 50%}
+body::before {
+ content: "";
+ position: fixed;
+ inset: 0;
+ background: linear-gradient(45deg, red, blue, lime, red);
+ background-size: 400% 400%;
+ animation: rgb 12s linear infinite;
+ opacity: .25;
+ z-index: -1;
+ pointer-events: none;
 }
 
-#login{
- position:fixed;
- inset:0;
- background:#020617;
- display:flex;
- flex-direction:column;
- justify-content:center;
- align-items:center;
- gap:10px;
- z-index:10;
+@keyframes rgb {
+ 0% { background-position: 0% 50% }
+ 50% { background-position: 100% 50% }
+ 100% { background-position: 0% 50% }
 }
 
-input{
- height:42px;
- width:230px;
- border-radius:10px;
- border:none;
- padding:0 10px;
- font-size:15px;
+/* Login ekranı */
+#login {
+ position: fixed;
+ inset: 0;
+ background: #020617;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ gap: 10px;
+ z-index: 10;
 }
 
-button{
- height:40px;
- padding:0 14px;
- border-radius:10px;
- border:none;
- background:#1e293b;
- color:white;
- cursor:pointer;
+#login input {
+ height: 42px;
+ width: 230px;
+ border-radius: 10px;
+ border: none;
+ padding: 0 10px;
+ font-size: 15px;
+ -webkit-user-select: text;
+ -moz-user-select: text;
+ -ms-user-select: text;
+ user-select: text;
 }
 
-#topbar{
- height:55px;
- background:#020617;
- display:flex;
- align-items:center;
- justify-content:center;
- position:relative;
+#login input[type="password"] {
+  font-family: monospace;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
-#onlineBtn{
- position:absolute;
- right:10px;
+#login input[type="file"] {
+  padding: 8px;
+  background: #1e293b;
+  color: white;
 }
 
-#onlinePanel{
- position:fixed;
- top:60px;
- left:50%;
- transform:translateX(-50%);
- background:#020617;
- padding:10px;
- border-radius:12px;
- display:none;
- min-width:200px;
- max-height:250px;
- overflow:auto;
+#login button {
+ height: 40px;
+ padding: 0 14px;
+ border-radius: 10px;
+ border: none;
+ background: #1e293b;
+ color: white;
+ cursor: pointer;
+ pointer-events: auto;
 }
 
-.userItem{
- padding:6px;
- border-bottom:1px solid #1e293b;
- font-size:14px;
+#login-error {
+ color: #ff4444;
+ font-size: 14px;
+ min-height: 20px;
 }
 
-#chat{
- position:absolute;
- top:55px;
- bottom:70px;
- left:0;
- right:0;
- overflow-y:auto;
- padding:10px;
- display:flex;
- flex-direction:column;
- gap:8px;
+/* Profil fotoğrafı preview */
+#pfp-preview {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #1e293b;
+  margin-bottom: 10px;
+  object-fit: cover;
+  border: 3px solid #2563eb;
+  display: none;
+  pointer-events: none;
 }
 
-.msg{
- max-width:70%;
- padding:10px 14px;
- border-radius:16px;
- font-size:14px;
- line-height:1.4;
- word-wrap:break-word;
- animation:fade .12s ease-out;
+/* Menü butonu */
+#menu-btn {
+ position: fixed;
+ left: 10px;
+ top: 10px;
+ width: 45px;
+ height: 45px;
+ background: #020617;
+ border: 2px solid #1e293b;
+ border-radius: 10px;
+ color: white;
+ font-size: 24px;
+ cursor: pointer;
+ z-index: 100;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ transition: 0.3s;
+ pointer-events: auto;
 }
 
-.user{ background:#1e293b; align-self:flex-start; border-bottom-left-radius:4px;}
-.me{ background:#2563eb; align-self:flex-end; border-bottom-right-radius:4px;}
-.admin{ background:#dc2626; align-self:flex-start; }
-
-.msg img{
- max-width:180px;
- border-radius:10px;
- margin-top:5px;
+#menu-btn:hover {
+ background: #2563eb;
+ border-color: #2563eb;
 }
 
-@keyframes fade{
- from{opacity:.4;transform:translateY(3px)}
- to{opacity:1}
+/* Sidebar (Menü) */
+#sidebar {
+ position: fixed;
+ left: -250px;
+ top: 0;
+ bottom: 0;
+ width: 250px;
+ background: #020617;
+ border-right: 2px solid #1e293b;
+ padding: 70px 0 20px 0;
+ z-index: 99;
+ transition: left 0.3s ease;
+ display: flex;
+ flex-direction: column;
+ overflow-y: auto;
 }
 
-#inputBar{
- position:fixed;
- bottom:0;
- left:0;
- right:0;
- height:70px;
- background:#020617;
- display:flex;
- align-items:center;
- gap:6px;
- padding:8px;
+#sidebar.open {
+ left: 0;
 }
 
-#text{
- flex:1;
- height:40px;
- border:none;
- border-radius:10px;
- padding:0 10px;
- font-size:16px;
+#sidebar-header {
+ padding: 15px;
+ border-bottom: 1px solid #1e293b;
+ margin-bottom: 20px;
+}
+
+#sidebar-header h3 {
+ margin: 0;
+ color: #00ffcc;
+ font-size: 18px;
+}
+
+.sidebar-btn {
+ width: 210px;
+ margin: 10px 20px;
+ padding: 15px;
+ background: #1e293b;
+ border: none;
+ border-radius: 10px;
+ color: white;
+ cursor: pointer;
+ font-size: 16px;
+ transition: 0.3s;
+ text-align: left;
+ pointer-events: auto;
+}
+
+.sidebar-btn:hover {
+ background: #2563eb;
+}
+
+.sidebar-btn.active {
+ background: #2563eb;
+ border-left: 4px solid #00ffcc;
+}
+
+/* Sidebar overlay */
+#sidebar-overlay {
+ position: fixed;
+ inset: 0;
+ background: rgba(0,0,0,0.5);
+ z-index: 98;
+ display: none;
+ pointer-events: auto;
+}
+
+#sidebar-overlay.show {
+ display: block;
+}
+
+/* Ana içerik */
+#main-content {
+ position: absolute;
+ left: 0;
+ right: 0;
+ top: 0;
+ bottom: 0;
+ background: transparent;
+ overflow: hidden;
+}
+
+/* Sohbet ekranı */
+#chat-screen {
+ height: 100%;
+ display: flex;
+ flex-direction: column;
+ overflow: hidden;
+}
+
+#topbar {
+ height: 55px;
+ background: #020617;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ position: relative;
+ flex-shrink: 0;
+}
+
+#admin-badge {
+ position: absolute;
+ left: 70px;
+ background: #dc2626;
+ color: white;
+ padding: 4px 10px;
+ border-radius: 20px;
+ font-size: 12px;
+ font-weight: bold;
+ display: none;
+ pointer-events: none;
+}
+
+#onlineBtn {
+ position: absolute;
+ right: 10px;
+ pointer-events: auto;
+}
+
+#onlinePanel {
+ position: fixed;
+ top: 60px;
+ left: 50%;
+ transform: translateX(-50%);
+ background: #020617;
+ padding: 10px;
+ border-radius: 12px;
+ display: none;
+ min-width: 200px;
+ max-height: 250px;
+ overflow-y: auto;
+ z-index: 6;
+ pointer-events: auto;
+}
+
+.userItem {
+ padding: 8px;
+ border-bottom: 1px solid #1e293b;
+ font-size: 14px;
+ display: flex;
+ align-items: center;
+ gap: 8px;
+}
+
+.userItem .user-pfp {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.userItem .user-info {
+  flex: 1;
+}
+
+.userItem .admin-actions {
+ display: flex;
+ gap: 5px;
+ margin-left: auto;
+}
+
+.userItem .admin-actions button {
+ padding: 2px 5px;
+ font-size: 11px;
+ background: #1e293b;
+ color: white;
+ border: none;
+ border-radius: 3px;
+ cursor: pointer;
+ pointer-events: auto;
+}
+
+.userItem .admin-actions button:hover {
+ background: #dc2626;
+}
+
+.userItem.banned {
+ opacity: 0.5;
+ text-decoration: line-through;
+}
+
+.userItem.muted {
+ color: #ffaa00;
+}
+
+#chat {
+ flex: 1;
+ overflow-y: auto;
+ padding: 10px;
+ display: flex;
+ flex-direction: column;
+ gap: 8px;
+ -webkit-overflow-scrolling: touch;
+}
+
+.msg {
+ max-width: 70%;
+ padding: 10px 14px;
+ border-radius: 16px;
+ font-size: 14px;
+ line-height: 1.4;
+ word-wrap: break-word;
+ animation: fade .12s ease-out;
+ position: relative;
+}
+
+.user { background: #1e293b; align-self: flex-start; border-bottom-left-radius: 4px; }
+.me { background: #2563eb; align-self: flex-end; border-bottom-right-radius: 4px; }
+.admin { background: #dc2626; align-self: flex-start; }
+
+.msg-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+
+.msg-pfp {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid currentColor;
+  pointer-events: none;
+}
+
+.msg-username {
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.msg.muted-message {
+ opacity: 0.5;
+ font-style: italic;
+}
+
+.msg .delete-btn {
+ position: absolute;
+ top: -5px;
+ right: -5px;
+ background: #dc2626;
+ color: white;
+ border: none;
+ border-radius: 50%;
+ width: 20px;
+ height: 20px;
+ font-size: 12px;
+ cursor: pointer;
+ display: none;
+ pointer-events: auto;
+}
+
+.msg.admin .delete-btn {
+ display: block;
+}
+
+.msg img {
+ max-width: 180px;
+ border-radius: 10px;
+ margin-top: 5px;
+ pointer-events: none;
+}
+
+@keyframes fade {
+ from { opacity: .4; transform: translateY(3px) }
+ to { opacity: 1 }
+}
+
+#inputBar {
+ height: 70px;
+ background: #020617;
+ display: flex;
+ align-items: center;
+ gap: 6px;
+ padding: 8px;
+ flex-shrink: 0;
+}
+
+#text {
+ flex: 1;
+ height: 40px;
+ border: none;
+ border-radius: 10px;
+ padding: 0 10px;
+ font-size: 16px;
+ -webkit-user-select: text;
+ -moz-user-select: text;
+ -ms-user-select: text;
+ user-select: text;
+}
+
+#text:disabled {
+ opacity: 0.5;
+ background: #333;
+}
+
+#imgInput {
+  pointer-events: auto;
+}
+
+/* Altun.ai ekranı */
+#altun-screen {
+ height: 100%;
+ display: flex;
+ flex-direction: column;
+ background: rgba(20,20,20,0.95);
+ overflow: hidden;
+}
+
+#altun-header {
+ padding: 18px;
+ background: linear-gradient(90deg, #00ffcc, #0099ff);
+ color: black;
+ font-weight: bold;
+ text-align: center;
+ font-size: 20px;
+ flex-shrink: 0;
+}
+
+#altun-messages {
+ flex: 1;
+ overflow-y: auto;
+ padding: 15px;
+ scroll-behavior: smooth;
+ -webkit-overflow-scrolling: touch;
+}
+
+.altun-message {
+ margin: 10px 0;
+ padding: 10px 14px;
+ border-radius: 14px;
+ max-width: 75%;
+ animation: popIn 0.2s ease;
+}
+
+@keyframes popIn {
+ from { transform: scale(0.9); opacity: 0; }
+ to { transform: scale(1); opacity: 1; }
+}
+
+.altun-user {
+ background: #0099ff;
+ margin-left: auto;
+}
+
+.altun-bot {
+ background: #00c853;
+ color: black;
+}
+
+.typing {
+ display: inline-block;
+ width: 40px;
+}
+
+.dot {
+ animation: blink 1.4s infinite both;
+}
+
+.dot:nth-child(2) { animation-delay: .2s; }
+.dot:nth-child(3) { animation-delay: .4s; }
+
+@keyframes blink {
+ 0% { opacity: .2; }
+ 20% { opacity: 1; }
+ 100% { opacity: .2; }
+}
+
+#altun-input-area {
+ display: flex;
+ padding: 10px;
+ background: #111;
+ flex-shrink: 0;
+}
+
+#altun-input {
+ flex: 1;
+ padding: 12px;
+ border-radius: 10px;
+ border: none;
+ outline: none;
+ font-size: 14px;
+ -webkit-user-select: text;
+ -moz-user-select: text;
+ -ms-user-select: text;
+ user-select: text;
+}
+
+.altun-btn {
+ margin-left: 10px;
+ padding: 12px 16px;
+ border: none;
+ border-radius: 10px;
+ background: linear-gradient(90deg, #00ffcc, #0099ff);
+ cursor: pointer;
+ font-weight: bold;
+ pointer-events: auto;
+}
+
+input, button {
+ outline: none;
+}
+
+.hidden {
+ display: none !important;
+}
+
+.mute-notification {
+ position: fixed;
+ top: 20px;
+ right: 20px;
+ background: #ffaa00;
+ color: black;
+ padding: 10px 20px;
+ border-radius: 10px;
+ font-weight: bold;
+ z-index: 200;
+ animation: slideIn 0.3s ease;
+ pointer-events: none;
+}
+
+@keyframes slideIn {
+ from { transform: translateX(100%); }
+ to { transform: translateX(0); }
+}
+
+/* Mobil dokunmatik düzeltmeler */
+input, textarea, button, [contenteditable] {
+  -webkit-touch-callout: default;
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Scrollbar stilleri */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2563eb;
+  border-radius: 5px;
 }
 </style>
 </head>
@@ -161,26 +613,63 @@ button{
 
 <audio id="notify" src="TT.m4a"></audio>
 
+<!-- Login Ekranı -->
 <div id="login">
+ <img id="pfp-preview" src="" alt="Profil fotoğrafı">
  <input id="nameInput" placeholder="Kullanıcı adı">
- <input id="codeInput" placeholder="Kod">
- <input type="file" id="pfpInput" accept="image/*">
+ <input type="password" id="codeInput" placeholder="Kod">
+ <input type="file" id="pfpInput" accept="image/*" onchange="previewPFP()">
  <button onclick="enter()">Giriş</button>
+ <div id="login-error"></div>
 </div>
 
-<div id="topbar">
- <div>7/D Sohbet</div>
- <button id="onlineBtn" onclick="toggleOnline()">👥 Aktif</button>
+<!-- Menü butonu -->
+<button id="menu-btn" onclick="toggleMenu()">☰</button>
+
+<!-- Sidebar overlay -->
+<div id="sidebar-overlay" onclick="closeMenu()"></div>
+
+<!-- Sidebar (Menü) -->
+<div id="sidebar">
+  <div id="sidebar-header">
+    <h3>MENÜ</h3>
+  </div>
+  <button class="sidebar-btn active" onclick="switchScreen('chat'); closeMenu()" id="btn-chat">💬 7/D Sohbet</button>
+  <button class="sidebar-btn" onclick="switchScreen('altun'); closeMenu()" id="btn-altun">🤖 Altun.ai</button>
 </div>
 
-<div id="onlinePanel"></div>
+<!-- Ana İçerik -->
+<div id="main-content">
+  
+  <!-- Sohbet Ekranı -->
+  <div id="chat-screen">
+    <div id="topbar">
+      <div id="admin-badge">👑 ADMIN</div>
+      <div>7/D Sohbet</div>
+      <button id="onlineBtn" onclick="toggleOnline()">👥 Aktif</button>
+    </div>
 
-<div id="chat"></div>
+    <div id="onlinePanel"></div>
 
-<div id="inputBar">
- <input id="text" placeholder="Mesaj...">
- <input type="file" id="imgInput" accept="image/*,image/gif">
- <button onclick="send()">Gönder</button>
+    <div id="chat"></div>
+
+    <div id="inputBar">
+      <input id="text" placeholder="Mesaj...">
+      <input type="file" id="imgInput" accept="image/*,image/gif">
+      <button onclick="send()">Gönder</button>
+    </div>
+  </div>
+
+  <!-- Altun.ai Ekranı -->
+  <div id="altun-screen" class="hidden">
+    <div id="altun-header">Altun.ai</div>
+    <div id="altun-messages"></div>
+    <div id="altun-input-area">
+      <input id="altun-input" placeholder="Mesaj yaz..." />
+      <button class="altun-btn" onclick="sendToAltun()">Gönder</button>
+    </div>
+  </div>
+
 </div>
 
 <script type="module">
@@ -208,122 +697,372 @@ window.onDisconnect = onDisconnect;
 </script>
 
 <script>
-let username="", role="user", pfp="";
+// Altun.ai API
+const API_KEY = "6f49a41b-ee0f-47f3-a4ea-05d3f4f373a7";
+
+// Değişkenler
+let username = "", role = "user", pfp = "";
 let onlineRef;
+let currentScreen = 'chat';
+let mutedUsers = {};
+let bannedUsers = {};
 
-/* Giriş */
-function enter(){
- username=nameInput.value.trim();
- const code=codeInput.value.trim();
- if(!username) return alert("İsim gir");
+// Sayfa kaymasını engelle
+document.body.addEventListener('touchmove', function(e) {
+  if (!e.target.closest('#chat') && !e.target.closest('#altun-messages') && !e.target.closest('#onlinePanel') && !e.target.closest('#sidebar')) {
+    e.preventDefault();
+  }
+}, { passive: false });
 
- if(code==="deop") role="admin";
-
- const file = pfpInput.files[0];
- if(file){
-  const reader=new FileReader();
-  reader.onload=e=>pfp=e.target.result;
-  reader.readAsDataURL(file);
- }
-
- login.style.display="none";
-
- setupPresence();
- listenMessages();
- listenOnline();
+// Profil fotoğrafı preview
+window.previewPFP = function() {
+  const file = document.getElementById('pfpInput').files[0];
+  const preview = document.getElementById('pfp-preview');
+  
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
 }
 
-/* Online presence */
-function setupPresence(){
- onlineRef = ref(db,"online/"+username);
-
- set(onlineRef,{
-  name:username,
-  role:role,
-  time:Date.now()
- });
-
- onDisconnect(onlineRef).remove();
+// Menü fonksiyonları
+window.toggleMenu = function() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('show');
 }
 
-/* Online listesi */
-function listenOnline(){
- onValue(ref(db,"online"), snap=>{
-  onlinePanel.innerHTML="";
-  snap.forEach(child=>{
-   const u=child.val();
-   const div=document.createElement("div");
-   div.className="userItem";
-   div.textContent = u.name + (u.role==="admin" ? " (admin)" : "");
-   onlinePanel.appendChild(div);
+window.closeMenu = function() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  sidebar.classList.remove('open');
+  overlay.classList.remove('show');
+}
+
+// Ekran değiştirme
+window.switchScreen = function(screen) {
+  currentScreen = screen;
+  
+  document.getElementById('btn-chat').classList.remove('active');
+  document.getElementById('btn-altun').classList.remove('active');
+  document.getElementById('btn-' + screen).classList.add('active');
+  
+  if (screen === 'chat') {
+    document.getElementById('chat-screen').classList.remove('hidden');
+    document.getElementById('altun-screen').classList.add('hidden');
+  } else {
+    document.getElementById('chat-screen').classList.add('hidden');
+    document.getElementById('altun-screen').classList.remove('hidden');
+    loadAltunHistory();
+  }
+}
+
+// Altun.ai fonksiyonları
+function loadAltunHistory() {
+  const saved = localStorage.getItem("altun_chat_history");
+  const messagesDiv = document.getElementById("altun-messages");
+  if (saved) {
+    messagesDiv.innerHTML = saved;
+  } else {
+    addAltunMessage("Merhaba! Ben Altun.ai. Size nasıl yardımcı olabilirim?", "altun-bot");
+  }
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+function saveAltunChat() {
+  localStorage.setItem("altun_chat_history", document.getElementById("altun-messages").innerHTML);
+}
+
+function addAltunMessage(text, cls) {
+  const div = document.createElement("div");
+  div.className = "altun-message " + cls;
+  div.textContent = text;
+  document.getElementById("altun-messages").appendChild(div);
+  document.getElementById("altun-messages").scrollTop = document.getElementById("altun-messages").scrollHeight;
+  saveAltunChat();
+}
+
+function showAltunTyping() {
+  const div = document.createElement("div");
+  div.className = "altun-message altun-bot";
+  div.innerHTML = `Bot yazıyor <span class="typing">
+    <span class="dot">.</span>
+    <span class="dot">.</span>
+    <span class="dot">.</span>
+  </span>`;
+  div.id = "altun-typing";
+  document.getElementById("altun-messages").appendChild(div);
+  document.getElementById("altun-messages").scrollTop = document.getElementById("altun-messages").scrollHeight;
+}
+
+function removeAltunTyping() {
+  const t = document.getElementById("altun-typing");
+  if (t) t.remove();
+}
+
+window.sendToAltun = async function() {
+  const input = document.getElementById("altun-input");
+  const text = input.value.trim();
+  if (!text) return;
+
+  addAltunMessage("Sen: " + text, "altun-user");
+  input.value = "";
+
+  showAltunTyping();
+
+  try {
+    const response = await fetch("https://api.sambanova.ai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "Meta-Llama-3.1-8B-Instruct",
+        messages: [
+          { role: "user", content: text }
+        ]
+      })
+    });
+
+    const data = await response.json();
+    removeAltunTyping();
+    const reply = data.choices?.[0]?.message?.content || "Cevap alınamadı";
+    addAltunMessage("Bot: " + reply, "altun-bot");
+
+  } catch (err) {
+    removeAltunTyping();
+    addAltunMessage("Bot: Hata oluştu", "altun-bot");
+  }
+}
+
+// Giriş fonksiyonu
+window.enter = function() {
+  username = document.getElementById('nameInput').value.trim();
+  const code = document.getElementById('codeInput').value.trim();
+  const errorDiv = document.getElementById('login-error');
+  
+  if (!username) {
+    errorDiv.textContent = "İsim girmelisin!";
+    return;
+  }
+
+  // Sadece belirlenen kodlar ile giriş
+  const validCodes = ['deop', 'kmja', 'Alex'];
+  if (!validCodes.includes(code)) {
+    errorDiv.textContent = "Geçersiz kod!";
+    return;
+  }
+
+  // Admin kontrolü (sadece deop kodu admin yetkisi verir)
+  if (code === "deop") {
+    role = "admin";
+    document.getElementById('admin-badge').style.display = 'block';
+  } else {
+    role = "user";
+  }
+
+  // Profil fotoğrafını al
+  const file = document.getElementById('pfpInput').files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      pfp = e.target.result;
+      setupPresence();
+    };
+    reader.readAsDataURL(file);
+  } else {
+    pfp = "https://via.placeholder.com/50/1e293b/ffffff?text=" + username.charAt(0).toUpperCase();
+    setupPresence();
+  }
+
+  document.getElementById('login').style.display = "none";
+
+  listenMessages();
+  listenOnline();
+  
+  document.getElementById("altun-input").addEventListener("keydown", e => {
+    if (e.key === "Enter") sendToAltun();
   });
- });
 }
 
-/* Mesajlar */
-function listenMessages(){
- onChildAdded(ref(db,"messages"), snap=>{
-  render(snap.val());
-  notify.play();
- });
-}
-
-/* Gönder */
-function send(){
- const value=text.value.trim();
- const file=imgInput.files[0];
-
- if(!value && !file) return;
-
- if(file){
-  const reader=new FileReader();
-  reader.onload=e=>{
-   push(ref(db,"messages"),{
-    name:username,
-    role:role,
-    text:value,
-    img:e.target.result
-   });
-  };
-  reader.readAsDataURL(file);
- } else {
-  push(ref(db,"messages"),{
-   name:username,
-   role:role,
-   text:value
+// Online presence
+function setupPresence() {
+  onlineRef = ref(db, "online/" + username);
+  set(onlineRef, {
+    name: username,
+    role: role,
+    pfp: pfp,
+    time: Date.now()
   });
- }
-
- text.value="";
- imgInput.value="";
+  onDisconnect(onlineRef).remove();
 }
 
-/* Render */
-function render(m){
- const div=document.createElement("div");
-
- let cls="msg user";
- if(m.name===username) cls="msg me";
- if(m.role==="admin") cls="msg admin";
-
- div.className=cls;
-
- div.innerHTML="<b>"+m.name+"</b><br>"+(m.text||"");
-
- if(m.img){
-  const img=document.createElement("img");
-  img.src=m.img;
-  div.appendChild(img);
- }
-
- chat.appendChild(div);
- chat.scrollTop=chat.scrollHeight;
+// Online listesi
+function listenOnline() {
+  onValue(ref(db, "online"), snap => {
+    const onlinePanel = document.getElementById('onlinePanel');
+    onlinePanel.innerHTML = "";
+    snap.forEach(child => {
+      const u = child.val();
+      const div = document.createElement("div");
+      div.className = "userItem";
+      
+      const pfpImg = document.createElement("img");
+      pfpImg.className = "user-pfp";
+      pfpImg.src = u.pfp || "https://via.placeholder.com/50/1e293b/ffffff?text=" + u.name.charAt(0).toUpperCase();
+      pfpImg.onerror = () => pfpImg.src = "https://via.placeholder.com/50/1e293b/ffffff?text=" + u.name.charAt(0).toUpperCase();
+      
+      const infoDiv = document.createElement("div");
+      infoDiv.className = "user-info";
+      infoDiv.textContent = u.name + (u.role === "admin" ? " (admin)" : "");
+      
+      div.appendChild(pfpImg);
+      div.appendChild(infoDiv);
+      
+      if (role === "admin" && u.name !== username) {
+        const actions = document.createElement("div");
+        actions.className = "admin-actions";
+        
+        const muteBtn = document.createElement("button");
+        muteBtn.textContent = "🔇";
+        muteBtn.title = "10 dk sustur";
+        muteBtn.onclick = () => muteUser(u.name);
+        
+        const banBtn = document.createElement("button");
+        banBtn.textContent = "🚫";
+        banBtn.title = "10 dk banla";
+        banBtn.onclick = () => banUser(u.name);
+        
+        actions.appendChild(muteBtn);
+        actions.appendChild(banBtn);
+        div.appendChild(actions);
+      }
+      
+      onlinePanel.appendChild(div);
+    });
+  });
 }
 
-/* Online panel toggle */
-function toggleOnline(){
- onlinePanel.style.display =
-  onlinePanel.style.display==="block" ? "none" : "block";
+// Admin fonksiyonları
+function muteUser(targetUser) {
+  mutedUsers[targetUser] = Date.now() + 600000;
+  showNotification(`${targetUser} 10 dakika susturuldu!`);
+}
+
+function banUser(targetUser) {
+  bannedUsers[targetUser] = Date.now() + 600000;
+  showNotification(`${targetUser} 10 dakika banlandı!`);
+}
+
+function showNotification(text) {
+  const notif = document.createElement('div');
+  notif.className = 'mute-notification';
+  notif.textContent = text;
+  document.body.appendChild(notif);
+  setTimeout(() => notif.remove(), 3000);
+}
+
+function listenMessages() {
+  onChildAdded(ref(db, "messages"), snap => {
+    render(snap.val());
+    document.getElementById('notify').play();
+  });
+}
+
+window.send = function() {
+  if (bannedUsers[username] && bannedUsers[username] > Date.now()) {
+    showNotification("Banlandınız! 10 dakika boyunca mesaj gönderemezsiniz.");
+    return;
+  }
+  
+  if (mutedUsers[username] && mutedUsers[username] > Date.now()) {
+    showNotification("Susturuldunuz! 10 dakika boyunca mesaj gönderemezsiniz.");
+    return;
+  }
+  
+  const value = document.getElementById('text').value.trim();
+  const file = document.getElementById('imgInput').files[0];
+
+  if (!value && !file) return;
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      push(ref(db, "messages"), {
+        name: username,
+        role: role,
+        pfp: pfp,
+        text: value,
+        img: e.target.result
+      });
+    };
+    reader.readAsDataURL(file);
+  } else {
+    push(ref(db, "messages"), {
+      name: username,
+      role: role,
+      pfp: pfp,
+      text: value
+    });
+  }
+
+  document.getElementById('text').value = "";
+  document.getElementById('imgInput').value = "";
+}
+
+function render(m) {
+  const chat = document.getElementById('chat');
+  const div = document.createElement("div");
+
+  let cls = "msg user";
+  if (m.name === username) cls = "msg me";
+  if (m.role === "admin") cls = "msg admin";
+
+  div.className = cls;
+  
+  const header = document.createElement("div");
+  header.className = "msg-header";
+  
+  const pfpImg = document.createElement("img");
+  pfpImg.className = "msg-pfp";
+  pfpImg.src = m.pfp || "https://via.placeholder.com/50/1e293b/ffffff?text=" + m.name.charAt(0).toUpperCase();
+  pfpImg.onerror = () => pfpImg.src = "https://via.placeholder.com/50/1e293b/ffffff?text=" + m.name.charAt(0).toUpperCase();
+  
+  const nameSpan = document.createElement("span");
+  nameSpan.className = "msg-username";
+  nameSpan.textContent = m.name;
+  
+  header.appendChild(pfpImg);
+  header.appendChild(nameSpan);
+  div.appendChild(header);
+  
+  const textDiv = document.createElement("div");
+  textDiv.textContent = m.text || "";
+  div.appendChild(textDiv);
+
+  if (m.img) {
+    const img = document.createElement("img");
+    img.src = m.img;
+    div.appendChild(img);
+  }
+
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+window.toggleOnline = function() {
+  const panel = document.getElementById('onlinePanel');
+  panel.style.display = panel.style.display === "block" ? "none" : "block";
+}
+
+window.onload = function() {
+  switchScreen('chat');
 }
 </script>
 
