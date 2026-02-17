@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-<title>7/D Sohbet + Altun.ai + Profesyonel Satranç</title>
+<title>7/D Sohbet + Altun.ai + Tam Ekran Satranç</title>
 
 <style>
 * {
@@ -556,18 +556,18 @@ body::before {
  pointer-events: auto;
 }
 
-/* Satranç Oyunu ekranı */
+/* Tam Ekran Satranç Oyunu */
 #chess-screen {
  height: 100%;
- display: flex;
+ width: 100%;
  background: linear-gradient(135deg, #0a0a1f, #1a1a3a);
+ display: flex;
  overflow: hidden;
- position: relative;
 }
 
 /* Oda Listesi Sidebar */
 #chess-sidebar {
- width: 300px;
+ width: 280px;
  background: rgba(0,0,0,0.9);
  backdrop-filter: blur(10px);
  border-right: 2px solid #00ffcc;
@@ -698,7 +698,7 @@ body::before {
  color: #00ffcc;
 }
 
-.room-status.ready {
+.room-status.playing {
  background: rgba(0,255,0,0.2);
  color: #00ff00;
 }
@@ -708,15 +708,15 @@ body::before {
  color: #ff4444;
 }
 
-/* Oda Bekleme Alanı */
-#chess-waiting-area {
+/* Bekleme Odası */
+#waiting-room {
  flex: 1;
  display: flex;
  justify-content: center;
  align-items: center;
 }
 
-#waiting-room {
+.waiting-container {
  background: rgba(0,0,0,0.8);
  backdrop-filter: blur(10px);
  border: 3px solid #00ffcc;
@@ -727,84 +727,66 @@ body::before {
  box-shadow: 0 0 50px rgba(0,255,200,0.3);
 }
 
-#waiting-room h2 {
+.waiting-container h2 {
  color: #00ffcc;
- margin: 0 0 20px 0;
+ margin: 0 0 30px 0;
  font-size: 32px;
  text-shadow: 0 0 10px #00ffcc;
 }
 
-#waiting-room .room-name-display {
- font-size: 24px;
- color: white;
- margin-bottom: 30px;
- padding: 10px;
- background: rgba(255,255,255,0.05);
- border-radius: 15px;
+.waiting-players {
+ display: flex;
+ justify-content: space-around;
+ margin: 30px 0;
 }
 
 .player-slot {
- display: flex;
- align-items: center;
- justify-content: space-between;
- padding: 15px 20px;
- margin: 10px 0;
+ text-align: center;
+ padding: 20px;
  background: rgba(255,255,255,0.05);
  border-radius: 15px;
- border: 1px solid rgba(255,255,255,0.1);
+ min-width: 120px;
 }
 
 .player-slot.white {
- border-left: 5px solid white;
+ border-top: 3px solid white;
 }
 
 .player-slot.black {
- border-left: 5px solid black;
+ border-top: 3px solid black;
 }
 
-.player-slot .color-badge {
- width: 30px;
- height: 30px;
- border-radius: 15px;
-}
-
-.player-slot.white .color-badge {
- background: white;
- box-shadow: 0 0 15px white;
-}
-
-.player-slot.black .color-badge {
- background: black;
- border: 2px solid white;
+.player-slot .color-icon {
+ font-size: 24px;
+ margin-bottom: 10px;
 }
 
 .player-slot .player-name {
- flex: 1;
- margin-left: 15px;
- font-size: 18px;
+ font-size: 16px;
  font-weight: bold;
+ margin-bottom: 10px;
 }
 
 .player-slot .ready-status {
- padding: 8px 20px;
- border-radius: 20px;
  font-size: 14px;
- font-weight: bold;
+ padding: 5px 15px;
+ border-radius: 20px;
+ display: inline-block;
 }
 
-.ready-status.ready {
+.player-slot .ready-status.ready {
  background: #00ff00;
  color: black;
 }
 
-.ready-status.not-ready {
+.player-slot .ready-status.not-ready {
  background: #ff4444;
  color: white;
 }
 
 #ready-button {
- margin-top: 30px;
- padding: 15px 40px;
+ margin-top: 20px;
+ padding: 15px 50px;
  background: linear-gradient(90deg, #00ffcc, #0099ff);
  border: none;
  border-radius: 30px;
@@ -813,32 +795,90 @@ body::before {
  font-size: 20px;
  cursor: pointer;
  transition: 0.3s;
- width: 100%;
 }
 
 #ready-button:hover {
- transform: scale(1.02);
+ transform: scale(1.05);
  box-shadow: 0 0 30px #00ffcc;
 }
 
-#ready-button:disabled {
- opacity: 0.5;
- cursor: not-allowed;
+#ready-button.ready {
+ background: linear-gradient(90deg, #ff4444, #cc0000);
 }
 
 /* Oyun Alanı */
 #chess-game-area {
  flex: 1;
  display: flex;
+ flex-direction: column;
+ padding: 20px;
+ overflow: hidden;
+}
+
+#game-top-bar {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ padding: 10px 20px;
+ background: rgba(0,0,0,0.5);
+ border-radius: 15px;
+ margin-bottom: 20px;
+ border: 1px solid #00ffcc;
+}
+
+#game-top-bar .room-info {
+ display: flex;
+ gap: 30px;
+}
+
+#game-top-bar .player-badge {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+}
+
+#game-top-bar .player-badge.white .color-dot {
+ width: 20px;
+ height: 20px;
+ border-radius: 10px;
+ background: white;
+ box-shadow: 0 0 10px white;
+}
+
+#game-top-bar .player-badge.black .color-dot {
+ width: 20px;
+ height: 20px;
+ border-radius: 10px;
+ background: black;
+ border: 2px solid white;
+}
+
+#turn-status {
+ font-size: 18px;
+ font-weight: bold;
+ padding: 8px 20px;
+ border-radius: 20px;
+ background: linear-gradient(90deg, #00ffcc, #0099ff);
+ color: black;
+}
+
+#game-main-area {
+ flex: 1;
+ display: flex;
+ gap: 20px;
+ min-height: 0;
+}
+
+#chess-board-container {
+ flex: 2;
+ display: flex;
  justify-content: center;
  align-items: center;
- position: relative;
- display: none;
 }
 
 #chess-canvas {
- width: 560px;
- height: 560px;
+ width: min(70vh, 560px);
+ height: min(70vh, 560px);
  border: 4px solid #00ffcc;
  border-radius: 15px;
  box-shadow: 0 0 50px rgba(0,255,200,0.4);
@@ -846,68 +886,109 @@ body::before {
  cursor: pointer;
 }
 
-#game-info-panel {
- position: absolute;
- top: 30px;
- right: 30px;
- background: rgba(0,0,0,0.8);
+#game-chat {
+ flex: 1;
+ background: rgba(0,0,0,0.7);
  backdrop-filter: blur(10px);
  border: 2px solid #00ffcc;
  border-radius: 15px;
- padding: 20px;
+ display: flex;
+ flex-direction: column;
  min-width: 250px;
 }
 
-#game-info-panel h3 {
- margin: 0 0 15px 0;
+#game-chat-header {
+ padding: 15px;
+ border-bottom: 1px solid #00ffcc;
  color: #00ffcc;
+ font-weight: bold;
  text-align: center;
 }
 
-.player-info {
+#game-chat-messages {
+ flex: 1;
+ overflow-y: auto;
+ padding: 15px;
  display: flex;
- align-items: center;
- gap: 15px;
- margin: 10px 0;
+ flex-direction: column;
+ gap: 10px;
+}
+
+.game-chat-message {
+ padding: 8px 12px;
+ border-radius: 10px;
+ max-width: 85%;
+ word-wrap: break-word;
+}
+
+.game-chat-message.me {
+ background: #2563eb;
+ align-self: flex-end;
+}
+
+.game-chat-message.opponent {
+ background: #1e293b;
+ align-self: flex-start;
+}
+
+.game-chat-message .msg-sender {
+ font-size: 11px;
+ color: #00ffcc;
+ margin-bottom: 3px;
+}
+
+.game-chat-message .msg-text {
+ font-size: 13px;
+}
+
+#game-chat-input-area {
+ display: flex;
  padding: 10px;
- background: rgba(255,255,255,0.05);
- border-radius: 10px;
+ gap: 10px;
+ border-top: 1px solid #00ffcc;
 }
 
-.player-color-box {
- width: 25px;
- height: 25px;
- border-radius: 13px;
+#game-chat-input {
+ flex: 1;
+ padding: 10px;
+ border-radius: 8px;
+ border: 1px solid #00ffcc;
+ background: rgba(0,0,0,0.3);
+ color: white;
+ font-size: 13px;
 }
 
-.player-color-box.white { background: white; box-shadow: 0 0 10px white; }
-.player-color-box.black { background: black; border: 2px solid white; }
-
-#turn-indicator {
- margin-top: 15px;
- padding: 12px;
- text-align: center;
+#game-chat-send {
+ padding: 10px 15px;
+ border-radius: 8px;
+ border: none;
  background: linear-gradient(90deg, #00ffcc, #0099ff);
- border-radius: 10px;
  color: black;
  font-weight: bold;
- font-size: 16px;
+ cursor: pointer;
 }
 
-#check-warning {
- margin-top: 10px;
- padding: 10px;
- background: rgba(255,0,0,0.3);
- border: 1px solid #ff4444;
- border-radius: 8px;
- color: #ff4444;
- text-align: center;
+#turn-warning {
+ position: fixed;
+ top: 20px;
+ left: 50%;
+ transform: translateX(-50%);
+ background: #ff4444;
+ color: white;
+ padding: 10px 20px;
+ border-radius: 10px;
  font-weight: bold;
+ z-index: 1000;
  display: none;
+ animation: slideDown 0.3s ease;
 }
 
-/* Uyarı Mesajları */
-#room-full-message, #check-alert {
+@keyframes slideDown {
+ from { transform: translate(-50%, -100%); }
+ to { transform: translate(-50%, 0); }
+}
+
+#room-full-message {
  position: fixed;
  top: 50%;
  left: 50%;
@@ -923,19 +1004,19 @@ body::before {
  display: none;
 }
 
-#room-full-message h2, #check-alert h2 {
+#room-full-message h2 {
  color: #ff4444;
  margin: 0 0 15px 0;
  font-size: 32px;
 }
 
-#room-full-message p, #check-alert p {
+#room-full-message p {
  color: white;
  margin-bottom: 25px;
  font-size: 18px;
 }
 
-#room-full-message button, #check-alert button {
+#room-full-message button {
  padding: 12px 40px;
  background: white;
  border: none;
@@ -971,6 +1052,15 @@ input, button {
 @keyframes slideIn {
  from { transform: translateX(100%); }
  to { transform: translateX(0); }
+}
+
+/* Tam ekran ayarları */
+:fullscreen #chess-screen {
+ padding: 0;
+}
+
+:-webkit-full-screen #chess-screen {
+ padding: 0;
 }
 
 /* Mobil dokunmatik düzeltmeler */
@@ -1029,7 +1119,7 @@ input, textarea, button, [contenteditable] {
   </div>
   <button class="sidebar-btn active" onclick="switchScreen('chat'); closeMenu()" id="btn-chat">💬 7/D Sohbet</button>
   <button class="sidebar-btn" onclick="switchScreen('altun'); closeMenu()" id="btn-altun">🤖 Altun.ai</button>
-  <button class="sidebar-btn" onclick="switchScreen('chess'); closeMenu()" id="btn-chess">♟️ Profesyonel Satranç</button>
+  <button class="sidebar-btn" onclick="switchScreen('chess'); closeMenu()" id="btn-chess">♟️ Tam Ekran Satranç</button>
 </div>
 
 <!-- Ana İçerik -->
@@ -1064,15 +1154,15 @@ input, textarea, button, [contenteditable] {
     </div>
   </div>
 
-  <!-- Satranç Oyunu Ekranı -->
+  <!-- Tam Ekran Satranç -->
   <div id="chess-screen" class="hidden">
-    <!-- Oda Listesi Sidebar -->
+    <!-- Oda Listesi -->
     <div id="chess-sidebar">
-      <h2>♟️ SATRANÇ ODALARI</h2>
+      <h2>♟️ SATRANÇ</h2>
       
       <div id="create-room-section">
         <h3>➕ Oda Oluştur</h3>
-        <input type="text" id="new-room-name" placeholder="Oda adı" maxlength="20">
+        <input type="text" id="new-room-name" placeholder="Oda adı" maxlength="20" value="Oda">
         <button onclick="createChessRoom()">Oda Oluştur</button>
       </div>
       
@@ -1082,22 +1172,23 @@ input, textarea, button, [contenteditable] {
       </div>
     </div>
     
-    <!-- Bekleme Alanı -->
-    <div id="chess-waiting-area">
-      <div id="waiting-room" style="display: none;">
-        <h2>⏳ BEKLEME ODASI</h2>
-        <div class="room-name-display" id="waiting-room-name"></div>
+    <!-- Bekleme Odası -->
+    <div id="waiting-room">
+      <div class="waiting-container" id="waiting-room-container" style="display: none;">
+        <h2 id="waiting-room-title">BEKLEME ODASI</h2>
         
-        <div class="player-slot white">
-          <div class="color-badge"></div>
-          <span class="player-name" id="white-player-name">Boş</span>
-          <span class="ready-status not-ready" id="white-ready">Hazır Değil</span>
-        </div>
-        
-        <div class="player-slot black">
-          <div class="color-badge"></div>
-          <span class="player-name" id="black-player-name">Boş</span>
-          <span class="ready-status not-ready" id="black-ready">Hazır Değil</span>
+        <div class="waiting-players">
+          <div class="player-slot white">
+            <div class="color-icon">⚪</div>
+            <div class="player-name" id="waiting-white-name">Boş</div>
+            <div class="ready-status not-ready" id="waiting-white-ready">Hazır Değil</div>
+          </div>
+          
+          <div class="player-slot black">
+            <div class="color-icon">⚫</div>
+            <div class="player-name" id="waiting-black-name">Boş</div>
+            <div class="ready-status not-ready" id="waiting-black-ready">Hazır Değil</div>
+          </div>
         </div>
         
         <button id="ready-button" onclick="toggleReady()">HAZIR OL</button>
@@ -1105,38 +1196,44 @@ input, textarea, button, [contenteditable] {
     </div>
     
     <!-- Oyun Alanı -->
-    <div id="chess-game-area">
-      <canvas id="chess-canvas" width="560" height="560"></canvas>
+    <div id="chess-game-area" style="display: none;">
+      <div id="game-top-bar">
+        <div class="room-info">
+          <span id="game-room-name">Oda</span>
+          <div class="player-badge white">
+            <span class="color-dot"></span>
+            <span id="game-white-player">Beyaz</span>
+          </div>
+          <div class="player-badge black">
+            <span class="color-dot"></span>
+            <span id="game-black-player">Siyah</span>
+          </div>
+        </div>
+        <div id="turn-status">Sıra Sende</div>
+      </div>
       
-      <div id="game-info-panel">
-        <h3 id="game-room-name"></h3>
-        
-        <div class="player-info">
-          <div class="player-color-box white"></div>
-          <span id="game-white-player"></span>
+      <div id="game-main-area">
+        <div id="chess-board-container">
+          <canvas id="chess-canvas" width="560" height="560"></canvas>
         </div>
         
-        <div class="player-info">
-          <div class="player-color-box black"></div>
-          <span id="game-black-player"></span>
+        <div id="game-chat">
+          <div id="game-chat-header">💬 OYUN SOHBETİ</div>
+          <div id="game-chat-messages"></div>
+          <div id="game-chat-input-area">
+            <input type="text" id="game-chat-input" placeholder="Mesaj yaz..." maxlength="100">
+            <button id="game-chat-send" onclick="sendGameChat()">Gönder</button>
+          </div>
         </div>
-        
-        <div id="turn-indicator">Beyaz'ın Sırası</div>
-        <div id="check-warning">⚠ ŞAH TEHDİDİ ALTINDASINIZ!</div>
       </div>
     </div>
     
-    <!-- Uyarı Mesajları -->
+    <!-- Uyarılar -->
+    <div id="turn-warning">⚠ Sıra sende değil!</div>
     <div id="room-full-message">
       <h2>⚠️ ODA DOLU</h2>
       <p>Bu oda şu anda dolu. Başka bir oda seçin.</p>
       <button onclick="closeFullRoomMessage()">Tamam</button>
-    </div>
-    
-    <div id="check-alert">
-      <h2>👑 ŞAH!</h2>
-      <p id="check-alert-text"></p>
-      <button onclick="closeCheckAlert()">Tamam</button>
     </div>
   </div>
 
@@ -1184,6 +1281,9 @@ let chess = null;
 let selectedSquare = null;
 let possibleMoves = [];
 let isPlayerReady = false;
+let lastMoveTime = Date.now();
+let inactivityTimer = null;
+let gameChatRef = null;
 
 // Sayfa kaymasını engelle
 document.body.addEventListener('touchmove', function(e) {
@@ -1245,6 +1345,11 @@ window.switchScreen = function(screen) {
     document.getElementById('altun-screen').classList.add('hidden');
     document.getElementById('chess-screen').classList.remove('hidden');
     initChessScreen();
+    
+    // Tam ekran yap
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    }
   }
 }
 
@@ -1541,7 +1646,7 @@ window.toggleOnline = function() {
   panel.style.display = panel.style.display === "block" ? "none" : "block";
 }
 
-/* SATRANÇ OYUNU - PROFESYONEL VERSİYON */
+/* SATRANÇ FONKSİYONLARI */
 let chessCanvas, chessCtx;
 
 function initChessScreen() {
@@ -1553,6 +1658,29 @@ function initChessScreen() {
   
   // Canvas tıklama olayı
   chessCanvas.addEventListener('click', handleChessClick);
+  
+  // Chat input enter tuşu
+  document.getElementById('game-chat-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') sendGameChat();
+  });
+  
+  // Inactivity timer'ı başlat
+  startInactivityTimer();
+}
+
+function startInactivityTimer() {
+  if (inactivityTimer) clearInterval(inactivityTimer);
+  
+  inactivityTimer = setInterval(() => {
+    if (currentRoom && chess) {
+      const timeSinceLastMove = Date.now() - lastMoveTime;
+      if (timeSinceLastMove > 60000) { // 60 saniye
+        // Hareketsizlik nedeniyle odadan çıkar
+        leaveChessRoom();
+        showNotification('Hareketsizlik nedeniyle odadan çıkarıldınız!');
+      }
+    }
+  }, 10000); // 10 saniyede bir kontrol et
 }
 
 function listenChessRooms() {
@@ -1575,14 +1703,12 @@ function displayRooms(rooms) {
     let status = 'waiting';
     let statusText = 'Bekliyor';
     
-    if (room.white && room.black) {
-      if (whiteReady && blackReady) {
-        status = 'ready';
-        statusText = 'Oynanıyor';
-      } else {
-        status = 'full';
-        statusText = 'Dolu';
-      }
+    if (room.gameStarted) {
+      status = 'playing';
+      statusText = 'Oynanıyor';
+    } else if (room.white && room.black) {
+      status = 'full';
+      statusText = 'Dolu';
     }
     
     const roomDiv = document.createElement('div');
@@ -1627,14 +1753,10 @@ window.createChessRoom = function() {
 };
 
 window.joinChessRoom = function(roomId, room) {
-  // Oda dolu mu kontrol et
-  if (room.white && room.black) {
-    if (!room.white.ready || !room.black.ready) {
-      // Oda dolu ama hazır değiller
-    } else {
-      document.getElementById('room-full-message').style.display = 'block';
-      return;
-    }
+  // Oda dolu ve oyun başlamışsa kontrol et
+  if (room.gameStarted || (room.white && room.black)) {
+    document.getElementById('room-full-message').style.display = 'block';
+    return;
   }
   
   // Önceki odadan ayrıl
@@ -1647,15 +1769,8 @@ window.joinChessRoom = function(roomId, room) {
   // Rengi belirle
   if (!room.white) {
     playerColor = 'white';
-  } else if (!room.black && room.white.name !== username) {
-    playerColor = 'black';
-  } else if (room.white.name === username) {
-    playerColor = 'white';
-  } else if (room.black?.name === username) {
-    playerColor = 'black';
   } else {
-    showNotification('Bu odaya katılamazsınız!');
-    return;
+    playerColor = 'black';
   }
   
   isPlayerReady = false;
@@ -1679,17 +1794,17 @@ window.joinChessRoom = function(roomId, room) {
     if (!roomData) return;
     
     // Bekleme odasını göster
-    document.getElementById('waiting-room').style.display = 'block';
+    document.getElementById('waiting-room-container').style.display = 'block';
     document.getElementById('chess-game-area').style.display = 'none';
-    document.getElementById('waiting-room-name').textContent = roomData.name;
+    document.getElementById('waiting-room-title').textContent = roomData.name;
     
     // Oyuncu bilgilerini güncelle
-    document.getElementById('white-player-name').textContent = roomData.white?.name || 'Boş';
-    document.getElementById('black-player-name').textContent = roomData.black?.name || 'Boş';
+    document.getElementById('waiting-white-name').textContent = roomData.white?.name || 'Boş';
+    document.getElementById('waiting-black-name').textContent = roomData.black?.name || 'Boş';
     
     // Hazır durumlarını güncelle
-    const whiteReadySpan = document.getElementById('white-ready');
-    const blackReadySpan = document.getElementById('black-ready');
+    const whiteReadySpan = document.getElementById('waiting-white-ready');
+    const blackReadySpan = document.getElementById('waiting-black-ready');
     
     if (roomData.white?.ready) {
       whiteReadySpan.textContent = 'HAZIR';
@@ -1711,20 +1826,20 @@ window.joinChessRoom = function(roomId, room) {
     const readyButton = document.getElementById('ready-button');
     if (isPlayerReady) {
       readyButton.textContent = 'HAZIRDAN VAZGEÇ';
-      readyButton.style.background = 'linear-gradient(90deg, #ff4444, #cc0000)';
+      readyButton.classList.add('ready');
     } else {
       readyButton.textContent = 'HAZIR OL';
-      readyButton.style.background = 'linear-gradient(90deg, #00ffcc, #0099ff)';
+      readyButton.classList.remove('ready');
     }
     
     // İki oyuncu da hazırsa oyunu başlat
     if (roomData.white?.ready && roomData.black?.ready && !roomData.gameStarted) {
-      startChessGame(roomId, roomData);
+      startChessGame(roomId);
     }
     
     // Oyun başladıysa satranç tahtasını göster
     if (roomData.gameStarted) {
-      document.getElementById('waiting-room').style.display = 'none';
+      document.getElementById('waiting-room-container').style.display = 'none';
       document.getElementById('chess-game-area').style.display = 'flex';
       document.getElementById('game-room-name').textContent = roomData.name;
       document.getElementById('game-white-player').textContent = roomData.white.name;
@@ -1737,22 +1852,67 @@ window.joinChessRoom = function(roomId, room) {
         chess.load(roomData.fen);
       }
       
-      updateTurnIndicator();
+      // Oyun sohbetini dinle
+      listenGameChat(roomId);
+      
+      updateTurnStatus();
       drawChessBoard();
     }
   });
   
   // Çıkışta odadan ayrıl
   onDisconnect(roomRef).update({
-    white: roomData?.white?.name === username ? null : roomData?.white,
-    black: roomData?.black?.name === username ? null : roomData?.black
+    white: room.white?.name === username ? null : room.white,
+    black: room.black?.name === username ? null : room.black
   });
+}
+
+function listenGameChat(roomId) {
+  gameChatRef = ref(db, `chessChat/${roomId}`);
+  onChildAdded(gameChatRef, (snap) => {
+    const msg = snap.val();
+    if (msg) {
+      addGameChatMessage(msg);
+    }
+  });
+}
+
+window.sendGameChat = function() {
+  if (!currentRoom) return;
+  
+  const input = document.getElementById('game-chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  
+  const message = {
+    sender: username,
+    text: text,
+    time: Date.now()
+  };
+  
+  push(ref(db, `chessChat/${currentRoom}`), message);
+  input.value = '';
+}
+
+function addGameChatMessage(msg) {
+  const container = document.getElementById('game-chat-messages');
+  const div = document.createElement('div');
+  div.className = `game-chat-message ${msg.sender === username ? 'me' : 'opponent'}`;
+  
+  div.innerHTML = `
+    <div class="msg-sender">${msg.sender === username ? 'Sen' : msg.sender}</div>
+    <div class="msg-text">${msg.text}</div>
+  `;
+  
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
 }
 
 window.toggleReady = function() {
   if (!currentRoom || !playerColor) return;
   
   isPlayerReady = !isPlayerReady;
+  lastMoveTime = Date.now();
   
   const roomRef = ref(db, `chessRooms/${currentRoom}`);
   if (playerColor === 'white') {
@@ -1762,7 +1922,7 @@ window.toggleReady = function() {
   }
 }
 
-function startChessGame(roomId, roomData) {
+function startChessGame(roomId) {
   chess = new Chess();
   
   const roomRef = ref(db, `chessRooms/${roomId}`);
@@ -1776,6 +1936,13 @@ function startChessGame(roomId, roomData) {
 function leaveChessRoom() {
   if (!currentRoom) return;
   
+  // Oyun sohbetini temizle
+  if (gameChatRef) {
+    gameChatRef = null;
+  }
+  
+  document.getElementById('game-chat-messages').innerHTML = '';
+  
   const roomRef = ref(db, `chessRooms/${currentRoom}`);
   if (playerColor === 'white') {
     update(roomRef, { white: null });
@@ -1788,6 +1955,28 @@ function leaveChessRoom() {
   chess = null;
   selectedSquare = null;
   possibleMoves = [];
+  isPlayerReady = false;
+}
+
+function updateTurnStatus() {
+  if (!chess || !playerColor) return;
+  
+  const isMyTurn = (chess.turn() === 'w' && playerColor === 'white') || 
+                   (chess.turn() === 'b' && playerColor === 'black');
+  
+  const turnElement = document.getElementById('turn-status');
+  if (isMyTurn) {
+    turnElement.textContent = 'Sıra Sende';
+    turnElement.style.background = 'linear-gradient(90deg, #00ffcc, #0099ff)';
+  } else {
+    turnElement.textContent = 'Sıra Rakibinde';
+    turnElement.style.background = 'linear-gradient(90deg, #ff4444, #cc0000)';
+  }
+}
+
+function getSquareName(row, col) {
+  const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+  return letters[col] + (8 - row);
 }
 
 function drawChessBoard() {
@@ -1817,12 +2006,7 @@ function drawChessBoard() {
         if (kingSquare && kingSquare.row === row && kingSquare.col === col) {
           chessCtx.fillStyle = 'rgba(255, 0, 0, 0.3)';
           chessCtx.fillRect(x, y, squareSize, squareSize);
-          document.getElementById('check-warning').style.display = 'block';
-        } else {
-          document.getElementById('check-warning').style.display = 'none';
         }
-      } else {
-        document.getElementById('check-warning').style.display = 'none';
       }
       
       // Olası hamleler (● ile göster)
@@ -1859,11 +2043,6 @@ function drawChessBoard() {
   chessCtx.shadowBlur = 0;
 }
 
-function getSquareName(row, col) {
-  const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-  return letters[col] + (8 - row);
-}
-
 function findKing(color) {
   const board = chess.board();
   for (let row = 0; row < 8; row++) {
@@ -1877,26 +2056,22 @@ function findKing(color) {
   return null;
 }
 
-function updateTurnIndicator() {
-  if (!chess) return;
-  
-  const turn = chess.turn() === 'w' ? 'Beyaz' : 'Siyah';
-  const isMyTurn = (chess.turn() === 'w' && playerColor === 'white') || 
-                   (chess.turn() === 'b' && playerColor === 'black');
-  
-  document.getElementById('turn-indicator').textContent = 
-    `${turn}'ın Sırası ${isMyTurn ? '(Sen)' : ''}`;
-}
-
 function handleChessClick(e) {
   if (!chess || !currentRoom) return;
+  
+  lastMoveTime = Date.now();
   
   // Sıra sende mi kontrol et
   const isMyTurn = (chess.turn() === 'w' && playerColor === 'white') || 
                    (chess.turn() === 'b' && playerColor === 'black');
   
   if (!isMyTurn) {
-    showNotification('Sıra sende değil!');
+    // Sıra sende değil uyarısı
+    const warning = document.getElementById('turn-warning');
+    warning.style.display = 'block';
+    setTimeout(() => {
+      warning.style.display = 'none';
+    }, 2000);
     return;
   }
   
@@ -1918,7 +2093,7 @@ function handleChessClick(e) {
       const move = {
         from: getSquareName(selectedSquare.row, selectedSquare.col),
         to: squareName,
-        promotion: 'q' // Varsayılan olarak vezir yap
+        promotion: 'q'
       };
       
       const result = chess.move(move);
@@ -1938,13 +2113,8 @@ function handleChessClick(e) {
         if (chess.in_check()) {
           if (chess.in_checkmate()) {
             showNotification('ŞAH MAT! Oyun bitti!');
-            document.getElementById('check-alert-text').textContent = 
-              `${chess.turn() === 'w' ? 'Siyah' : 'Beyaz'} kazandı! ŞAH MAT!`;
-            document.getElementById('check-alert').style.display = 'block';
           } else {
-            document.getElementById('check-alert-text').textContent = 'ŞAH!';
-            document.getElementById('check-alert').style.display = 'block';
-            setTimeout(() => document.getElementById('check-alert').style.display = 'none', 2000);
+            showNotification('ŞAH!');
           }
         }
       } else {
@@ -1976,17 +2146,12 @@ function handleChessClick(e) {
     }
     
     drawChessBoard();
-    updateTurnIndicator();
+    updateTurnStatus();
   }
 }
 
-// Uyarı mesajlarını kapat
 window.closeFullRoomMessage = function() {
   document.getElementById('room-full-message').style.display = 'none';
-};
-
-window.closeCheckAlert = function() {
-  document.getElementById('check-alert').style.display = 'none';
 };
 
 window.onload = function() {
