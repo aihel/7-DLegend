@@ -20,7 +20,7 @@ body::before{
  inset:0;
  background:linear-gradient(45deg, red, blue, lime, red);
  background-size:400% 400%;
- animation:rgb 10s linear infinite;
+ animation:rgb 12s linear infinite;
  opacity:.25;
  z-index:-1;
 }
@@ -43,12 +43,12 @@ body::before{
 }
 
 input{
- height:40px;
- width:220px;
+ height:42px;
+ width:230px;
  border-radius:10px;
  border:none;
  padding:0 10px;
- font-size:16px;
+ font-size:15px;
 }
 
 button{
@@ -66,8 +66,33 @@ button{
  background:#020617;
  display:flex;
  align-items:center;
- justify-content:space-between;
- padding:0 15px;
+ justify-content:center;
+ position:relative;
+}
+
+#onlineBtn{
+ position:absolute;
+ right:10px;
+}
+
+#onlinePanel{
+ position:fixed;
+ top:60px;
+ left:50%;
+ transform:translateX(-50%);
+ background:#020617;
+ padding:10px;
+ border-radius:12px;
+ display:none;
+ min-width:200px;
+ max-height:250px;
+ overflow:auto;
+}
+
+.userItem{
+ padding:6px;
+ border-bottom:1px solid #1e293b;
+ font-size:14px;
 }
 
 #chat{
@@ -129,16 +154,6 @@ button{
  padding:0 10px;
  font-size:16px;
 }
-
-#adminPanel{
- position:fixed;
- top:60px;
- right:10px;
- background:#020617;
- padding:10px;
- border-radius:12px;
- display:none;
-}
 </style>
 </head>
 
@@ -155,15 +170,12 @@ button{
 
 <div id="topbar">
  <div>7/D Sohbet</div>
- <button id="adminBtn" style="display:none" onclick="toggleAdmin()">⚙</button>
+ <button id="onlineBtn" onclick="toggleOnline()">👥 Aktif</button>
 </div>
+
+<div id="onlinePanel"></div>
 
 <div id="chat"></div>
-
-<div id="adminPanel">
- <input id="banName" placeholder="Ban kullanıcı adı">
- <button onclick="ban()">Banla (10dk)</button>
-</div>
 
 <div id="inputBar">
  <input id="text" placeholder="Mesaj...">
@@ -173,8 +185,10 @@ button{
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded, set, get }
-from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
+import { 
+ getDatabase, ref, push, onChildAdded, set,
+ onValue, onDisconnect
+} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
 
 const firebaseConfig = {
  apiKey: "AIzaSyBVMvgD3u-UT5dAk72pXqLub05qNPjqPW8",
@@ -189,28 +203,21 @@ window.ref = ref;
 window.push = push;
 window.onChildAdded = onChildAdded;
 window.set = set;
-window.get = get;
+window.onValue = onValue;
+window.onDisconnect = onDisconnect;
 </script>
 
 <script>
 let username="", role="user", pfp="";
+let onlineRef;
 
 /* Giriş */
-async function enter(){
+function enter(){
  username=nameInput.value.trim();
  const code=codeInput.value.trim();
  if(!username) return alert("İsim gir");
 
- const banSnap = await get(ref(db,"bans/"+username));
- if(banSnap.exists()){
-   const until = banSnap.val();
-   if(Date.now() < until) return alert("Banlısın");
- }
-
- if(code==="deop"){
-  role="admin";
-  adminBtn.style.display="block";
- }
+ if(code==="deop") role="admin";
 
  const file = pfpInput.files[0];
  if(file){
@@ -220,11 +227,41 @@ async function enter(){
  }
 
  login.style.display="none";
- listen();
+
+ setupPresence();
+ listenMessages();
+ listenOnline();
 }
 
-/* Dinle */
-function listen(){
+/* Online presence */
+function setupPresence(){
+ onlineRef = ref(db,"online/"+username);
+
+ set(onlineRef,{
+  name:username,
+  role:role,
+  time:Date.now()
+ });
+
+ onDisconnect(onlineRef).remove();
+}
+
+/* Online listesi */
+function listenOnline(){
+ onValue(ref(db,"online"), snap=>{
+  onlinePanel.innerHTML="";
+  snap.forEach(child=>{
+   const u=child.val();
+   const div=document.createElement("div");
+   div.className="userItem";
+   div.textContent = u.name + (u.role==="admin" ? " (admin)" : "");
+   onlinePanel.appendChild(div);
+  });
+ });
+}
+
+/* Mesajlar */
+function listenMessages(){
  onChildAdded(ref(db,"messages"), snap=>{
   render(snap.val());
   notify.play();
@@ -283,21 +320,10 @@ function render(m){
  chat.scrollTop=chat.scrollHeight;
 }
 
-/* Admin panel */
-function toggleAdmin(){
- adminPanel.style.display =
-  adminPanel.style.display==="block"?"none":"block";
-}
-
-/* Ban */
-function ban(){
- const target=banName.value.trim();
- if(!target) return;
-
- const until = Date.now() + 10*60*1000;
-
- set(ref(db,"bans/"+target), until);
- alert("Banlandı: "+target);
+/* Online panel toggle */
+function toggleOnline(){
+ onlinePanel.style.display =
+  onlinePanel.style.display==="block" ? "none" : "block";
 }
 </script>
 
