@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-<title>7/D Sohbet + Altun.ai + [Yeni update yakında]</title>
+<title>7/D Sohbet + Oyunlar + Premium</title>
 
 <style>
 * {
@@ -15,6 +15,7 @@
   -ms-user-select: none;
   user-select: none;
   box-sizing: border-box;
+  overscroll-behavior: none;
 }
 
 html, body {
@@ -28,6 +29,7 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
+  touch-action: none;
 }
 
 body {
@@ -46,9 +48,9 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background: linear-gradient(45deg, #1a2f4f, #0a0f1f, #2f1f4f, #1a0f2f);
-  background-size: 400% 400%;
-  animation: gradientBG 15s ease infinite;
+  background: linear-gradient(45deg, #1a2f4f, #0a0f1f, #2f1f4f, #1a0f2f, #0f2a3a);
+  background-size: 500% 500%;
+  animation: gradientBG 20s ease infinite;
   z-index: -2;
 }
 
@@ -62,9 +64,15 @@ body::after {
   content: "";
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at 70% 60%, #2f1f4f 0%, transparent 70%);
-  opacity: 0.4;
+  background: radial-gradient(circle at 70% 60%, rgba(47, 31, 79, 0.6) 0%, transparent 70%),
+              radial-gradient(circle at 30% 40%, rgba(26, 47, 79, 0.4) 0%, transparent 60%);
   z-index: -1;
+  animation: pulseBG 8s ease-in-out infinite;
+}
+
+@keyframes pulseBG {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
 }
 
 /* Login ekranı */
@@ -77,89 +85,96 @@ body::after {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   z-index: 10;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 #login input {
-  height: 44px;
-  width: 260px;
-  border-radius: 12px;
-  border: 1px solid #2a3a4a;
+  height: 52px;
+  width: 85%;
+  max-width: 300px;
+  border-radius: 16px;
+  border: 2px solid #2a3a4a;
   background: #1a1f2a;
-  padding: 0 15px;
-  font-size: 15px;
+  padding: 0 20px;
+  font-size: 16px;
   color: #fff;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   -webkit-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
   user-select: text;
 }
 
 #login input:focus {
   outline: none;
   border-color: #4a9eff;
-  box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.2);
-}
-
-#login input[type="password"] {
-  font-family: monospace;
-  -webkit-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
-  user-select: text;
+  box-shadow: 0 0 0 4px rgba(74, 158, 255, 0.2);
+  transform: scale(1.02);
 }
 
 #login input[type="file"] {
-  padding: 8px;
+  padding: 12px;
   background: #1a1f2a;
   color: #e4e6f0;
-  border: 1px dashed #3a4a5a;
+  border: 2px dashed #3a4a5a;
+  height: auto;
 }
 
 #login button {
-  height: 44px;
-  width: 260px;
-  border-radius: 12px;
+  height: 52px;
+  width: 85%;
+  max-width: 300px;
+  border-radius: 16px;
   border: none;
   background: linear-gradient(135deg, #2a6eff, #4a9eff);
   color: white;
-  font-weight: 600;
-  font-size: 16px;
+  font-weight: 700;
+  font-size: 17px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  pointer-events: auto;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(42, 110, 255, 0.3);
 }
 
 #login button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(42, 110, 255, 0.4);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(42, 110, 255, 0.4);
 }
 
 #login button:active {
-  transform: translateY(0);
+  transform: translateY(-1px) scale(0.98);
 }
 
 #login-error {
   color: #ff5a5a;
   font-size: 14px;
   min-height: 20px;
-  max-width: 260px;
+  max-width: 300px;
   text-align: center;
+  font-weight: 500;
 }
 
 /* Profil fotoğrafı preview */
 #pfp-preview {
-  width: 90px;
-  height: 90px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   background: #1a1f2a;
   margin-bottom: 8px;
   object-fit: cover;
-  border: 3px solid #2a6eff;
+  border: 4px solid #2a6eff;
   display: none;
-  box-shadow: 0 8px 20px rgba(42, 110, 255, 0.3);
+  box-shadow: 0 12px 30px rgba(42, 110, 255, 0.4);
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 /* Menü butonu */
@@ -167,46 +182,48 @@ body::after {
   position: fixed;
   left: 16px;
   top: 16px;
-  width: 44px;
-  height: 44px;
-  background: #1a1f2a;
-  border: 1px solid #2a3a4a;
-  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  background: rgba(26, 31, 42, 0.9);
+  border: 2px solid #2a3a4a;
+  border-radius: 14px;
   color: #e4e6f0;
-  font-size: 22px;
+  font-size: 24px;
   cursor: pointer;
   z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
-  pointer-events: auto;
+  transition: all 0.3s ease;
   backdrop-filter: blur(10px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 #menu-btn:hover {
   background: #2a3a4a;
   border-color: #4a9eff;
   color: #fff;
+  transform: scale(1.1) rotate(90deg);
 }
 
 /* Sidebar (Menü) */
 #sidebar {
   position: fixed;
-  left: -280px;
+  left: -100%;
   top: 0;
   bottom: 0;
-  width: 280px;
-  background: #0f1219;
-  border-right: 1px solid #1e2a3a;
-  padding: 80px 16px 20px;
+  width: 85%;
+  max-width: 320px;
+  background: rgba(15, 18, 25, 0.98);
+  border-right: 2px solid #1e2a3a;
+  padding: 80px 20px 20px;
   z-index: 99;
-  transition: left 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+  transition: left 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 8px 0 40px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(20px);
 }
 
 #sidebar.open {
@@ -214,69 +231,73 @@ body::after {
 }
 
 #sidebar-header {
-  padding: 0 8px 16px;
-  border-bottom: 1px solid #1e2a3a;
-  margin-bottom: 20px;
+  padding: 0 8px 20px;
+  border-bottom: 2px solid #1e2a3a;
+  margin-bottom: 24px;
 }
 
 #sidebar-header h3 {
   margin: 0;
   color: #aab6c8;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
   text-transform: uppercase;
 }
 
 .sidebar-btn {
   width: 100%;
-  margin: 4px 0;
-  padding: 14px 16px;
+  margin: 6px 0;
+  padding: 16px 20px;
   background: transparent;
   border: none;
-  border-radius: 10px;
+  border-radius: 14px;
   color: #b4c0d0;
   cursor: pointer;
-  font-size: 15px;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
   text-align: left;
   display: flex;
   align-items: center;
-  gap: 12px;
-  pointer-events: auto;
+  gap: 14px;
 }
 
 .sidebar-btn:hover {
-  background: #1a212e;
+  background: rgba(42, 110, 255, 0.15);
   color: #fff;
+  transform: translateX(8px);
 }
 
 .sidebar-btn.active {
-  background: #1e2a3a;
+  background: linear-gradient(135deg, rgba(42, 110, 255, 0.3), rgba(74, 158, 255, 0.2));
   color: #fff;
-  font-weight: 600;
+  font-weight: 700;
+  border: 1px solid rgba(74, 158, 255, 0.5);
+  box-shadow: 0 4px 16px rgba(42, 110, 255, 0.2);
 }
 
 .sidebar-btn i {
-  font-size: 20px;
-  width: 28px;
-  opacity: 0.8;
+  font-size: 22px;
+  width: 32px;
+  opacity: 0.9;
 }
 
 /* Sidebar overlay */
 #sidebar-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
   z-index: 98;
   display: none;
-  pointer-events: auto;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 #sidebar-overlay.show {
   display: block;
+  opacity: 1;
 }
 
 /* Ana içerik */
@@ -299,59 +320,66 @@ body::after {
 }
 
 #topbar {
-  height: 64px;
-  background: #0f1219;
-  border-bottom: 1px solid #1e2a3a;
+  height: 70px;
+  background: rgba(15, 18, 25, 0.95);
+  border-bottom: 2px solid #1e2a3a;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   flex-shrink: 0;
   padding: 0 16px;
+  backdrop-filter: blur(10px);
 }
 
 #admin-badge {
   position: absolute;
   left: 70px;
-  background: #ffaa2a;
+  background: linear-gradient(135deg, #ffaa2a, #ffcc4a);
   color: #0a0c12;
-  padding: 4px 12px;
+  padding: 6px 14px;
   border-radius: 30px;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   display: none;
-  letter-spacing: 0.3px;
-  box-shadow: 0 2px 8px rgba(255, 170, 42, 0.3);
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(255, 170, 42, 0.4);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 4px 12px rgba(255, 170, 42, 0.4); }
+  50% { box-shadow: 0 4px 20px rgba(255, 170, 42, 0.7); }
 }
 
 #points-display {
   position: absolute;
   left: 70px;
-  background: #1e2a3a;
+  background: linear-gradient(135deg, #1e2a3a, #2a3a4a);
   color: #ffaa2a;
-  padding: 6px 16px;
+  padding: 8px 18px;
   border-radius: 30px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   display: flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid #3a4a5a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 2px solid #3a4a5a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 #onlineBtn {
   position: absolute;
   right: 16px;
-  background: transparent;
-  border: 1px solid #2a3a4a;
+  background: rgba(26, 33, 46, 0.8);
+  border: 2px solid #2a3a4a;
   border-radius: 30px;
-  padding: 8px 18px;
+  padding: 10px 20px;
   color: #b4c0d0;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -361,73 +389,80 @@ body::after {
   background: #1e2a3a;
   border-color: #4a9eff;
   color: #fff;
+  transform: scale(1.05);
 }
 
 #shop-btn {
   position: absolute;
   right: 130px;
-  background: #1a2a3a;
-  border: 1px solid #2a6eff;
+  background: linear-gradient(135deg, #1a2a3a, #2a3a4a);
+  border: 2px solid #2a6eff;
   border-radius: 30px;
-  padding: 8px 18px;
+  padding: 10px 20px;
   color: #fff;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 2px 10px rgba(42, 110, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(42, 110, 255, 0.3);
 }
 
 #shop-btn:hover {
   background: #2a6eff;
-  border-color: #2a6eff;
-  transform: translateY(-1px);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 24px rgba(42, 110, 255, 0.4);
 }
 
 #inventory-btn {
   position: absolute;
   right: 240px;
-  background: #1a2a3a;
-  border: 1px solid #ffaa2a;
+  background: linear-gradient(135deg, #2a2a1a, #3a3a2a);
+  border: 2px solid #ffaa2a;
   border-radius: 30px;
-  padding: 8px 18px;
+  padding: 10px 20px;
   color: #fff;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 2px 10px rgba(255, 170, 42, 0.2);
+  box-shadow: 0 4px 16px rgba(255, 170, 42, 0.3);
 }
 
 #inventory-btn:hover {
   background: #ffaa2a;
   color: #0a0c12;
-  transform: translateY(-1px);
+  transform: translateY(-2px) scale(1.05);
 }
 
 /* Yazıyor göstergesi */
 #typing-indicator {
   position: absolute;
-  bottom: 80px;
+  bottom: 90px;
   left: 20px;
-  background: #1a212e;
-  padding: 8px 16px;
+  background: rgba(26, 33, 46, 0.95);
+  padding: 10px 20px;
   border-radius: 30px;
-  font-size: 13px;
+  font-size: 14px;
   color: #aab6c8;
   display: none;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   z-index: 10;
-  border: 1px solid #2a3a4a;
+  border: 2px solid #2a3a4a;
   backdrop-filter: blur(10px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .typing-dots {
@@ -436,8 +471,8 @@ body::after {
 }
 
 .typing-dots span {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   background: #4a9eff;
   border-radius: 50%;
   display: inline-block;
@@ -449,73 +484,105 @@ body::after {
 
 @keyframes typingBounce {
   0%, 60%, 100% { transform: translateY(0); }
-  30% { transform: translateY(-6px); }
+  30% { transform: translateY(-8px); }
 }
 
 #onlinePanel {
   position: fixed;
-  top: 72px;
+  top: 80px;
   right: 16px;
-  background: #0f1219;
-  border: 1px solid #1e2a3a;
-  border-radius: 16px;
-  padding: 12px;
+  background: rgba(15, 18, 25, 0.98);
+  border: 2px solid #1e2a3a;
+  border-radius: 20px;
+  padding: 16px;
   display: none;
-  min-width: 240px;
-  max-height: 320px;
+  min-width: 280px;
+  max-height: 400px;
   overflow-y: auto;
   z-index: 50;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(20px);
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .userItem {
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-size: 14px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 15px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  transition: background 0.2s ease;
+  gap: 12px;
+  transition: all 0.3s ease;
+  margin-bottom: 8px;
 }
 
 .userItem:hover {
-  background: #1a212e;
+  background: rgba(42, 110, 255, 0.1);
+  transform: translateX(4px);
 }
 
 .userItem .user-pfp {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #2a3a4a;
+  border: 3px solid #2a3a4a;
+  transition: all 0.3s ease;
+}
+
+.userItem:hover .user-pfp {
+  border-color: #4a9eff;
+  transform: scale(1.1);
 }
 
 .userItem .user-info {
   flex: 1;
   color: #e4e6f0;
+  font-weight: 600;
 }
 
 .userItem .admin-actions {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   margin-left: auto;
 }
 
 .userItem .admin-actions button {
-  padding: 4px 8px;
-  font-size: 11px;
-  background: #1e2a3a;
+  padding: 8px 12px;
+  font-size: 12px;
+  background: rgba(30, 42, 58, 0.8);
   color: #b4c0d0;
   border: 1px solid #2a3a4a;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  font-weight: 600;
 }
 
 .userItem .admin-actions button:hover {
+  transform: scale(1.1);
+}
+
+.userItem .admin-actions button:nth-child(1):hover {
   background: #ff5a5a;
   border-color: #ff5a5a;
+  color: white;
+}
+
+.userItem .admin-actions button:nth-child(2):hover {
+  background: #ffaa2a;
+  border-color: #ffaa2a;
+  color: #0a0c12;
+}
+
+.userItem .admin-actions button:nth-child(3):hover {
+  background: #4a9eff;
+  border-color: #4a9eff;
   color: white;
 }
 
@@ -534,141 +601,205 @@ body::after {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 }
 
 .msg {
-  max-width: 70%;
-  padding: 12px 16px;
-  border-radius: 20px;
-  font-size: 14px;
-  line-height: 1.5;
+  max-width: 80%;
+  padding: 14px 18px;
+  border-radius: 24px;
+  font-size: 15px;
+  line-height: 1.6;
   word-wrap: break-word;
-  animation: fadeIn 0.2s ease-out;
+  animation: messagePop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+.msg:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes messagePop {
+  0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+  70% { transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .user { 
-  background: #1a212e; 
+  background: linear-gradient(135deg, #1a212e, #252b3a);
   align-self: flex-start; 
-  border-bottom-left-radius: 6px;
-  border: 1px solid #2a3a4a;
+  border-bottom-left-radius: 8px;
+  border: 2px solid #2a3a4a;
 }
 
 .me { 
-  background: #1a3a6a; 
+  background: linear-gradient(135deg, #1a3a6a, #2a4a8a);
   align-self: flex-end; 
-  border-bottom-right-radius: 6px;
-  border: 1px solid #2a6eff;
+  border-bottom-right-radius: 8px;
+  border: 2px solid #4a9eff;
 }
 
 .admin { 
-  background: #4a2a2a; 
+  background: linear-gradient(135deg, #4a2a2a, #5a3a3a);
   align-self: flex-start; 
-  border-bottom-left-radius: 6px;
-  border-left: 3px solid #ffaa2a;
-  border: 1px solid #ff5a5a;
+  border-bottom-left-radius: 8px;
+  border: 2px solid #ff5a5a;
 }
 
 /* Mesaj balonu stilleri - Geçişli ve Animasyonlu */
 .msg.style-green {
-  background: linear-gradient(135deg, #1a4a2a, #0a3a1a, #1a6a3a);
-  background-size: 200% 200%;
-  animation: gradientShift 3s ease infinite;
-  border-color: #2a9a4a;
-  box-shadow: 0 4px 15px rgba(42, 154, 74, 0.3);
+  background: linear-gradient(135deg, #1a4a2a, #0a3a1a, #2a6a4a, #1a5a3a);
+  background-size: 300% 300%;
+  animation: gradientShift 4s ease infinite, glowGreen 2s ease-in-out infinite alternate;
+  border-color: #4aff4a;
+}
+
+@keyframes glowGreen {
+  from { box-shadow: 0 4px 16px rgba(74, 255, 74, 0.3); }
+  to { box-shadow: 0 8px 32px rgba(74, 255, 74, 0.6); }
 }
 
 .msg.style-rgb {
-  background: linear-gradient(135deg, #ff0066, #6600ff, #0066ff, #00ff66);
-  background-size: 300% 300%;
-  animation: gradientShift 4s ease infinite;
-  border: 2px solid transparent;
+  background: linear-gradient(135deg, #ff0066, #6600ff, #0066ff, #00ff66, #ff6600);
+  background-size: 400% 400%;
+  animation: gradientShift 3s ease infinite, glowRGB 2s ease-in-out infinite alternate;
+  border: 3px solid transparent;
   background-clip: padding-box;
-  box-shadow: 0 4px 20px rgba(255, 0, 102, 0.4);
+}
+
+@keyframes glowRGB {
+  from { box-shadow: 0 4px 20px rgba(255, 0, 102, 0.4); }
+  to { box-shadow: 0 12px 40px rgba(102, 0, 255, 0.6); }
 }
 
 .msg.style-gold {
-  background: linear-gradient(135deg, #4a3a1a, #8a6a2a, #c4a442, #8a6a2a);
-  background-size: 200% 200%;
-  animation: gradientShift 3s ease infinite;
-  border-color: #ffcc00;
-  box-shadow: 0 4px 20px rgba(255, 204, 0, 0.4);
+  background: linear-gradient(135deg, #4a3a1a, #8a6a2a, #c4a442, #ffd700, #8a6a2a);
+  background-size: 300% 300%;
+  animation: gradientShift 5s ease infinite, glowGold 2s ease-in-out infinite alternate;
+  border-color: #ffd700;
+}
+
+@keyframes glowGold {
+  from { box-shadow: 0 4px 16px rgba(255, 215, 0, 0.4); }
+  to { box-shadow: 0 12px 40px rgba(255, 215, 0, 0.7); }
 }
 
 .msg.style-ocean {
-  background: linear-gradient(135deg, #0a3a5a, #1a6a9a, #0a4a7a, #1a8aaa);
-  background-size: 200% 200%;
-  animation: gradientShift 4s ease infinite;
+  background: linear-gradient(135deg, #0a2a4a, #1a4a6a, #2a6a8a, #4a9aaa, #1a6a9a);
+  background-size: 300% 300%;
+  animation: gradientShift 6s ease infinite, wave 3s ease-in-out infinite;
   border-color: #4a9eff;
-  box-shadow: 0 4px 15px rgba(74, 158, 255, 0.4);
+}
+
+@keyframes wave {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
 }
 
 .msg.style-fire {
-  background: linear-gradient(135deg, #4a1a0a, #8a2a1a, #ff4a1a, #ff8a2a);
-  background-size: 200% 200%;
-  animation: gradientShift 2s ease infinite;
+  background: linear-gradient(135deg, #4a1a0a, #8a2a1a, #ff4a1a, #ff8a2a, #ffaa4a);
+  background-size: 300% 300%;
+  animation: gradientShift 2s ease infinite, flicker 0.5s ease-in-out infinite alternate;
   border-color: #ff6a2a;
-  box-shadow: 0 4px 20px rgba(255, 106, 42, 0.5);
+}
+
+@keyframes flicker {
+  0% { opacity: 1; }
+  50% { opacity: 0.95; }
+  100% { opacity: 1; }
 }
 
 .msg.style-ice {
-  background: linear-gradient(135deg, #0a2a4a, #1a4a6a, #4a9aaa, #8accdd);
-  background-size: 200% 200%;
-  animation: gradientShift 5s ease infinite;
+  background: linear-gradient(135deg, #0a1a2a, #1a3a4a, #2a5a6a, #4a8a9a, #8accdd);
+  background-size: 300% 300%;
+  animation: gradientShift 8s ease infinite, freeze 4s ease-in-out infinite;
   border-color: #8accdd;
-  box-shadow: 0 4px 15px rgba(138, 204, 221, 0.4);
+}
+
+@keyframes freeze {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.2); }
 }
 
 .msg.style-purple {
-  background: linear-gradient(135deg, #2a0a4a, #4a1a6a, #8a2aaa, #aa4aff);
-  background-size: 200% 200%;
-  animation: gradientShift 4s ease infinite;
+  background: linear-gradient(135deg, #1a0a2a, #3a1a5a, #6a2a8a, #aa4aff, #8a2aaa);
+  background-size: 300% 300%;
+  animation: gradientShift 5s ease infinite, pulsePurple 3s ease-in-out infinite;
   border-color: #aa4aff;
-  box-shadow: 0 4px 20px rgba(170, 74, 255, 0.4);
+}
+
+@keyframes pulsePurple {
+  0%, 100% { box-shadow: 0 4px 16px rgba(170, 74, 255, 0.4); }
+  50% { box-shadow: 0 12px 40px rgba(170, 74, 255, 0.7); }
 }
 
 .msg.style-neon {
-  background: linear-gradient(135deg, #0a0a0a, #1a1a2a, #2a2a4a, #3a3a6a);
-  background-size: 300% 300%;
-  animation: gradientShift 2s ease infinite;
-  border: 2px solid #00ff00;
-  box-shadow: 0 0 20px #00ff00, 0 0 40px #00ff00;
+  background: #0a0a0a;
+  border: 3px solid #00ff00;
+  animation: neonPulse 1s ease-in-out infinite alternate, neonFlicker 0.1s infinite;
+  box-shadow: 0 0 20px #00ff00, 0 0 40px #00ff00, inset 0 0 20px rgba(0, 255, 0, 0.1);
   color: #00ff00;
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 0 10px #00ff00;
+}
+
+@keyframes neonPulse {
+  from { box-shadow: 0 0 20px #00ff00, 0 0 40px #00ff00; }
+  to { box-shadow: 0 0 30px #00ff00, 0 0 60px #00ff00, 0 0 80px #00ff00; }
+}
+
+@keyframes neonFlicker {
+  0%, 100% { opacity: 1; }
+  95% { opacity: 1; }
+  96% { opacity: 0.8; }
+  97% { opacity: 1; }
 }
 
 .msg.style-sunset {
-  background: linear-gradient(135deg, #ff5a4a, #ff8a4a, #ffaa4a, #ff6a8a);
-  background-size: 200% 200%;
-  animation: gradientShift 4s ease infinite;
+  background: linear-gradient(135deg, #ff2a4a, #ff5a4a, #ff8a4a, #ffaa4a, #ffca4a, #ff8a6a);
+  background-size: 400% 400%;
+  animation: gradientShift 7s ease infinite, sunsetGlow 4s ease-in-out infinite;
   border-color: #ff8a4a;
-  box-shadow: 0 4px 20px rgba(255, 138, 74, 0.4);
+}
+
+@keyframes sunsetGlow {
+  0%, 100% { filter: hue-rotate(0deg); }
+  50% { filter: hue-rotate(30deg); }
 }
 
 .msg.style-matrix {
   background: #000;
-  border: 1px solid #00ff00;
+  border: 2px solid #00ff00;
   color: #00ff00;
   font-family: 'Courier New', monospace;
   text-shadow: 0 0 10px #00ff00;
-  box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 30px rgba(0, 255, 0, 0.05);
+  animation: matrixRain 0.5s linear infinite;
+}
+
+@keyframes matrixRain {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 20px; }
 }
 
 .msg.style-blackwhite {
-  background: linear-gradient(135deg, #1a1a1a, #ffffff, #1a1a1a, #ffffff);
-  background-size: 400% 400%;
-  animation: gradientShift 3s ease infinite;
-  border: 2px solid #fff;
+  background: linear-gradient(135deg, #0a0a0a, #2a2a2a, #ffffff, #e0e0e0, #0a0a0a, #ffffff);
+  background-size: 600% 600%;
+  animation: gradientShift 4s ease infinite, bwPulse 2s ease-in-out infinite;
+  border: 3px solid #fff;
   color: #000;
   font-weight: bold;
-  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 24px rgba(255, 255, 255, 0.4), 0 0 40px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes bwPulse {
+  0%, 100% { filter: contrast(1); }
+  50% { filter: contrast(1.3); }
 }
 
 @keyframes gradientShift {
@@ -680,110 +811,136 @@ body::after {
 .msg-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
-  font-size: 12px;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 13px;
 }
 
 .msg-pfp {
-  width: 26px;
-  height: 26px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.msg:hover .msg-pfp {
+  transform: scale(1.2) rotate(10deg);
+  border-color: #4a9eff;
 }
 
 .msg-username {
-  font-weight: 600;
+  font-weight: 700;
   color: #b4d0ff;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
 .admin-crown {
   color: #ffaa2a;
-  font-size: 13px;
+  font-size: 14px;
+  animation: crownShine 2s infinite;
+}
+
+@keyframes crownShine {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.5); }
 }
 
 .msg-time {
   color: #8892a6;
-  font-size: 11px;
+  font-size: 12px;
   margin-left: auto;
 }
 
 .msg .delete-btn {
   position: absolute;
-  top: -6px;
-  right: -6px;
-  background: #ff5a5a;
+  top: -10px;
+  right: -10px;
+  background: linear-gradient(135deg, #ff5a5a, #ff3a3a);
   color: white;
   border: none;
   border-radius: 50%;
-  width: 22px;
-  height: 22px;
-  font-size: 12px;
+  width: 28px;
+  height: 28px;
+  font-size: 14px;
   cursor: pointer;
   display: none;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(255, 90, 90, 0.4);
+  box-shadow: 0 4px 12px rgba(255, 90, 90, 0.5);
+  transition: all 0.3s ease;
+  z-index: 10;
 }
 
-.msg.admin .delete-btn {
+.msg:hover .delete-btn {
   display: flex;
+  animation: popIn 0.3s ease;
+}
+
+.msg .delete-btn:hover {
+  transform: scale(1.2) rotate(90deg);
+  background: #ff1a1a;
 }
 
 .msg .video-container {
-  margin-top: 8px;
-  border-radius: 12px;
+  margin-top: 10px;
+  border-radius: 16px;
   overflow: hidden;
   max-width: 100%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .msg video {
   max-width: 100%;
-  max-height: 280px;
-  border-radius: 12px;
+  max-height: 300px;
+  border-radius: 16px;
 }
 
 .msg img {
-  max-width: 200px;
-  border-radius: 12px;
-  margin-top: 8px;
+  max-width: 240px;
+  border-radius: 16px;
+  margin-top: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.msg img:hover {
+  transform: scale(1.05);
 }
 
 #inputBar {
-  height: 72px;
-  background: #0f1219;
-  border-top: 1px solid #1e2a3a;
+  height: 80px;
+  background: rgba(15, 18, 25, 0.98);
+  border-top: 2px solid #1e2a3a;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   padding: 12px 16px;
   flex-shrink: 0;
+  backdrop-filter: blur(10px);
 }
 
 #text {
   flex: 1;
-  height: 44px;
-  border: 1px solid #2a3a4a;
-  border-radius: 22px;
+  height: 52px;
+  border: 2px solid #2a3a4a;
+  border-radius: 26px;
   background: #1a212e;
-  padding: 0 18px;
-  font-size: 15px;
+  padding: 0 22px;
+  font-size: 16px;
   color: #fff;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   -webkit-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
   user-select: text;
 }
 
 #text:focus {
   outline: none;
   border-color: #4a9eff;
-  box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.2);
+  box-shadow: 0 0 0 4px rgba(74, 158, 255, 0.2);
 }
 
 #text:disabled {
@@ -796,43 +953,47 @@ body::after {
 }
 
 .media-btn {
-  width: 44px;
-  height: 44px;
-  background: #1a212e;
-  border: 1px solid #2a3a4a;
-  border-radius: 22px;
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, #1a212e, #252b3a);
+  border: 2px solid #2a3a4a;
+  border-radius: 26px;
   color: #b4c0d0;
-  font-size: 20px;
+  font-size: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .media-btn:hover {
   background: #2a3a4a;
   color: #fff;
   border-color: #4a9eff;
+  transform: scale(1.1) rotate(10deg);
 }
 
 .send-btn {
-  padding: 0 24px;
-  height: 44px;
-  background: #2a6eff;
+  padding: 0 28px;
+  height: 52px;
+  background: linear-gradient(135deg, #2a6eff, #4a9eff);
   border: none;
-  border-radius: 22px;
+  border-radius: 26px;
   color: white;
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(42, 110, 255, 0.3);
 }
 
 .send-btn:hover {
-  background: #1a5eef;
-  transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(42, 110, 255, 0.3);
+  background: linear-gradient(135deg, #1a5eef, #3a8eff);
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(42, 110, 255, 0.4);
 }
 
 .send-btn:active {
@@ -849,15 +1010,16 @@ body::after {
 }
 
 #altun-header {
-  padding: 18px;
-  background: #0f1219;
-  border-bottom: 1px solid #1e2a3a;
+  padding: 20px;
+  background: rgba(15, 18, 25, 0.98);
+  border-bottom: 2px solid #1e2a3a;
   color: #e4e6f0;
-  font-weight: 600;
+  font-weight: 700;
   text-align: center;
-  font-size: 18px;
+  font-size: 20px;
   flex-shrink: 0;
   letter-spacing: 0.5px;
+  backdrop-filter: blur(10px);
 }
 
 #altun-messages {
@@ -869,42 +1031,38 @@ body::after {
 }
 
 .altun-message {
-  margin: 12px 0;
-  padding: 12px 18px;
-  border-radius: 20px;
-  max-width: 80%;
-  animation: popIn 0.2s ease;
-  line-height: 1.5;
-  font-size: 14px;
-}
-
-@keyframes popIn {
-  from { transform: scale(0.96); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  margin: 14px 0;
+  padding: 16px 22px;
+  border-radius: 24px;
+  max-width: 85%;
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  line-height: 1.6;
+  font-size: 15px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .altun-user {
-  background: #1a3a6a;
+  background: linear-gradient(135deg, #1a3a6a, #2a4a8a);
   margin-left: auto;
-  border-bottom-right-radius: 6px;
-  border: 1px solid #2a6eff;
+  border-bottom-right-radius: 8px;
+  border: 2px solid #4a9eff;
 }
 
 .altun-bot {
-  background: #1a2a3a;
+  background: linear-gradient(135deg, #1a2a3a, #2a3a4a);
   color: #e4e6f0;
-  border-bottom-left-radius: 6px;
-  border: 1px solid #2a3a4a;
+  border-bottom-left-radius: 8px;
+  border: 2px solid #2a3a4a;
 }
 
 .typing {
   display: inline-block;
-  margin-left: 4px;
+  margin-left: 6px;
 }
 
 .dot {
   animation: blink 1.4s infinite both;
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1;
 }
 
@@ -919,49 +1077,279 @@ body::after {
 
 #altun-input-area {
   display: flex;
-  padding: 16px;
-  background: #0f1219;
-  border-top: 1px solid #1e2a3a;
+  padding: 20px;
+  background: rgba(15, 18, 25, 0.98);
+  border-top: 2px solid #1e2a3a;
   flex-shrink: 0;
-  gap: 10px;
+  gap: 12px;
+  backdrop-filter: blur(10px);
 }
 
 #altun-input {
   flex: 1;
-  padding: 12px 18px;
+  padding: 16px 24px;
   border-radius: 30px;
-  border: 1px solid #2a3a4a;
+  border: 2px solid #2a3a4a;
   background: #1a212e;
   outline: none;
-  font-size: 15px;
+  font-size: 16px;
   color: #fff;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   -webkit-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
   user-select: text;
 }
 
 #altun-input:focus {
   border-color: #4a9eff;
-  box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.2);
+  box-shadow: 0 0 0 4px rgba(74, 158, 255, 0.2);
 }
 
 .altun-btn {
-  padding: 0 24px;
+  padding: 0 28px;
   border: none;
   border-radius: 30px;
-  background: #2a6eff;
+  background: linear-gradient(135deg, #2a6eff, #4a9eff);
   color: white;
-  font-weight: 600;
-  font-size: 15px;
+  font-weight: 700;
+  font-size: 16px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(42, 110, 255, 0.3);
 }
 
 .altun-btn:hover {
-  background: #1a5eef;
-  transform: scale(1.02);
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(42, 110, 255, 0.4);
+}
+
+/* Oyun Ekranları - Mobil Optimizasyonlu */
+.game-screen {
+  width: 100%;
+  height: 100%;
+  background: #0a0c12;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 14px 18px;
+  background: rgba(15, 18, 25, 0.98);
+  border-radius: 20px;
+  border: 2px solid #1e2a3a;
+  backdrop-filter: blur(10px);
+  flex-shrink: 0;
+}
+
+.game-header h2 {
+  color: #e4e6f0;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.server-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.server-btn {
+  flex: 1;
+  padding: 12px;
+  background: rgba(26, 33, 46, 0.8);
+  border: 2px solid #2a3a4a;
+  border-radius: 14px;
+  color: #b4c0d0;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.server-btn.active {
+  background: linear-gradient(135deg, #2a6eff, #4a9eff);
+  border-color: #4a9eff;
+  color: white;
+  box-shadow: 0 4px 16px rgba(42, 110, 255, 0.3);
+}
+
+.game-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.game-sidebar {
+  background: rgba(15, 18, 25, 0.98);
+  border: 2px solid #1e2a3a;
+  border-radius: 20px;
+  padding: 16px;
+  overflow-y: auto;
+  flex-shrink: 0;
+  max-height: 30%;
+  backdrop-filter: blur(10px);
+}
+
+.game-sidebar h3 {
+  color: #aab6c8;
+  margin: 0 0 14px 0;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.rooms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.room-item {
+  padding: 14px;
+  background: rgba(26, 33, 46, 0.8);
+  border: 2px solid #2a3a4a;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.room-item:hover, .room-item:active {
+  background: rgba(42, 110, 255, 0.15);
+  border-color: #4a9eff;
+  transform: translateX(6px);
+}
+
+.room-item .room-name {
+  color: #e4e6f0;
+  font-weight: 700;
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.room-item .room-players {
+  font-size: 13px;
+  color: #8892a6;
+  font-weight: 500;
+}
+
+.game-area {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(15, 18, 25, 0.98);
+  border: 2px solid #1e2a3a;
+  border-radius: 20px;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Yılan Oyunu */
+#snake-screen canvas {
+  width: 100%;
+  height: 100%;
+  max-width: 600px;
+  max-height: 600px;
+  border-radius: 16px;
+  background: #0a0a0a;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.joystick-area {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 150px;
+  background: rgba(26, 33, 46, 0.6);
+  border: 3px solid #2a3a4a;
+  border-radius: 50%;
+  touch-action: none;
+}
+
+.joystick-knob {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #2a6eff, #4a9eff);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 4px 16px rgba(42, 110, 255, 0.4);
+  transition: transform 0.1s ease;
+}
+
+/* Araba Oyunu */
+#car-screen canvas {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #1a1a2a 0%, #0a0a1a 100%);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* XOX Oyunu */
+#tictactoe-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 350px;
+  aspect-ratio: 1;
+}
+
+.tictactoe-cell {
+  background: rgba(26, 33, 46, 0.8);
+  border: 3px solid #2a3a4a;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  aspect-ratio: 1;
+}
+
+.tictactoe-cell:hover:not(.taken) {
+  background: rgba(42, 110, 255, 0.15);
+  border-color: #4a9eff;
+  transform: scale(1.05);
+}
+
+.tictactoe-cell.taken {
+  cursor: not-allowed;
+}
+
+.tictactoe-cell.x {
+  color: #ff5a5a;
+  text-shadow: 0 0 20px rgba(255, 90, 90, 0.6);
+  animation: placeMark 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.tictactoe-cell.o {
+  color: #4a9eff;
+  text-shadow: 0 0 20px rgba(74, 158, 255, 0.6);
+  animation: placeMark 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes placeMark {
+  0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
 }
 
 /* Sayı Tahmin Oyunu */
@@ -978,254 +1366,287 @@ body::after {
 
 #guess-container {
   width: 100%;
-  max-width: 900px;
+  max-width: 500px;
   height: 95%;
   display: flex;
   flex-direction: column;
   gap: 16px;
   overflow-y: auto;
-  padding: 4px;
 }
 
 #guess-scoreboard {
-  background: #0f1219;
-  border: 1px solid #1e2a3a;
+  background: rgba(15, 18, 25, 0.98);
+  border: 2px solid #1e2a3a;
   border-radius: 24px;
   padding: 20px;
   flex-shrink: 0;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
 }
 
 #guess-scoreboard h2 {
   color: #aab6c8;
-  margin: 0 0 12px 0;
+  margin: 0 0 14px 0;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: 0.5px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 #score-list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  max-height: 140px;
+  gap: 8px;
+  max-height: 160px;
   overflow-y: auto;
 }
 
 .score-item {
-  background: #1a212e;
-  padding: 8px 14px;
+  background: rgba(26, 33, 46, 0.8);
+  padding: 10px 16px;
   border-radius: 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 14px;
-  border: 1px solid #2a3a4a;
+  border: 2px solid #2a3a4a;
+  transition: all 0.3s ease;
 }
 
 .score-item.me {
-  background: #1a2a4a;
-  border-color: #2a6eff;
+  background: linear-gradient(135deg, rgba(42, 110, 255, 0.2), rgba(74, 158, 255, 0.1));
+  border-color: #4a9eff;
+  transform: scale(1.02);
 }
 
 .score-item .rank {
-  font-weight: 600;
+  font-weight: 700;
   color: #4a9eff;
-  width: 32px;
+  width: 36px;
+  font-size: 16px;
 }
 
 .score-item .name {
   flex: 1;
-  margin-left: 8px;
+  margin-left: 10px;
   color: #e4e6f0;
+  font-weight: 600;
 }
 
 .score-item .score {
-  background: #0f1a2a;
-  padding: 4px 12px;
+  background: rgba(15, 26, 42, 0.8);
+  padding: 6px 14px;
   border-radius: 30px;
   color: #ffaa2a;
-  font-weight: 600;
-  font-size: 13px;
+  font-weight: 700;
+  font-size: 14px;
 }
 
 #guess-game-panel {
-  background: #0f1219;
-  border: 1px solid #1e2a3a;
+  background: rgba(15, 18, 25, 0.98);
+  border: 2px solid #1e2a3a;
   border-radius: 32px;
   padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
   flex: 1;
   min-height: 0;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
 }
 
 #guess-header {
   text-align: center;
-  padding: 20px;
-  background: #1a212e;
-  border-radius: 28px;
-  border: 1px solid #2a3a4a;
+  padding: 24px;
+  background: rgba(26, 33, 46, 0.8);
+  border-radius: 24px;
+  border: 2px solid #2a3a4a;
 }
 
 #guess-header h1 {
-  font-size: 26px;
-  margin: 0 0 12px 0;
-  font-weight: 600;
+  font-size: 28px;
+  margin: 0 0 14px 0;
+  font-weight: 700;
   background: linear-gradient(135deg, #aab6c8, #e4e6f0);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 #target-number {
-  font-size: 72px;
-  font-weight: 700;
+  font-size: 80px;
+  font-weight: 800;
   color: #4a9eff;
-  text-shadow: 0 4px 20px rgba(74, 158, 255, 0.3);
+  text-shadow: 0 4px 24px rgba(74, 158, 255, 0.4);
   line-height: 1;
-  margin: 8px 0;
+  margin: 10px 0;
+  animation: numberPulse 2s ease-in-out infinite;
+}
+
+@keyframes numberPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
 
 #range-info {
-  font-size: 16px;
+  font-size: 18px;
   color: #aab6c8;
-  background: #0f1a2a;
-  padding: 10px 24px;
+  background: rgba(15, 26, 42, 0.8);
+  padding: 12px 28px;
   border-radius: 40px;
   display: inline-block;
+  font-weight: 600;
 }
 
 #range-info span {
   color: #ffaa2a;
-  font-weight: 600;
-  font-size: 20px;
+  font-weight: 700;
+  font-size: 22px;
 }
 
 #guess-history {
-  background: #1a212e;
+  background: rgba(26, 33, 46, 0.8);
   border-radius: 24px;
-  padding: 16px;
-  border: 1px solid #2a3a4a;
+  padding: 18px;
+  border: 2px solid #2a3a4a;
 }
 
 #guess-history h3 {
   font-size: 15px;
   color: #aab6c8;
-  margin: 0 0 12px 0;
-  font-weight: 500;
+  margin: 0 0 14px 0;
+  font-weight: 700;
 }
 
 .history-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  min-height: 48px;
-  max-height: 80px;
+  gap: 10px;
+  min-height: 60px;
+  max-height: 100px;
   overflow-y: auto;
-  padding: 4px;
+  padding: 6px;
 }
 
 .history-item {
-  padding: 6px 16px;
+  padding: 8px 18px;
   border-radius: 30px;
-  font-weight: 500;
-  font-size: 14px;
-  animation: historyPop 0.2s ease;
+  font-weight: 600;
+  font-size: 15px;
+  animation: historyPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 2px solid transparent;
 }
 
 @keyframes historyPop {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
 }
 
-.history-item.high { background: #4a2a2a; color: #ff8a8a; border: 1px solid #ff5a5a; }
-.history-item.low { background: #2a2a4a; color: #8a8aff; border: 1px solid #4a6eff; }
-.history-item.correct { background: #2a4a2a; color: #8aff8a; border: 1px solid #4aff4a; transform: scale(1.05); }
+.history-item.high { 
+  background: linear-gradient(135deg, #4a2a2a, #5a3a3a); 
+  color: #ff8a8a; 
+  border-color: #ff5a5a;
+  box-shadow: 0 4px 12px rgba(255, 90, 90, 0.3);
+}
+
+.history-item.low { 
+  background: linear-gradient(135deg, #2a2a4a, #3a3a5a); 
+  color: #8a8aff; 
+  border-color: #4a6eff;
+  box-shadow: 0 4px 12px rgba(74, 110, 255, 0.3);
+}
+
+.history-item.correct { 
+  background: linear-gradient(135deg, #2a4a2a, #3a6a3a); 
+  color: #8aff8a; 
+  border-color: #4aff4a;
+  transform: scale(1.1);
+  box-shadow: 0 4px 16px rgba(74, 255, 74, 0.4);
+  animation: correctPulse 0.6s ease;
+}
+
+@keyframes correctPulse {
+  0%, 100% { transform: scale(1.1); }
+  50% { transform: scale(1.2); }
+}
 
 #guess-input-area {
   display: flex;
   gap: 12px;
   align-items: center;
-  background: #1a212e;
+  background: rgba(26, 33, 46, 0.8);
   padding: 20px;
   border-radius: 60px;
-  border: 1px solid #2a3a4a;
+  border: 2px solid #2a3a4a;
 }
 
 #guess-input {
   flex: 1;
-  height: 56px;
-  font-size: 24px;
+  height: 60px;
+  font-size: 28px;
   text-align: center;
-  background: #0f1a2a;
-  border: 1px solid #2a3a4a;
+  background: rgba(15, 26, 42, 0.8);
+  border: 2px solid #2a3a4a;
   border-radius: 40px;
   color: #fff;
-  font-weight: 500;
-  padding: 0 20px;
-  transition: all 0.2s ease;
+  font-weight: 700;
+  padding: 0 24px;
+  transition: all 0.3s ease;
   -webkit-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
   user-select: text;
 }
 
 #guess-input:focus {
   outline: none;
   border-color: #4a9eff;
-  box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.2);
+  box-shadow: 0 0 0 4px rgba(74, 158, 255, 0.2);
 }
 
 #guess-submit {
-  width: 90px;
-  height: 90px;
-  border-radius: 45px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
   border: none;
-  background: #2a6eff;
+  background: linear-gradient(135deg, #2a6eff, #4a9eff);
   color: white;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 6px 16px rgba(42, 110, 255, 0.3);
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(42, 110, 255, 0.4);
 }
 
 #guess-submit:hover {
-  background: #1a5eef;
-  transform: scale(1.05);
+  background: linear-gradient(135deg, #1a5eef, #3a8eff);
+  transform: scale(1.1);
 }
 
 #guess-submit:disabled {
   opacity: 0.4;
-  transform: scale(0.95);
+  transform: scale(0.9);
   pointer-events: none;
   box-shadow: none;
 }
 
 #new-game-btn {
-  padding: 16px 32px;
-  background: #2a3a4a;
-  border: 1px solid #4a9eff;
+  padding: 18px 36px;
+  background: linear-gradient(135deg, #2a3a4a, #3a4a5a);
+  border: 2px solid #4a9eff;
   border-radius: 50px;
   color: white;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  margin-top: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  margin-top: 10px;
 }
 
 #new-game-btn:hover {
-  background: #1a2a3a;
+  background: linear-gradient(135deg, #1a2a3a, #2a3a4a);
   border-color: #ffaa2a;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255, 170, 42, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(255, 170, 42, 0.4);
 }
 
 #guess-feedback {
@@ -1233,19 +1654,20 @@ body::after {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 90px;
-  font-weight: 700;
-  text-shadow: 0 4px 30px currentColor;
+  font-size: 100px;
+  font-weight: 800;
+  text-shadow: 0 4px 40px currentColor;
   z-index: 1000;
   pointer-events: none;
-  animation: feedbackFloat 0.8s ease-out forwards;
+  animation: feedbackFloat 1s ease-out forwards;
   opacity: 0;
 }
 
 @keyframes feedbackFloat {
-  0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
-  20% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.9; }
-  80% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.7; }
+  0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+  20% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+  40% { transform: translate(-50%, -50%) scale(1.1); }
+  60% { transform: translate(-50%, -50%) scale(1.2); }
   100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
 }
 
@@ -1253,562 +1675,153 @@ body::after {
 #guess-feedback.low { color: #6b6bff; }
 #guess-feedback.correct { color: #6bff6b; }
 
-/* Satranç Oyunu - Geliştirilmiş */
-#chess-screen {
-  width: 100%;
-  height: 100%;
-  background: #0a0c12;
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  overflow: auto;
-}
-
-#chess-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding: 12px 20px;
-  background: #0f1219;
-  border-radius: 20px;
-  border: 1px solid #1e2a3a;
-}
-
-#chess-header h2 {
-  color: #e4e6f0;
-  margin: 0;
-  font-size: 20px;
-  font-weight: 600;
-}
-
-#chess-header button {
-  padding: 8px 20px;
-  background: #2a6eff;
-  border: none;
-  border-radius: 30px;
-  color: white;
-  font-weight: 500;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-#chess-header button:hover {
-  background: #1a5eef;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(42, 110, 255, 0.3);
-}
-
-#server-selector {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.server-btn {
-  flex: 1;
-  padding: 12px;
-  background: #1a212e;
-  border: 2px solid #2a3a4a;
-  border-radius: 12px;
-  color: #b4c0d0;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.server-btn.active {
-  background: #2a6eff;
-  border-color: #4a9eff;
-  color: white;
-}
-
-.server-btn:hover:not(.active) {
-  background: #2a3a4a;
-  color: #fff;
-}
-
-#new-room-name {
-  padding: 8px 16px;
-  border-radius: 30px;
-  border: 1px solid #2a3a4a;
-  background: #1a212e;
-  color: white;
-  font-size: 14px;
-  margin-right: 10px;
-  width: 200px;
-}
-
-#new-room-name:focus {
-  outline: none;
-  border-color: #4a9eff;
-}
-
-#chess-main {
-  display: flex;
-  gap: 20px;
-  flex: 1;
-  min-height: 0;
-}
-
-#chess-sidebar {
-  width: 280px;
-  background: #0f1219;
-  border: 1px solid #1e2a3a;
-  border-radius: 24px;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-#chess-sidebar h3 {
-  color: #aab6c8;
-  margin: 0 0 16px 0;
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: 0.3px;
-}
-
-#rooms-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.room-item {
-  padding: 16px;
-  background: #1a212e;
-  border: 1px solid #2a3a4a;
-  border-radius: 16px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.room-item:hover {
-  background: #1e2a3a;
-  border-color: #4a9eff;
-  transform: translateX(4px);
-}
-
-.room-item .room-name {
-  color: #e4e6f0;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.room-item .room-players {
-  font-size: 13px;
-  color: #8892a6;
-}
-
-#chess-game-area {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #0f1219;
-  border: 1px solid #1e2a3a;
-  border-radius: 24px;
-  padding: 20px;
-}
-
-#chess-canvas {
-  width: min(65vh, 520px);
-  height: min(65vh, 520px);
-  border: 2px solid #2a3a4a;
-  border-radius: 16px;
-  background: #2a2a2a;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-  cursor: pointer;
-}
-
-#waiting-area {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.waiting-box {
-  background: #1a212e;
-  border: 1px solid #2a3a4a;
-  border-radius: 32px;
-  padding: 40px;
-  text-align: center;
-  min-width: 360px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-}
-
-.waiting-box h2 {
-  color: #e4e6f0;
-  margin-bottom: 30px;
-  font-size: 24px;
-  font-weight: 600;
-}
-
-.player-slot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 20px;
-  margin: 12px 0;
-  background: #0f1a2a;
-  border: 1px solid #2a3a4a;
-  border-radius: 20px;
-}
-
-.player-slot .ready {
-  color: #4aff4a;
-  font-weight: 600;
-}
-
-.player-slot .not-ready {
-  color: #ff6b6b;
-  font-weight: 600;
-}
-
-#ready-btn {
-  margin-top: 30px;
-  padding: 16px 48px;
-  background: #2a6eff;
-  border: none;
-  border-radius: 40px;
-  color: white;
-  font-weight: 600;
-  font-size: 18px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 6px 16px rgba(42, 110, 255, 0.3);
-}
-
-#ready-btn:hover {
-  background: #1a5eef;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(42, 110, 255, 0.4);
-}
-
-#turn-indicator {
-  position: fixed;
-  top: 90px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 10px 30px;
-  border-radius: 40px;
-  font-weight: 600;
-  font-size: 16px;
-  z-index: 100;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
-}
-
-#turn-indicator.my-turn {
-  background: #1a4a2a;
-  color: #8aff8a;
-  border: 1px solid #4aff4a;
-}
-
-#turn-indicator.opponent-turn {
-  background: #4a2a2a;
-  color: #ff8a8a;
-  border: 1px solid #ff5a5a;
-}
-
-/* Ateş ve Su Oyunu */
-#firewater-screen {
-  width: 100%;
-  height: 100%;
-  background: #0a0c12;
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  overflow: hidden;
-}
-
-#firewater-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  padding: 12px 20px;
-  background: #0f1219;
-  border-radius: 20px;
-  border: 1px solid #1e2a3a;
-}
-
-#firewater-header h2 {
-  color: #e4e6f0;
-  margin: 0;
-  font-size: 20px;
-  font-weight: 600;
-}
-
-#firewater-server-selector {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-#firewater-game-container {
-  flex: 1;
-  display: flex;
-  gap: 20px;
-  min-height: 0;
-}
-
-#firewater-sidebar {
-  width: 280px;
-  background: #0f1219;
-  border: 1px solid #1e2a3a;
-  border-radius: 24px;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-#firewater-rooms-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-#firewater-game-area {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #0f1219;
-  border: 1px solid #1e2a3a;
-  border-radius: 24px;
-  padding: 20px;
-  position: relative;
-}
-
-#firewater-canvas {
-  width: min(70vh, 600px);
-  height: min(70vh, 600px);
-  border: 3px solid #2a3a4a;
-  border-radius: 16px;
-  background: #1a1a2a;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-}
-
-#firewater-waiting {
-  position: absolute;
-  background: #1a212e;
-  border: 1px solid #2a3a4a;
-  border-radius: 32px;
-  padding: 40px;
-  text-align: center;
-  min-width: 360px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-}
-
-#firewater-controls {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 10px;
-  background: rgba(0, 0, 0, 0.8);
-  padding: 15px;
-  border-radius: 20px;
-  border: 1px solid #2a3a4a;
-}
-
-.control-key {
-  width: 50px;
-  height: 50px;
-  background: #2a3a4a;
-  border: 2px solid #4a9eff;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: bold;
-  color: #fff;
-}
-
-/* Tic Tac Toe Oyunu */
-#tictactoe-screen {
-  width: 100%;
-  height: 100%;
-  background: #0a0c12;
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  overflow: hidden;
-}
-
-#tictactoe-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  padding: 12px 20px;
-  background: #0f1219;
-  border-radius: 20px;
-  border: 1px solid #1e2a3a;
-}
-
-#tictactoe-server-selector {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-#tictactoe-game-container {
-  flex: 1;
-  display: flex;
-  gap: 20px;
-  min-height: 0;
-}
-
-#tictactoe-sidebar {
-  width: 280px;
-  background: #0f1219;
-  border: 1px solid #1e2a3a;
-  border-radius: 24px;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-#tictactoe-rooms-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-#tictactoe-game-area {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: #0f1219;
-  border: 1px solid #1e2a3a;
-  border-radius: 24px;
-  padding: 20px;
-}
-
-#tictactoe-board {
-  display: grid;
-  grid-template-columns: repeat(3, 120px);
-  grid-template-rows: repeat(3, 120px);
-  gap: 10px;
-  background: #2a3a4a;
-  padding: 10px;
-  border-radius: 20px;
-}
-
-.tictactoe-cell {
-  background: #1a212e;
-  border: 2px solid #2a3a4a;
-  border-radius: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 60px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.tictactoe-cell:hover:not(.taken) {
-  background: #2a3a4a;
-  transform: scale(1.05);
-}
-
-.tictactoe-cell.taken {
-  cursor: not-allowed;
-}
-
-.tictactoe-cell.x {
-  color: #ff5a5a;
-  text-shadow: 0 0 20px rgba(255, 90, 90, 0.5);
-}
-
-.tictactoe-cell.o {
-  color: #4a9eff;
-  text-shadow: 0 0 20px rgba(74, 158, 255, 0.5);
-}
-
-#tictactoe-status {
-  margin-top: 20px;
-  font-size: 24px;
-  font-weight: 600;
-  color: #e4e6f0;
-}
-
-/* Mağaza Paneli */
+/* Mağaza Paneli - İki Sekmeli */
 #shop-panel {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 90%;
-  max-width: 520px;
-  max-height: 80vh;
-  background: #0f1219;
-  border: 1px solid #2a3a4a;
-  border-radius: 36px;
-  padding: 32px;
+  width: 92%;
+  max-width: 500px;
+  height: 85vh;
+  background: rgba(15, 18, 25, 0.98);
+  border: 2px solid #2a3a4a;
+  border-radius: 32px;
+  padding: 24px;
   z-index: 1000;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(20px);
   display: none;
-  overflow-y: auto;
+  overflow: hidden;
+  flex-direction: column;
 }
 
 #shop-panel h2 {
   color: #e4e6f0;
-  margin: 0 0 16px 0;
+  margin: 0 0 20px 0;
   text-align: center;
-  font-size: 28px;
-  font-weight: 600;
+  font-size: 26px;
+  font-weight: 700;
+  flex-shrink: 0;
 }
 
-#shop-items {
+.shop-tabs {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin: 24px 0;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+.shop-tab {
+  flex: 1;
+  padding: 14px;
+  background: rgba(26, 33, 46, 0.8);
+  border: 2px solid #2a3a4a;
+  border-radius: 16px;
+  color: #b4c0d0;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.shop-tab.active {
+  background: linear-gradient(135deg, #2a6eff, #4a9eff);
+  border-color: #4a9eff;
+  color: white;
+  box-shadow: 0 4px 16px rgba(42, 110, 255, 0.3);
+}
+
+.shop-content {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.shop-section {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 50px;
+  display: none;
+}
+
+.shop-section.active {
+  display: block;
+}
+
+.shop-section::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+
+.scroll-btn {
+  position: absolute;
+  right: 0;
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #2a6eff, #4a9eff);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(42, 110, 255, 0.4);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scroll-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 24px rgba(42, 110, 255, 0.5);
+}
+
+.scroll-btn.up {
+  top: 10px;
+}
+
+.scroll-btn.down {
+  bottom: 10px;
 }
 
 .shop-item {
-  background: #1a212e;
-  border: 1px solid #2a3a4a;
-  border-radius: 28px;
+  background: rgba(26, 33, 46, 0.8);
+  border: 2px solid #2a3a4a;
+  border-radius: 24px;
   padding: 20px;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  margin-bottom: 14px;
 }
 
 .shop-item:hover {
-  background: #1e2a3a;
+  background: rgba(42, 110, 255, 0.1);
   border-color: #4a9eff;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(74, 158, 255, 0.2);
+  transform: translateX(8px);
+  box-shadow: 0 8px 24px rgba(74, 158, 255, 0.2);
 }
 
 .shop-item.disabled {
-  opacity: 0.4;
+  opacity: 0.5;
   pointer-events: none;
   filter: grayscale(0.8);
 }
 
 .shop-item-preview {
-  width: 70px;
-  height: 70px;
-  border-radius: 35px;
+  width: 64px;
+  height: 64px;
+  border-radius: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 32px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .shop-item-info {
@@ -1818,42 +1831,45 @@ body::after {
 .shop-item-info h3 {
   margin: 0 0 6px 0;
   color: #e4e6f0;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 17px;
+  font-weight: 700;
 }
 
 .shop-item-info p {
   margin: 0;
   color: #8892a6;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .shop-item-price {
-  font-size: 26px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 800;
   color: #ffaa2a;
   display: flex;
   align-items: center;
   gap: 4px;
+  flex-shrink: 0;
 }
 
 #shop-close {
   width: 100%;
-  padding: 16px;
-  background: #2a3a4a;
-  border: 1px solid #4a5a6a;
+  padding: 18px;
+  background: linear-gradient(135deg, #2a3a4a, #3a4a5a);
+  border: 2px solid #4a5a6a;
   border-radius: 30px;
   color: white;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   margin-top: 16px;
+  flex-shrink: 0;
 }
 
 #shop-close:hover {
-  background: #ff5a5a;
+  background: linear-gradient(135deg, #ff5a5a, #ff3a3a);
   border-color: #ff8a8a;
+  transform: translateY(-2px);
 }
 
 /* Envanter Paneli */
@@ -1862,64 +1878,79 @@ body::after {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 90%;
-  max-width: 600px;
-  max-height: 80vh;
-  background: #0f1219;
-  border: 1px solid #2a3a4a;
-  border-radius: 36px;
-  padding: 32px;
+  width: 92%;
+  max-width: 500px;
+  height: 85vh;
+  background: rgba(15, 18, 25, 0.98);
+  border: 2px solid #2a3a4a;
+  border-radius: 32px;
+  padding: 24px;
   z-index: 1000;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(20px);
   display: none;
-  overflow-y: auto;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 #inventory-panel h2 {
   color: #e4e6f0;
-  margin: 0 0 16px 0;
+  margin: 0 0 20px 0;
   text-align: center;
-  font-size: 28px;
-  font-weight: 600;
+  font-size: 26px;
+  font-weight: 700;
+  flex-shrink: 0;
 }
 
 #inventory-grid {
+  flex: 1;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 16px;
-  margin: 24px 0;
-  max-height: 400px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
   overflow-y: auto;
-}
-
-.inventory-item {
-  background: #1a212e;
-  border: 2px solid #2a3a4a;
-  border-radius: 20px;
-  padding: 16px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  padding-right: 50px;
   position: relative;
 }
 
+.inventory-item {
+  background: rgba(26, 33, 46, 0.8);
+  border: 3px solid #2a3a4a;
+  border-radius: 20px;
+  padding: 16px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .inventory-item:hover {
-  background: #1e2a3a;
+  background: rgba(42, 110, 255, 0.15);
   border-color: #4a9eff;
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(74, 158, 255, 0.2);
 }
 
 .inventory-item.active {
   border-color: #4aff4a;
-  box-shadow: 0 0 20px rgba(74, 255, 74, 0.3);
+  box-shadow: 0 0 24px rgba(74, 255, 74, 0.4);
+  animation: activePulse 2s infinite;
+}
+
+@keyframes activePulse {
+  0%, 100% { box-shadow: 0 0 24px rgba(74, 255, 74, 0.4); }
+  50% { box-shadow: 0 0 40px rgba(74, 255, 74, 0.7); }
 }
 
 .inventory-item-preview {
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
-  margin: 0 auto 8px;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  margin-bottom: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1929,151 +1960,173 @@ body::after {
 .inventory-item-name {
   font-size: 12px;
   color: #e4e6f0;
-  font-weight: 600;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .inventory-item-badge {
   position: absolute;
   top: -8px;
   right: -8px;
-  background: #4aff4a;
+  background: linear-gradient(135deg, #4aff4a, #6aff6a);
   color: #0a0c12;
-  width: 24px;
-  height: 24px;
-  border-radius: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  font-weight: bold;
+  font-size: 16px;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(74, 255, 74, 0.4);
+  animation: badgePulse 1.5s infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
 }
 
 #inventory-close {
   width: 100%;
-  padding: 16px;
-  background: #2a3a4a;
-  border: 1px solid #4a5a6a;
+  padding: 18px;
+  background: linear-gradient(135deg, #2a3a4a, #3a4a5a);
+  border: 2px solid #4a5a6a;
   border-radius: 30px;
   color: white;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   margin-top: 16px;
+  flex-shrink: 0;
 }
 
 #inventory-close:hover {
-  background: #ff5a5a;
+  background: linear-gradient(135deg, #ff5a5a, #ff3a3a);
   border-color: #ff8a8a;
+  transform: translateY(-2px);
 }
 
-/* Ban Paneli */
-#ban-panel {
+/* Admin Panelleri */
+#ban-panel, #warn-panel {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 90%;
-  max-width: 440px;
-  background: #0f1219;
-  border: 1px solid #ff5a5a;
-  border-radius: 36px;
-  padding: 32px;
+  max-width: 420px;
+  background: rgba(15, 18, 25, 0.98);
+  border-radius: 32px;
+  padding: 28px;
   z-index: 1002;
   display: none;
-  box-shadow: 0 25px 50px rgba(255, 90, 90, 0.2);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(20px);
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#ban-panel {
+  border: 3px solid #ff5a5a;
+}
+
+#warn-panel {
+  border: 3px solid #ffaa2a;
 }
 
 #ban-panel h3 {
   color: #ff8a8a;
   margin: 0 0 20px 0;
   font-size: 24px;
-  font-weight: 600;
+  font-weight: 700;
   text-align: center;
 }
 
-#ban-user {
-  color: #4a9eff;
+#warn-panel h3 {
+  color: #ffcc4a;
+  margin: 0 0 20px 0;
+  font-size: 24px;
   font-weight: 700;
+  text-align: center;
+}
+
+#ban-user, #warn-user {
+  color: #4a9eff;
+  font-weight: 800;
   font-size: 20px;
+  display: block;
+  text-align: center;
+  margin: 10px 0;
 }
 
-#ban-duration {
+select, textarea {
   width: 100%;
-  padding: 14px 18px;
-  margin: 16px 0;
-  background: #1a212e;
-  border: 1px solid #2a3a4a;
-  border-radius: 20px;
+  padding: 16px 20px;
+  margin: 12px 0;
+  background: rgba(26, 33, 46, 0.8);
+  border: 2px solid #2a3a4a;
+  border-radius: 16px;
   color: white;
-  font-size: 16px;
-}
-
-#ban-duration:focus {
-  outline: none;
-  border-color: #ff5a5a;
-}
-
-#ban-reason {
-  width: 100%;
-  padding: 14px 18px;
-  margin: 16px 0;
-  background: #1a212e;
-  border: 1px solid #2a3a4a;
-  border-radius: 20px;
-  color: white;
-  resize: none;
-  height: 100px;
-  font-family: inherit;
   font-size: 15px;
+  font-family: inherit;
+  transition: all 0.3s ease;
 }
 
-#ban-reason:focus {
+select:focus, textarea:focus {
   outline: none;
-  border-color: #ff5a5a;
+  border-color: #4a9eff;
+  box-shadow: 0 0 0 4px rgba(74, 158, 255, 0.2);
 }
 
-.ban-buttons {
+textarea {
+  resize: none;
+  height: 120px;
+}
+
+.ban-buttons, .warn-buttons {
   display: flex;
   gap: 12px;
-  margin-top: 24px;
+  margin-top: 20px;
 }
 
-.ban-confirm {
+.ban-confirm, .warn-confirm {
   flex: 1;
   padding: 16px;
-  background: #ff5a5a;
+  background: linear-gradient(135deg, #ff5a5a, #ff3a3a);
   color: white;
   border: none;
   border-radius: 30px;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 16px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
-.ban-confirm:hover {
-  background: #ff3a3a;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255, 90, 90, 0.3);
+.warn-confirm {
+  background: linear-gradient(135deg, #ffaa2a, #ff8a2a);
 }
 
-.ban-cancel {
+.ban-confirm:hover, .warn-confirm:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(255, 90, 90, 0.4);
+}
+
+.ban-cancel, .warn-cancel {
   flex: 1;
   padding: 16px;
-  background: #2a3a4a;
+  background: rgba(42, 58, 74, 0.8);
   color: white;
   border: none;
   border-radius: 30px;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 16px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
-.ban-cancel:hover {
-  background: #1a2a3a;
+.ban-cancel:hover, .warn-cancel:hover {
+  background: rgba(26, 42, 58, 0.8);
+  transform: translateY(-3px);
 }
 
 /* Geri Bildirim Paneli */
@@ -2082,24 +2135,25 @@ body::after {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 90%;
-  max-width: 520px;
-  background: #0f1219;
-  border: 1px solid #2a3a4a;
-  border-radius: 36px;
-  padding: 32px;
+  width: 92%;
+  max-width: 480px;
+  background: rgba(15, 18, 25, 0.98);
+  border: 2px solid #2a3a4a;
+  border-radius: 32px;
+  padding: 28px;
   z-index: 1001;
   display: none;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(20px);
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 #feedback-panel h2 {
   color: #e4e6f0;
-  margin: 0 0 8px 0;
+  margin: 0 0 10px 0;
   text-align: center;
   font-size: 26px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 #feedback-type {
@@ -2110,104 +2164,106 @@ body::after {
 
 .feedback-type-btn {
   flex: 1;
-  padding: 12px;
-  background: #1a212e;
-  border: 1px solid #2a3a4a;
+  padding: 14px;
+  background: rgba(26, 33, 46, 0.8);
+  border: 2px solid #2a3a4a;
   border-radius: 30px;
   color: #b4c0d0;
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .feedback-type-btn.active {
-  background: #2a6eff;
+  background: linear-gradient(135deg, #2a6eff, #4a9eff);
   border-color: #4a9eff;
   color: white;
+  box-shadow: 0 4px 16px rgba(42, 110, 255, 0.3);
 }
 
 .feedback-type-btn:hover {
-  background: #2a3a4a;
-  color: white;
+  background: rgba(42, 58, 74, 0.8);
+  color: #fff;
 }
 
 #feedback-text {
   width: 100%;
-  height: 140px;
-  background: #1a212e;
-  border: 1px solid #2a3a4a;
+  height: 160px;
+  background: rgba(26, 33, 46, 0.8);
+  border: 2px solid #2a3a4a;
   border-radius: 24px;
-  padding: 16px;
+  padding: 20px;
   color: white;
   font-size: 15px;
   resize: none;
   margin: 20px 0;
   font-family: inherit;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   -webkit-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
   user-select: text;
 }
 
 #feedback-text:focus {
   outline: none;
   border-color: #4a9eff;
-  box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.2);
+  box-shadow: 0 0 0 4px rgba(74, 158, 255, 0.2);
 }
 
 #feedback-submit {
   width: 100%;
-  padding: 16px;
-  background: #2a6eff;
+  padding: 18px;
+  background: linear-gradient(135deg, #2a6eff, #4a9eff);
   border: none;
   border-radius: 30px;
   color: white;
-  font-size: 17px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   margin-bottom: 12px;
+  box-shadow: 0 4px 16px rgba(42, 110, 255, 0.3);
 }
 
 #feedback-submit:hover {
-  background: #1a5eef;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(42, 110, 255, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(42, 110, 255, 0.4);
 }
 
 #feedback-close {
   width: 100%;
-  padding: 14px;
-  background: #2a3a4a;
+  padding: 16px;
+  background: rgba(42, 58, 74, 0.8);
   border: none;
   border-radius: 30px;
   color: white;
-  font-size: 16px;
+  font-size: 17px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  font-weight: 700;
 }
 
 #feedback-close:hover {
-  background: #1a2a3a;
+  background: rgba(26, 42, 58, 0.8);
+  transform: translateY(-2px);
 }
 
 #feedback-list {
   margin-top: 24px;
-  max-height: 200px;
+  max-height: 220px;
   overflow-y: auto;
   padding: 16px;
-  background: #1a212e;
+  background: rgba(26, 33, 46, 0.8);
   border-radius: 24px;
   display: none;
-  border: 1px solid #2a3a4a;
+  border: 2px solid #2a3a4a;
 }
 
 .feedback-item {
-  padding: 12px;
-  border-bottom: 1px solid #2a3a4a;
+  padding: 14px;
+  border-bottom: 2px solid #2a3a4a;
   font-size: 14px;
+  animation: slideIn 0.3s ease;
 }
 
 .feedback-item:last-child {
@@ -2218,16 +2274,17 @@ body::after {
   display: flex;
   justify-content: space-between;
   color: #4a9eff;
-  margin-bottom: 6px;
-  font-weight: 500;
+  margin-bottom: 8px;
+  font-weight: 700;
 }
 
 .feedback-type-badge {
-  background: #2a3a4a;
+  background: rgba(42, 58, 74, 0.8);
   color: #e4e6f0;
-  padding: 4px 12px;
+  padding: 6px 14px;
   border-radius: 30px;
   font-size: 12px;
+  font-weight: 700;
 }
 
 /* AFK uyarı */
@@ -2235,22 +2292,22 @@ body::after {
   position: fixed;
   top: 20px;
   right: 20px;
-  background: #ffaa2a;
+  background: linear-gradient(135deg, #ffaa2a, #ffcc4a);
   color: #0a0c12;
-  padding: 14px 24px;
+  padding: 16px 28px;
   border-radius: 40px;
-  font-weight: 600;
-  font-size: 14px;
+  font-weight: 700;
+  font-size: 15px;
   z-index: 1000;
-  animation: slideInRight 0.3s ease;
+  animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   display: none;
-  border: 1px solid #ffcc6a;
-  box-shadow: 0 8px 20px rgba(255, 170, 42, 0.4);
+  border: 2px solid #ffdd6a;
+  box-shadow: 0 8px 24px rgba(255, 170, 42, 0.5);
 }
 
 @keyframes slideInRight {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  from { transform: translateX(100%) scale(0.8); opacity: 0; }
+  to { transform: translateX(0) scale(1); opacity: 1; }
 }
 
 .hidden {
@@ -2261,16 +2318,16 @@ body::after {
   position: fixed;
   top: 20px;
   right: 20px;
-  background: #1a212e;
+  background: rgba(26, 33, 46, 0.98);
   color: #e4e6f0;
-  padding: 16px 28px;
+  padding: 18px 32px;
   border-radius: 40px;
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 700;
   z-index: 2000;
-  animation: slideInRight 0.3s ease;
-  border: 1px solid #2a3a4a;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 2px solid #2a3a4a;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(10px);
 }
 
@@ -2293,37 +2350,232 @@ body::after {
   background: #3a4a5a;
 }
 
-/* Mobil uyumluluk */
-@media (max-width: 768px) {
-  #chess-main, #firewater-game-container, #tictactoe-game-container {
-    flex-direction: column;
+/* Mobil optimizasyonları */
+@media (max-width: 480px) {
+  #topbar {
+    height: 60px;
   }
   
-  #chess-sidebar, #firewater-sidebar, #tictactoe-sidebar {
-    width: 100%;
-    max-height: 200px;
+  #points-display {
+    left: 60px;
+    padding: 6px 12px;
+    font-size: 12px;
   }
   
-  #tictactoe-board {
-    grid-template-columns: repeat(3, 80px);
-    grid-template-rows: repeat(3, 80px);
+  #shop-btn, #inventory-btn {
+    display: none;
   }
   
-  .tictactoe-cell {
-    font-size: 40px;
+  .game-sidebar {
+    max-height: 25%;
   }
+  
+  #guess-submit {
+    width: 80px;
+    height: 80px;
+    font-size: 16px;
+  }
+  
+  #inventory-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Joystick için özel stiller */
+.joystick-container {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160px;
+  height: 160px;
+  background: rgba(26, 33, 46, 0.4);
+  border: 3px solid rgba(74, 158, 255, 0.3);
+  border-radius: 50%;
+  touch-action: none;
+  z-index: 100;
+}
+
+.joystick-base {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(42, 110, 255, 0.1) 0%, transparent 70%);
+}
+
+.joystick-stick {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, #2a6eff, #4a9eff);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 6px 24px rgba(42, 110, 255, 0.5);
+  cursor: grab;
+  touch-action: none;
+}
+
+.joystick-stick:active {
+  cursor: grabbing;
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* Araba oyunu özel efektler */
+.car-game-hud {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.car-game-stat {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 12px 20px;
+  border-radius: 30px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+  border: 2px solid #4a9eff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Yılan oyunu özel efektler */
+.snake-game-hud {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.snake-score {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 12px 24px;
+  border-radius: 30px;
+  color: #4aff4a;
+  font-weight: 800;
+  font-size: 20px;
+  border: 2px solid #4aff4a;
+  text-shadow: 0 0 10px #4aff4a;
+}
+
+/* Oda bekleme ekranı */
+.waiting-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 12, 18, 0.95);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+}
+
+.waiting-overlay h2 {
+  color: #e4e6f0;
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.player-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 80%;
+  max-width: 400px;
+}
+
+.player-slot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  background: rgba(26, 33, 46, 0.8);
+  border: 3px solid #2a3a4a;
+  border-radius: 20px;
+  font-size: 18px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.player-slot.filled {
+  border-color: #4a9eff;
+  background: rgba(42, 110, 255, 0.1);
+}
+
+.player-slot.ready {
+  border-color: #4aff4a;
+  background: rgba(74, 255, 74, 0.1);
+  animation: readyPulse 1.5s infinite;
+}
+
+@keyframes readyPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(74, 255, 74, 0.4); }
+  50% { box-shadow: 0 0 20px 5px rgba(74, 255, 74, 0.2); }
+}
+
+.ready-btn {
+  margin-top: 30px;
+  padding: 18px 56px;
+  background: linear-gradient(135deg, #2a6eff, #4a9eff);
+  border: none;
+  border-radius: 40px;
+  color: white;
+  font-weight: 800;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(42, 110, 255, 0.4);
+}
+
+.ready-btn:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 12px 32px rgba(42, 110, 255, 0.5);
+}
+
+.ready-btn.ready {
+  background: linear-gradient(135deg, #4aff4a, #6aff6a);
+  box-shadow: 0 8px 24px rgba(74, 255, 74, 0.4);
+}
+
+.leave-btn {
+  margin-top: 16px;
+  padding: 14px 40px;
+  background: rgba(255, 90, 90, 0.2);
+  border: 2px solid #ff5a5a;
+  border-radius: 30px;
+  color: #ff8a8a;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.leave-btn:hover {
+  background: #ff5a5a;
+  color: white;
+  transform: translateY(-2px);
 }
 </style>
 
-<!-- Kütüphaneler -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 
 <body>
 
-<audio id="notify" src="TT.m4a"></audio>
+<audio id="notify" src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmFgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" preload="auto"></audio>
 
 <!-- Login Ekranı -->
 <div id="login">
@@ -2336,7 +2588,7 @@ body::after {
 </div>
 
 <!-- AFK Uyarı -->
-<div id="afk-warning">⚠️ 2 dakika hareketsizsin! Yakında çıkış yapılacak...</div>
+<div id="afk-warning">⚠️ 2 dakika hareketsizsin!</div>
 
 <!-- Menü butonu -->
 <button id="menu-btn" onclick="toggleMenu()">☰</button>
@@ -2355,14 +2607,14 @@ body::after {
   <button class="sidebar-btn" onclick="switchScreen('altun')" id="btn-altun">
     <i>🤖</i> Altun.ai
   </button>
-  <button class="sidebar-btn" onclick="switchScreen('chess')" id="btn-chess">
-    <i>♟️</i> Satranç
+  <button class="sidebar-btn" onclick="switchScreen('snake')" id="btn-snake">
+    <i>🐍</i> Yılan Oyunu
   </button>
-  <button class="sidebar-btn" onclick="switchScreen('firewater')" id="btn-firewater">
-    <i>🔥💧</i> Ateş ve Su
+  <button class="sidebar-btn" onclick="switchScreen('car')" id="btn-car">
+    <i>🏎️</i> Araba Yarışı
   </button>
   <button class="sidebar-btn" onclick="switchScreen('tictactoe')" id="btn-tictactoe">
-    <i>⭕❌</i> XOX Oyunu
+    <i>⭕</i> XOX Oyunu
   </button>
   <button class="sidebar-btn" onclick="switchScreen('guess')" id="btn-guess">
     <i>🔢</i> Sayı Tahmin
@@ -2386,15 +2638,14 @@ body::after {
     <div id="topbar">
       <div id="admin-badge">👑 ADMIN</div>
       <div id="points-display">💰 <span id="user-points">0</span></div>
-      <div style="font-weight: 500;">7/D Sohbet</div>
-      <button id="inventory-btn" onclick="openInventory()">🎒 Envanter</button>
-      <button id="shop-btn" onclick="openShop()">🛒 Mağaza</button>
+      <div style="font-weight: 700; font-size: 18px;">7/D Sohbet</div>
+      <button id="inventory-btn" onclick="openInventory()">🎒</button>
+      <button id="shop-btn" onclick="openShop()">🛒</button>
       <button id="onlineBtn" onclick="toggleOnline()">👥 <span id="online-count">0</span></button>
     </div>
 
     <div id="onlinePanel"></div>
     
-    <!-- Yazıyor göstergesi -->
     <div id="typing-indicator">
       <span id="typing-user"></span> yazıyor
       <span class="typing-dots"><span></span><span></span><span></span></span>
@@ -2408,7 +2659,7 @@ body::after {
       <input type="file" id="imgInput" accept="image/*">
       <label for="videoInput" class="media-btn">🎥</label>
       <input type="file" id="videoInput" accept="video/*">
-      <button class="send-btn" onclick="send()">Gönder</button>
+      <button class="send-btn" onclick="send()">➤</button>
     </div>
   </div>
 
@@ -2418,154 +2669,164 @@ body::after {
     <div id="altun-messages"></div>
     <div id="altun-input-area">
       <input type="text" id="altun-input" placeholder="Bir şey sor..." />
-      <button class="altun-btn" onclick="sendToAltun()">Gönder</button>
+      <button class="altun-btn" onclick="sendToAltun()">➤</button>
     </div>
   </div>
 
-  <!-- Satranç Ekranı -->
-  <div id="chess-screen" class="hidden">
-    <div id="chess-header">
-      <h2>♟️ Satranç</h2>
+  <!-- Yılan Oyunu -->
+  <div id="snake-screen" class="hidden game-screen">
+    <div class="game-header">
+      <h2>🐍 Yılan Oyunu</h2>
       <div>
-        <input type="text" id="new-room-name" placeholder="Oda adı">
-        <button onclick="createChessRoom()">Oda Oluştur</button>
+        <input type="text" id="new-snake-room" placeholder="Oda adı" style="padding: 10px 16px; border-radius: 30px; border: 2px solid #2a3a4a; background: #1a212e; color: white; margin-right: 10px; width: 150px;">
+        <button onclick="createSnakeRoom()" style="padding: 10px 20px; background: linear-gradient(135deg, #2a6eff, #4a9eff); border: none; border-radius: 30px; color: white; font-weight: 700; cursor: pointer;">Oda Oluştur</button>
       </div>
     </div>
     
-    <div id="server-selector">
-      <button class="server-btn active" onclick="switchServer('chess', 1)">🖥️ Server 1</button>
-      <button class="server-btn" onclick="switchServer('chess', 2)">🖥️ Server 2</button>
+    <div class="server-selector">
+      <button class="server-btn active" onclick="switchServer('snake', 1)">🖥️ Server 1</button>
+      <button class="server-btn" onclick="switchServer('snake', 2)">🖥️ Server 2</button>
     </div>
     
-    <div id="chess-main">
-      <div id="chess-sidebar">
+    <div class="game-container">
+      <div class="game-sidebar">
         <h3>📋 Aktif Odalar</h3>
-        <div id="rooms-list"></div>
+        <div class="rooms-list" id="snake-rooms-list"></div>
       </div>
       
-      <div id="chess-game-area">
-        <div id="waiting-area">
-          <div class="waiting-box">
-            <h2 id="waiting-room-title">Bekleme Odası</h2>
-            <div class="player-slot">
-              <span>⚪ Beyaz: <span id="white-player">Boş</span></span>
-              <span id="white-ready" class="not-ready">Hazır Değil</span>
-            </div>
-            <div class="player-slot">
-              <span>⚫ Siyah: <span id="black-player">Boş</span></span>
-              <span id="black-ready" class="not-ready">Hazır Değil</span>
-            </div>
-            <button id="ready-btn" onclick="toggleReady()">HAZIR OL</button>
-            <button id="leave-btn" onclick="leaveChessRoom()" style="margin-top: 10px; background: #ff5a5a;">ODADAN ÇIK</button>
-          </div>
+      <div class="game-area" id="snake-game-area">
+        <canvas id="snake-canvas" width="600" height="600"></canvas>
+        
+        <div class="joystick-container" id="snake-joystick" style="display: none;">
+          <div class="joystick-base"></div>
+          <div class="joystick-stick" id="snake-joystick-stick"></div>
         </div>
         
-        <canvas id="chess-canvas" width="520" height="520" style="display: none;"></canvas>
+        <div class="waiting-overlay" id="snake-waiting">
+          <h2 id="snake-waiting-title">Bekleme Odası</h2>
+          <div class="player-slots">
+            <div class="player-slot" id="snake-player1-slot">
+              <span>🐍 Oyuncu 1: <span id="snake-player1">Boş</span></span>
+              <span id="snake-player1-status" class="not-ready">Bekliyor</span>
+            </div>
+          </div>
+          <button class="ready-btn" id="snake-ready-btn" onclick="toggleSnakeReady()">HAZIR OL</button>
+          <button class="leave-btn" onclick="leaveSnakeRoom()">ODADAN ÇIK</button>
+        </div>
+        
+        <div class="snake-game-hud" id="snake-hud" style="display: none;">
+          <div class="snake-score">🍎 <span id="snake-score">0</span></div>
+          <div class="snake-score">🏆 <span id="snake-highscore">0</span></div>
+        </div>
       </div>
     </div>
-    
-    <div id="turn-indicator" class="hidden"></div>
   </div>
 
-  <!-- Ateş ve Su Oyunu -->
-  <div id="firewater-screen" class="hidden">
-    <div id="firewater-header">
-      <h2>🔥💧 Ateş ve Su</h2>
+  <!-- Araba Yarışı -->
+  <div id="car-screen" class="hidden game-screen">
+    <div class="game-header">
+      <h2>🏎️ Araba Yarışı</h2>
       <div>
-        <input type="text" id="new-firewater-room" placeholder="Oda adı" style="padding: 8px 16px; border-radius: 30px; border: 1px solid #2a3a4a; background: #1a212e; color: white; margin-right: 10px;">
-        <button onclick="createFirewaterRoom()" style="padding: 8px 20px; background: #2a6eff; border: none; border-radius: 30px; color: white; font-weight: 500; cursor: pointer;">Oda Oluştur</button>
+        <input type="text" id="new-car-room" placeholder="Oda adı" style="padding: 10px 16px; border-radius: 30px; border: 2px solid #2a3a4a; background: #1a212e; color: white; margin-right: 10px; width: 150px;">
+        <button onclick="createCarRoom()" style="padding: 10px 20px; background: linear-gradient(135deg, #2a6eff, #4a9eff); border: none; border-radius: 30px; color: white; font-weight: 700; cursor: pointer;">Oda Oluştur</button>
       </div>
     </div>
     
-    <div id="firewater-server-selector">
-      <button class="server-btn active" onclick="switchServer('firewater', 1)">🖥️ Server 1</button>
-      <button class="server-btn" onclick="switchServer('firewater', 2)">🖥️ Server 2</button>
+    <div class="server-selector">
+      <button class="server-btn active" onclick="switchServer('car', 1)">🖥️ Server 1</button>
+      <button class="server-btn" onclick="switchServer('car', 2)">🖥️ Server 2</button>
     </div>
     
-    <div id="firewater-game-container">
-      <div id="firewater-sidebar">
+    <div class="game-container">
+      <div class="game-sidebar">
         <h3>📋 Aktif Odalar</h3>
-        <div id="firewater-rooms-list"></div>
+        <div class="rooms-list" id="car-rooms-list"></div>
       </div>
       
-      <div id="firewater-game-area">
-        <div id="firewater-waiting">
-          <h2 id="firewater-waiting-title">Bekleme Odası</h2>
-          <div class="player-slot">
-            <span>🔥 Ateş: <span id="fire-player">Boş</span></span>
-            <span id="fire-ready" class="not-ready">Hazır Değil</span>
-          </div>
-          <div class="player-slot">
-            <span>💧 Su: <span id="water-player">Boş</span></span>
-            <span id="water-ready" class="not-ready">Hazır Değil</span>
-          </div>
-          <button onclick="toggleFirewaterReady()" style="margin-top: 20px; padding: 16px 48px; background: #2a6eff; border: none; border-radius: 40px; color: white; font-weight: 600; font-size: 18px; cursor: pointer;">HAZIR OL</button>
-          <button onclick="leaveFirewaterRoom()" style="margin-top: 10px; padding: 12px 32px; background: #ff5a5a; border: none; border-radius: 30px; color: white; font-weight: 600; cursor: pointer;">ODADAN ÇIK</button>
+      <div class="game-area" id="car-game-area">
+        <canvas id="car-canvas" width="400" height="700"></canvas>
+        
+        <div class="joystick-container" id="car-joystick" style="display: none;">
+          <div class="joystick-base"></div>
+          <div class="joystick-stick" id="car-joystick-stick"></div>
         </div>
         
-        <canvas id="firewater-canvas" width="600" height="600" style="display: none;"></canvas>
+        <div class="waiting-overlay" id="car-waiting">
+          <h2 id="car-waiting-title">Bekleme Odası</h2>
+          <div class="player-slots">
+            <div class="player-slot" id="car-player1-slot">
+              <span>🏎️ Yarışçı 1: <span id="car-player1">Boş</span></span>
+              <span id="car-player1-status" class="not-ready">Bekliyor</span>
+            </div>
+            <div class="player-slot" id="car-player2-slot">
+              <span>🏎️ Yarışçı 2: <span id="car-player2">Boş</span></span>
+              <span id="car-player2-status" class="not-ready">Bekliyor</span>
+            </div>
+          </div>
+          <button class="ready-btn" id="car-ready-btn" onclick="toggleCarReady()">HAZIR OL</button>
+          <button class="leave-btn" onclick="leaveCarRoom()">ODADAN ÇIK</button>
+        </div>
         
-        <div id="firewater-controls" style="display: none;">
-          <div class="control-key">W</div>
-          <div class="control-key">A</div>
-          <div class="control-key">S</div>
-          <div class="control-key">D</div>
+        <div class="car-game-hud" id="car-hud" style="display: none;">
+          <div class="car-game-stat">🏆 <span id="car-score">0</span></div>
+          <div class="car-game-stat">⚡ <span id="car-speed">0</span> km/h</div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- XOX Oyunu -->
-  <div id="tictactoe-screen" class="hidden">
-    <div id="tictactoe-header">
-      <h2>⭕❌ XOX Oyunu</h2>
+  <div id="tictactoe-screen" class="hidden game-screen">
+    <div class="game-header">
+      <h2>⭕ XOX Oyunu</h2>
       <div>
-        <input type="text" id="new-tictactoe-room" placeholder="Oda adı" style="padding: 8px 16px; border-radius: 30px; border: 1px solid #2a3a4a; background: #1a212e; color: white; margin-right: 10px;">
-        <button onclick="createTictactoeRoom()" style="padding: 8px 20px; background: #2a6eff; border: none; border-radius: 30px; color: white; font-weight: 500; cursor: pointer;">Oda Oluştur</button>
+        <input type="text" id="new-tictactoe-room" placeholder="Oda adı" style="padding: 10px 16px; border-radius: 30px; border: 2px solid #2a3a4a; background: #1a212e; color: white; margin-right: 10px; width: 150px;">
+        <button onclick="createTictactoeRoom()" style="padding: 10px 20px; background: linear-gradient(135deg, #2a6eff, #4a9eff); border: none; border-radius: 30px; color: white; font-weight: 700; cursor: pointer;">Oda Oluştur</button>
       </div>
     </div>
     
-    <div id="tictactoe-server-selector">
+    <div class="server-selector">
       <button class="server-btn active" onclick="switchServer('tictactoe', 1)">🖥️ Server 1</button>
       <button class="server-btn" onclick="switchServer('tictactoe', 2)">🖥️ Server 2</button>
     </div>
     
-    <div id="tictactoe-game-container">
-      <div id="tictactoe-sidebar">
+    <div class="game-container">
+      <div class="game-sidebar">
         <h3>📋 Aktif Odalar</h3>
-        <div id="tictactoe-rooms-list"></div>
+        <div class="rooms-list" id="tictactoe-rooms-list"></div>
       </div>
       
-      <div id="tictactoe-game-area">
-        <div id="tictactoe-waiting" style="background: #1a212e; border: 1px solid #2a3a4a; border-radius: 32px; padding: 40px; text-align: center; min-width: 360px; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);">
-          <h2 id="tictactoe-waiting-title">Bekleme Odası</h2>
-          <div class="player-slot">
-            <span>⭕ X Oyuncu: <span id="x-player">Boş</span></span>
-            <span id="x-ready" class="not-ready">Hazır Değil</span>
-          </div>
-          <div class="player-slot">
-            <span>❌ O Oyuncu: <span id="o-player">Boş</span></span>
-            <span id="o-ready" class="not-ready">Hazır Değil</span>
-          </div>
-          <button onclick="toggleTictactoeReady()" style="margin-top: 20px; padding: 16px 48px; background: #2a6eff; border: none; border-radius: 40px; color: white; font-weight: 600; font-size: 18px; cursor: pointer;">HAZIR OL</button>
-          <button onclick="leaveTictactoeRoom()" style="margin-top: 10px; padding: 12px 32px; background: #ff5a5a; border: none; border-radius: 30px; color: white; font-weight: 600; cursor: pointer;">ODADAN ÇIK</button>
+      <div class="game-area">
+        <div id="tictactoe-board" style="display: none;">
+          <div class="tictactoe-cell" data-index="0" onclick="makeTictactoeMove(0)"></div>
+          <div class="tictactoe-cell" data-index="1" onclick="makeTictactoeMove(1)"></div>
+          <div class="tictactoe-cell" data-index="2" onclick="makeTictactoeMove(2)"></div>
+          <div class="tictactoe-cell" data-index="3" onclick="makeTictactoeMove(3)"></div>
+          <div class="tictactoe-cell" data-index="4" onclick="makeTictactoeMove(4)"></div>
+          <div class="tictactoe-cell" data-index="5" onclick="makeTictactoeMove(5)"></div>
+          <div class="tictactoe-cell" data-index="6" onclick="makeTictactoeMove(6)"></div>
+          <div class="tictactoe-cell" data-index="7" onclick="makeTictactoeMove(7)"></div>
+          <div class="tictactoe-cell" data-index="8" onclick="makeTictactoeMove(8)"></div>
         </div>
         
-        <div id="tictactoe-board-container" style="display: none;">
-          <div id="tictactoe-board">
-            <div class="tictactoe-cell" data-index="0" onclick="makeTictactoeMove(0)"></div>
-            <div class="tictactoe-cell" data-index="1" onclick="makeTictactoeMove(1)"></div>
-            <div class="tictactoe-cell" data-index="2" onclick="makeTictactoeMove(2)"></div>
-            <div class="tictactoe-cell" data-index="3" onclick="makeTictactoeMove(3)"></div>
-            <div class="tictactoe-cell" data-index="4" onclick="makeTictactoeMove(4)"></div>
-            <div class="tictactoe-cell" data-index="5" onclick="makeTictactoeMove(5)"></div>
-            <div class="tictactoe-cell" data-index="6" onclick="makeTictactoeMove(6)"></div>
-            <div class="tictactoe-cell" data-index="7" onclick="makeTictactoeMove(7)"></div>
-            <div class="tictactoe-cell" data-index="8" onclick="makeTictactoeMove(8)"></div>
+        <div class="waiting-overlay" id="tictactoe-waiting">
+          <h2 id="tictactoe-waiting-title">Bekleme Odası</h2>
+          <div class="player-slots">
+            <div class="player-slot" id="tictactoe-x-slot">
+              <span>⭕ X Oyuncu: <span id="tictactoe-x">Boş</span></span>
+              <span id="tictactoe-x-status" class="not-ready">Bekliyor</span>
+            </div>
+            <div class="player-slot" id="tictactoe-o-slot">
+              <span>❌ O Oyuncu: <span id="tictactoe-o">Boş</span></span>
+              <span id="tictactoe-o-status" class="not-ready">Bekliyor</span>
+            </div>
           </div>
-          <div id="tictactoe-status">Sıra: X</div>
-          <button onclick="resetTictactoe()" style="margin-top: 20px; padding: 12px 32px; background: #2a6eff; border: none; border-radius: 30px; color: white; font-weight: 600; cursor: pointer;">Yeniden Başla</button>
+          <button class="ready-btn" id="tictactoe-ready-btn" onclick="toggleTictactoeReady()">HAZIR OL</button>
+          <button class="leave-btn" onclick="leaveTictactoeRoom()">ODADAN ÇIK</button>
         </div>
+        
+        <div id="tictactoe-status" style="display: none; margin-top: 20px; font-size: 24px; font-weight: 700; color: #e4e6f0;"></div>
+        <button onclick="resetTictactoe()" id="tictactoe-reset" style="display: none; margin-top: 16px; padding: 14px 32px; background: linear-gradient(135deg, #2a6eff, #4a9eff); border: none; border-radius: 30px; color: white; font-weight: 700; cursor: pointer;">Yeniden Başla</button>
       </div>
     </div>
   </div>
@@ -2594,7 +2855,7 @@ body::after {
         
         <div id="guess-input-area">
           <input type="number" id="guess-input" placeholder="Sayı gir" min="1" max="100">
-          <button id="guess-submit" onclick="makeGuess()">TAHMİN</button>
+          <button id="guess-submit" onclick="makeGuess()">➤</button>
         </div>
         
         <button id="new-game-btn" onclick="startNewGuessGame()">🔄 YENİ OYUN</button>
@@ -2608,14 +2869,41 @@ body::after {
 <!-- Mağaza Paneli -->
 <div id="shop-panel">
   <h2>🛒 MAĞAZA</h2>
-  <div id="shop-items"></div>
+  
+  <div class="shop-tabs">
+    <button class="shop-tab active" onclick="switchShopTab('bubbles')">💬 Baloncuklar</button>
+    <button class="shop-tab" onclick="switchShopTab('themes')">🎨 Temalar</button>
+  </div>
+  
+  <div class="shop-content">
+    <button class="scroll-btn up" onclick="scrollShop(-1)">▲</button>
+    
+    <div class="shop-section active" id="shop-bubbles">
+      <!-- Baloncuklar buraya dinamik olarak eklenecek -->
+    </div>
+    
+    <div class="shop-section" id="shop-themes">
+      <!-- Temalar buraya dinamik olarak eklenecek -->
+    </div>
+    
+    <button class="scroll-btn down" onclick="scrollShop(1)">▼</button>
+  </div>
+  
   <button id="shop-close" onclick="closeShop()">Kapat</button>
 </div>
 
 <!-- Envanter Paneli -->
 <div id="inventory-panel">
   <h2>🎒 ENVANTERİM</h2>
-  <div id="inventory-grid"></div>
+  
+  <button class="scroll-btn up" onclick="scrollInventory(-1)" style="top: 80px;">▲</button>
+  
+  <div id="inventory-grid">
+    <!-- Envanter öğeleri buraya dinamik olarak eklenecek -->
+  </div>
+  
+  <button class="scroll-btn down" onclick="scrollInventory(1)" style="bottom: 80px;">▼</button>
+  
   <button id="inventory-close" onclick="closeInventory()">Kapat</button>
 </div>
 
@@ -2640,6 +2928,19 @@ body::after {
   <div class="ban-buttons">
     <button class="ban-confirm" onclick="confirmBan()">BANLA</button>
     <button class="ban-cancel" onclick="closeBanPanel()">İptal</button>
+  </div>
+</div>
+
+<!-- Uyarı Paneli -->
+<div id="warn-panel">
+  <h3>⚠️ KULLANICIYI UYAR</h3>
+  <p>Kullanıcı: <span id="warn-user"></span></p>
+  
+  <textarea id="warn-reason" placeholder="Uyarı sebebi..."></textarea>
+  
+  <div class="warn-buttons">
+    <button class="warn-confirm" onclick="confirmWarn()">UYAR</button>
+    <button class="warn-cancel" onclick="closeWarnPanel()">İptal</button>
   </div>
 </div>
 
@@ -2673,9 +2974,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// Altun.ai API
-const API_KEY = "6f49a41b-ee0f-47f3-a4ea-05d3f4f373a7";
-
 // Global Değişkenler
 let username = "", role = "user", pfp = "";
 let onlineRef;
@@ -2683,40 +2981,25 @@ let currentScreen = 'chat';
 let userPoints = 0;
 let purchasedStyles = ['default'];
 let currentStyle = 'default';
+let purchasedThemes = ['default'];
+let currentTheme = 'default';
 let typingTimeout = null;
 let mutedUsers = {};
 let bannedUsers = {};
 
 // Server sistemi
 let currentServers = {
-  chess: 1,
-  firewater: 1,
+  snake: 1,
+  car: 1,
   tictactoe: 1
 };
 
-// Satranç Değişkenleri
-let chessCurrentRoom = null;
-let chessPlayerColor = null;
-let chess = null;
-let selectedSquare = null;
-let possibleMoves = [];
-let isPlayerReady = false;
-let roomListener = null;
-let chessCanvas, chessCtx;
-
-// Ateş ve Su Değişkenleri
-let firewaterCurrentRoom = null;
-let firewaterPlayerRole = null;
-let firewaterCanvas, firewaterCtx;
-let firewaterGameState = null;
-let firewaterListener = null;
-let firewaterIsReady = false;
-
-// XOX Değişkenleri
-let tictactoeCurrentRoom = null;
-let tictactoePlayerRole = null;
-let tictactoeListener = null;
-let tictactoeIsReady = false;
+// Oyun değişkenleri
+let gameRooms = {
+  snake: { current: null, player: null, ready: false, listener: null },
+  car: { current: null, player: null, ready: false, listener: null },
+  tictactoe: { current: null, player: null, ready: false, listener: null }
+};
 
 // Sayı Tahmin Değişkenleri
 let guessTarget = Math.floor(Math.random() * 100) + 1;
@@ -2735,28 +3018,38 @@ let afkKickTimer = null;
 const AFK_WARNING = 90000;
 const AFK_LIMIT = 120000;
 
-// Ban için geçici değişken
+// Admin için geçici değişken
 let targetBanUser = '';
+let targetWarnUser = '';
 
-// Stil tanımlamaları
+// Stil ve Tema tanımlamaları
 const STYLE_DEFINITIONS = {
-  'default': { name: 'Varsayılan', emoji: '💬', price: 0, color: '#1a212e' },
-  'green': { name: 'Yeşil Enerji', emoji: '💚', price: 200, color: 'linear-gradient(135deg, #1a4a2a, #0a3a1a)' },
-  'rgb': { name: 'RGB Akış', emoji: '🌈', price: 300, color: 'linear-gradient(135deg, #ff0066, #6600ff)' },
-  'gold': { name: 'Altın', emoji: '👑', price: 500, color: 'linear-gradient(135deg, #4a3a1a, #8a6a2a)' },
-  'ocean': { name: 'Okyanus', emoji: '🌊', price: 350, color: 'linear-gradient(135deg, #0a3a5a, #1a6a9a)' },
-  'fire': { name: 'Ateş', emoji: '🔥', price: 400, color: 'linear-gradient(135deg, #4a1a0a, #8a2a1a)' },
-  'ice': { name: 'Buz', emoji: '❄️', price: 400, color: 'linear-gradient(135deg, #0a2a4a, #1a4a6a)' },
-  'purple': { name: 'Mor', emoji: '💜', price: 350, color: 'linear-gradient(135deg, #2a0a4a, #4a1a6a)' },
-  'neon': { name: 'Neon', emoji: '⚡', price: 600, color: '#0a0a0a' },
-  'sunset': { name: 'Gün Batımı', emoji: '🌅', price: 450, color: 'linear-gradient(135deg, #ff5a4a, #ff8a4a)' },
-  'matrix': { name: 'Matrix', emoji: '🖥️', price: 550, color: '#000' },
-  'blackwhite': { name: 'Siyah Beyaz', emoji: '⚫⚪', price: 1000, color: 'linear-gradient(135deg, #1a1a1a, #ffffff)' }
+  'default': { name: 'Varsayılan', emoji: '💬', price: 0, color: '#1a212e', type: 'bubble' },
+  'green': { name: 'Yeşil Enerji', emoji: '💚', price: 200, color: 'linear-gradient(135deg, #1a4a2a, #0a3a1a)', type: 'bubble' },
+  'rgb': { name: 'RGB Akış', emoji: '🌈', price: 300, color: 'linear-gradient(135deg, #ff0066, #6600ff)', type: 'bubble' },
+  'gold': { name: 'Altın', emoji: '👑', price: 500, color: 'linear-gradient(135deg, #4a3a1a, #8a6a2a)', type: 'bubble' },
+  'ocean': { name: 'Okyanus', emoji: '🌊', price: 350, color: 'linear-gradient(135deg, #0a3a5a, #1a6a9a)', type: 'bubble' },
+  'fire': { name: 'Ateş', emoji: '🔥', price: 400, color: 'linear-gradient(135deg, #4a1a0a, #8a2a1a)', type: 'bubble' },
+  'ice': { name: 'Buz', emoji: '❄️', price: 400, color: 'linear-gradient(135deg, #0a2a4a, #1a4a6a)', type: 'bubble' },
+  'purple': { name: 'Mor', emoji: '💜', price: 350, color: 'linear-gradient(135deg, #2a0a4a, #4a1a6a)', type: 'bubble' },
+  'neon': { name: 'Neon', emoji: '⚡', price: 600, color: '#0a0a0a', type: 'bubble' },
+  'sunset': { name: 'Gün Batımı', emoji: '🌅', price: 450, color: 'linear-gradient(135deg, #ff5a4a, #ff8a4a)', type: 'bubble' },
+  'matrix': { name: 'Matrix', emoji: '🖥️', price: 550, color: '#000', type: 'bubble' },
+  'blackwhite': { name: 'Siyah Beyaz', emoji: '⚫⚪', price: 1000, color: 'linear-gradient(135deg, #1a1a1a, #ffffff)', type: 'bubble' }
+};
+
+const THEME_DEFINITIONS = {
+  'default': { name: 'Koyu Mod', emoji: '🌙', price: 0, bg: '#0a0c12' },
+  'light': { name: 'Açık Mod', emoji: '☀️', price: 300, bg: '#f0f2f5' },
+  'neon': { name: 'Neon Şehir', emoji: '🌃', price: 500, bg: 'linear-gradient(45deg, #0a0a1a, #1a0a2a)' },
+  'forest': { name: 'Orman', emoji: '🌲', price: 400, bg: 'linear-gradient(45deg, #0a1a0a, #1a2a1a)' },
+  'space': { name: 'Uzay', emoji: '🚀', price: 600, bg: 'linear-gradient(45deg, #0a0a1a, #000)' },
+  'cyberpunk': { name: 'Cyberpunk', emoji: '🤖', price: 700, bg: 'linear-gradient(45deg, #1a0a1a, #2a1a3a)' }
 };
 
 // Sayfa kaymasını engelle
 document.body.addEventListener('touchmove', function(e) {
-  if (!e.target.closest('#chat') && !e.target.closest('#altun-messages') && !e.target.closest('#guess-container') && !e.target.closest('#chess-game-area')) {
+  if (!e.target.closest('#chat') && !e.target.closest('#altun-messages') && !e.target.closest('#guess-container')) {
     e.preventDefault();
   }
 }, { passive: false });
@@ -2774,53 +3067,55 @@ window.closeMenu = () => {
 
 // Server değiştirme
 window.switchServer = (game, serverNum) => {
+  // Odadan çık
+  if (gameRooms[game].current) {
+    leaveGameRoom(game);
+  }
+  
   currentServers[game] = serverNum;
   
   // Butonları güncelle
-  const selector = document.getElementById(game + '-server-selector') || document.getElementById('server-selector');
-  if (selector) {
-    selector.querySelectorAll('.server-btn').forEach((btn, idx) => {
-      btn.classList.toggle('active', idx === serverNum - 1);
-    });
-  }
-  
-  // Odayı terk et ve listeyi yenile
-  if (game === 'chess' && chessCurrentRoom) {
-    leaveChessRoom();
-  } else if (game === 'firewater' && firewaterCurrentRoom) {
-    leaveFirewaterRoom();
-  } else if (game === 'tictactoe' && tictactoeCurrentRoom) {
-    leaveTictactoeRoom();
-  }
+  const screen = document.getElementById(game + '-screen');
+  screen.querySelectorAll('.server-btn').forEach((btn, idx) => {
+    btn.classList.toggle('active', idx === serverNum - 1);
+  });
   
   // Listeyi yenile
-  if (game === 'chess') listenChessRooms();
-  else if (game === 'firewater') listenFirewaterRooms();
+  if (game === 'snake') listenSnakeRooms();
+  else if (game === 'car') listenCarRooms();
   else if (game === 'tictactoe') listenTictactoeRooms();
   
   showNotification(`🖥️ Server ${serverNum}'e geçildi!`);
 }
 
-// Ekran değiştirme
+// Ekran değiştirme - Otomatik oda kontrolü
 window.switchScreen = (screen) => {
   updateActivity();
+  
+  // Eğer bir oda aktifse ve sohbete geçiyorsa, odadan çıkma, sadece görünümü değiştir
+  const wasInGame = ['snake', 'car', 'tictactoe'].includes(currentScreen);
+  const goingToChat = screen === 'chat';
+  
   currentScreen = screen;
   
   document.querySelectorAll('.sidebar-btn').forEach(btn => btn.classList.remove('active'));
   document.getElementById('btn-' + screen).classList.add('active');
   
+  // Tüm ekranları gizle
   document.getElementById('chat-screen').classList.add('hidden');
   document.getElementById('altun-screen').classList.add('hidden');
-  document.getElementById('chess-screen').classList.add('hidden');
-  document.getElementById('firewater-screen').classList.add('hidden');
+  document.getElementById('snake-screen').classList.add('hidden');
+  document.getElementById('car-screen').classList.add('hidden');
   document.getElementById('tictactoe-screen').classList.add('hidden');
   document.getElementById('guess-screen').classList.add('hidden');
   
+  // Seçilen ekranı göster
   document.getElementById(screen + '-screen').classList.remove('hidden');
   
+  // Oyun init
   if (screen === 'altun') loadAltunHistory();
-  else if (screen === 'chess') initChess();
-  else if (screen === 'firewater') initFirewater();
+  else if (screen === 'snake') initSnake();
+  else if (screen === 'car') initCar();
   else if (screen === 'tictactoe') initTictactoe();
   else if (screen === 'guess') initGuessGame();
   
@@ -2851,9 +3146,9 @@ function startAfkMonitoring() {
     } else if (afkTime >= AFK_LIMIT) {
       document.getElementById('afk-warning').style.display = 'none';
       if (onlineRef) onlineRef.remove();
-      if (chessCurrentRoom) leaveChessRoom();
-      if (firewaterCurrentRoom) leaveFirewaterRoom();
-      if (tictactoeCurrentRoom) leaveTictactoeRoom();
+      Object.keys(gameRooms).forEach(game => {
+        if (gameRooms[game].current) leaveGameRoom(game);
+      });
       alert('2 dakika hareketsiz kaldığınız için çıkış yapıldı!');
       location.reload();
     }
@@ -2865,11 +3160,11 @@ function updateActivity() {
   document.getElementById('afk-warning').style.display = 'none';
 }
 
-['mousedown', 'mousemove', 'keydown', 'touchstart'].forEach(ev => {
+['mousedown', 'mousemove', 'keydown', 'touchstart', 'touchmove'].forEach(ev => {
   document.addEventListener(ev, updateActivity);
 });
 
-// Giriş - SADECE 3 KOD: kmja, deop, Alex (şifre alanı gizli)
+// Giriş
 window.enter = () => {
   username = document.getElementById('nameInput').value.trim();
   const code = document.getElementById('codeInput').value.trim();
@@ -2885,7 +3180,6 @@ window.enter = () => {
     return;
   }
   
-  // Sadece 3 geçerli kod
   if (code === "deop" || code === "kmja" || code === "Alex") {
     if (code === "deop") { 
       role = "admin"; 
@@ -2913,7 +3207,7 @@ window.enter = () => {
 
   document.getElementById('login').style.display = "none";
   
-  loadUserPoints();
+  loadUserData();
   updateActivity();
   startAfkMonitoring();
 
@@ -2955,12 +3249,13 @@ function listenOnline() {
       div.appendChild(pfpImg);
       div.appendChild(infoDiv);
       
-      // Admin için aksiyon butonları
+      // Admin aksiyonları
       if (role === 'admin' && u.name !== username) {
         const actions = document.createElement('div');
         actions.className = 'admin-actions';
         actions.innerHTML = `
           <button onclick="showBanPanel('${u.name}')">🚫 Ban</button>
+          <button onclick="showWarnPanel('${u.name}')">⚠️ Uyar</button>
           <button onclick="muteUser('${u.name}')">🔇 Mute</button>
           <button onclick="deleteUserMessages('${u.name}')">🗑️ Sil</button>
         `;
@@ -3006,7 +3301,19 @@ window.onTyping = () => {
 function listenMessages() {
   db.ref("messages").on('child_added', (snap) => {
     renderMessage(snap.val(), snap.key);
-    document.getElementById('notify').play();
+    const notify = document.getElementById('notify');
+    notify.currentTime = 0;
+    notify.play().catch(() => {});
+  });
+  
+  // Silinen mesajları dinle
+  db.ref("messages").on('child_removed', (snap) => {
+    // Mesajı DOM'dan kaldır
+    const msgDiv = document.querySelector(`[data-key="${snap.key}"]`);
+    if (msgDiv) {
+      msgDiv.style.animation = 'fadeOut 0.3s ease forwards';
+      setTimeout(() => msgDiv.remove(), 300);
+    }
   });
 }
 
@@ -3061,6 +3368,7 @@ window.send = () => {
 function renderMessage(m, key) {
   const chat = document.getElementById('chat');
   const div = document.createElement("div");
+  div.setAttribute('data-key', key);
 
   let cls = "msg user";
   if (m.name === username) cls = "msg me";
@@ -3071,6 +3379,9 @@ function renderMessage(m, key) {
   
   const adminCrown = m.role === 'admin' ? '<span class="admin-crown">👑</span>' : '';
   
+  // Admin her mesajı silebilir
+  const deleteBtn = role === 'admin' ? `<button class="delete-btn" onclick="deleteMessage('${key}')">✕</button>` : '';
+  
   div.innerHTML = `
     <div class="msg-header">
       <img src="${m.pfp}" class="msg-pfp" onerror="this.src='https://ui-avatars.com/api/?name=${m.name}&background=2a6eff&color=fff'">
@@ -3078,16 +3389,16 @@ function renderMessage(m, key) {
       <span class="msg-time">${m.timeStr}</span>
     </div>
     <div>${m.text || ''}</div>
-    ${m.img ? `<img src="${m.img}">` : ''}
-    ${m.video ? `<div class="video-container"><video src="${m.video}" controls></video></div>` : ''}
-    ${role === 'admin' && m.name !== username ? `<button class="delete-btn" onclick="deleteMessage('${key}')">✕</button>` : ''}
+    ${m.img ? `<img src="${m.img}" loading="lazy">` : ''}
+    ${m.video ? `<div class="video-container"><video src="${m.video}" controls preload="metadata"></video></div>` : ''}
+    ${deleteBtn}
   `;
 
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
 }
 
-// Admin mesaj silme
+// Admin mesaj silme - Her mesajı silebilir
 window.deleteMessage = (key) => {
   if (role === 'admin') {
     db.ref(`messages/${key}`).remove();
@@ -3098,13 +3409,15 @@ window.deleteMessage = (key) => {
 window.deleteUserMessages = (targetUser) => {
   if (role === 'admin') {
     db.ref('messages').once('value', (snap) => {
+      let count = 0;
       snap.forEach(child => {
         if (child.val().name === targetUser) {
           child.ref.remove();
+          count++;
         }
       });
+      showNotification(`✅ ${targetUser}'ın ${count} mesajı silindi`);
     });
-    showNotification(`✅ ${targetUser}'ın tüm mesajları silindi`);
   }
 }
 
@@ -3140,15 +3453,47 @@ window.confirmBan = () => {
   closeBanPanel();
 }
 
+// Uyarı Paneli
+window.showWarnPanel = (targetUser) => {
+  targetWarnUser = targetUser;
+  document.getElementById('warn-user').textContent = targetUser;
+  document.getElementById('warn-panel').style.display = 'block';
+}
+
+window.closeWarnPanel = () => {
+  document.getElementById('warn-panel').style.display = 'none';
+  document.getElementById('warn-reason').value = '';
+}
+
+window.confirmWarn = () => {
+  const reason = document.getElementById('warn-reason').value.trim() || 'Kural ihlali';
+  
+  db.ref(`warnings/${targetWarnUser}`).push({
+    reason: reason,
+    warnedBy: username,
+    time: Date.now(),
+    timeStr: new Date().toLocaleString('tr-TR')
+  });
+  
+  db.ref(`notifications/${targetWarnUser}`).push({
+    type: 'warn',
+    text: `Uyarı aldınız! Sebep: ${reason}`,
+    time: Date.now()
+  });
+  
+  showNotification(`⚠️ ${targetWarnUser} uyarıldı!`);
+  closeWarnPanel();
+}
+
 window.muteUser = (targetUser) => {
-  const muteTime = Date.now() + 600000; // 10 dakika
+  const muteTime = Date.now() + 600000;
   mutedUsers[targetUser] = muteTime;
   
   db.ref(`mutes/${targetUser}`).set({ until: muteTime, mutedBy: username, time: Date.now() });
   
   db.ref(`notifications/${targetUser}`).push({
     type: 'mute',
-    text: '10 dakika süreyle susturuldunuz!',
+    text: '10 dakika susturuldunuz!',
     time: Date.now()
   });
   
@@ -3224,426 +3569,765 @@ window.sendToAltun = async () => {
   }
 }
 
-// Satranç - Geliştirilmiş
-function initChess() {
-  chessCanvas = document.getElementById('chess-canvas');
-  chessCtx = chessCanvas.getContext('2d');
-  listenChessRooms();
-  chessCanvas.addEventListener('click', handleChessClick);
+// Yılan Oyunu - 360 Derece Joystickli
+function initSnake() {
+  listenSnakeRooms();
 }
 
-function listenChessRooms() {
-  const serverPath = `chessRooms_server${currentServers.chess}`;
+function listenSnakeRooms() {
+  const serverPath = `snakeRooms_server${currentServers.snake}`;
   db.ref(serverPath).on('value', (snap) => {
     const rooms = snap.val() || {};
-    displayChessRooms(rooms);
+    displaySnakeRooms(rooms);
   });
 }
 
-function displayChessRooms(rooms) {
-  const container = document.getElementById('rooms-list');
+function displaySnakeRooms(rooms) {
+  const container = document.getElementById('snake-rooms-list');
   container.innerHTML = '';
   
   Object.entries(rooms).forEach(([roomId, room]) => {
     const roomDiv = document.createElement('div');
     roomDiv.className = 'room-item';
-    roomDiv.onclick = () => joinChessRoom(roomId, room);
+    roomDiv.onclick = () => joinSnakeRoom(roomId, room);
     roomDiv.innerHTML = `
       <div class="room-name">${room.name || roomId}</div>
-      <div class="room-players">⚪ ${room.white?.name || 'Boş'} | ⚫ ${room.black?.name || 'Boş'}</div>
+      <div class="room-players">🐍 ${room.player?.name || 'Boş'}</div>
     `;
     container.appendChild(roomDiv);
   });
 }
 
-window.createChessRoom = () => {
-  const roomName = document.getElementById('new-room-name').value.trim();
+window.createSnakeRoom = () => {
+  const roomName = document.getElementById('new-snake-room').value.trim();
   if (!roomName) { showNotification('Oda adı girin!'); return; }
   
-  const serverPath = `chessRooms_server${currentServers.chess}`;
-  const roomId = 'chess_' + Date.now();
-  db.ref(`${serverPath}/${roomId}`).set({
-    name: roomName, white: null, black: null, gameStarted: false,
-    fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-    turn: 'w', createdBy: username, lastActivity: Date.now()
-  });
-  document.getElementById('new-room-name').value = '';
-  showNotification('♟️ Oda oluşturuldu!');
-}
-
-window.joinChessRoom = (roomId, room) => {
-  if (room.white && room.black) {
-    showNotification('Oda dolu!'); return;
-  }
-  
-  chessCurrentRoom = roomId;
-  chessPlayerColor = !room.white ? 'white' : 'black';
-  
-  const playerData = { name: username, ready: false, lastActive: Date.now() };
-  const serverPath = `chessRooms_server${currentServers.chess}`;
-  const update = chessPlayerColor === 'white' ? { white: playerData } : { black: playerData };
-  db.ref(`${serverPath}/${roomId}`).update(update);
-  
-  if (roomListener) db.ref(`${serverPath}/${roomId}`).off('value', roomListener);
-  
-  roomListener = db.ref(`${serverPath}/${roomId}`).on('value', (snap) => {
-    const data = snap.val();
-    if (!data) return;
-    
-    document.getElementById('white-player').textContent = data.white?.name || 'Boş';
-    document.getElementById('black-player').textContent = data.black?.name || 'Boş';
-    document.getElementById('white-ready').className = data.white?.ready ? 'ready' : 'not-ready';
-    document.getElementById('black-ready').className = data.black?.ready ? 'ready' : 'not-ready';
-    document.getElementById('waiting-room-title').textContent = data.name;
-    
-    if (data.white?.ready && data.black?.ready && !data.gameStarted) {
-      startChessGame(roomId);
-    }
-    
-    if (data.gameStarted) {
-      document.getElementById('waiting-area').style.display = 'none';
-      document.getElementById('chess-canvas').style.display = 'block';
-      document.getElementById('turn-indicator').classList.remove('hidden');
-      
-      chess = new Chess(data.fen);
-      drawChessBoard();
-      updateTurnIndicator();
-    }
-  });
-}
-
-window.toggleReady = () => {
-  if (!chessCurrentRoom || !chessPlayerColor) return;
-  isPlayerReady = !isPlayerReady;
-  const serverPath = `chessRooms_server${currentServers.chess}`;
-  db.ref(`${serverPath}/${chessCurrentRoom}/${chessPlayerColor}/ready`).set(isPlayerReady);
-}
-
-function startChessGame(roomId) {
-  chess = new Chess();
-  const serverPath = `chessRooms_server${currentServers.chess}`;
-  db.ref(`${serverPath}/${roomId}`).update({ gameStarted: true, fen: chess.fen(), turn: 'w' });
-}
-
-window.leaveChessRoom = () => {
-  if (!chessCurrentRoom) return;
-  const serverPath = `chessRooms_server${currentServers.chess}`;
-  db.ref(`${serverPath}/${chessCurrentRoom}/${chessPlayerColor}`).remove();
-  if (roomListener) db.ref(`${serverPath}/${chessCurrentRoom}`).off('value', roomListener);
-  chessCurrentRoom = null; chessPlayerColor = null; chess = null; isPlayerReady = false;
-  document.getElementById('waiting-area').style.display = 'flex';
-  document.getElementById('chess-canvas').style.display = 'none';
-  document.getElementById('turn-indicator').classList.add('hidden');
-}
-
-function updateTurnIndicator() {
-  if (!chess || !chessPlayerColor) return;
-  const isMyTurn = (chess.turn() === 'w' && chessPlayerColor === 'white') || 
-                   (chess.turn() === 'b' && chessPlayerColor === 'black');
-  const indicator = document.getElementById('turn-indicator');
-  indicator.textContent = isMyTurn ? 'SIRA SENDE' : 'SIRA RAKİBİNDE';
-  indicator.className = isMyTurn ? 'my-turn' : 'opponent-turn';
-}
-
-function getSquareName(row, col) {
-  return 'abcdefgh'[col] + (8 - row);
-}
-
-function drawChessBoard() {
-  if (!chess) return;
-  const squareSize = 65;
-  const board = chess.board();
-  
-  for (let row = 0; row < 8; row++) {
-    for (let col = 0; col < 8; col++) {
-      const x = col * squareSize;
-      const y = row * squareSize;
-      
-      chessCtx.fillStyle = (row + col) % 2 === 0 ? '#f0d9b5' : '#b58863';
-      chessCtx.fillRect(x, y, squareSize, squareSize);
-      
-      if (selectedSquare && selectedSquare.row === row && selectedSquare.col === col) {
-        chessCtx.fillStyle = 'rgba(74, 158, 255, 0.4)';
-        chessCtx.fillRect(x, y, squareSize, squareSize);
-      }
-      
-      if (possibleMoves.some(m => m.to === getSquareName(row, col))) {
-        chessCtx.beginPath();
-        chessCtx.arc(x + squareSize/2, y + squareSize/2, 10, 0, 2 * Math.PI);
-        chessCtx.fillStyle = 'rgba(74, 255, 74, 0.4)';
-        chessCtx.fill();
-      }
-      
-      const piece = board[row][col];
-      if (piece) {
-        const symbols = { 
-          p: '♟', n: '♞', b: '♝', r: '♜', q: '♛', k: '♚',
-          P: '♙', N: '♘', B: '♗', R: '♖', Q: '♕', K: '♔' 
-        };
-        chessCtx.font = 'bold 45px Arial';
-        chessCtx.fillStyle = piece.color === 'w' ? 'white' : 'black';
-        chessCtx.fillText(
-          symbols[piece.type === 'p' ? (piece.color === 'w' ? 'P' : 'p') : 
-                  (piece.color === 'w' ? piece.type.toUpperCase() : piece.type)], 
-          x + 12, y + 52
-        );
-      }
-    }
-  }
-}
-
-function handleChessClick(e) {
-  updateActivity();
-  if (!chess || !chessCurrentRoom) return;
-  
-  const isMyTurn = (chess.turn() === 'w' && chessPlayerColor === 'white') || 
-                   (chess.turn() === 'b' && chessPlayerColor === 'black');
-  if (!isMyTurn) { showNotification('Sıra sende değil!'); return; }
-  
-  const rect = chessCanvas.getBoundingClientRect();
-  const scaleX = chessCanvas.width / rect.width;
-  const scaleY = chessCanvas.height / rect.height;
-  const col = Math.floor((e.clientX - rect.left) * scaleX / 65);
-  const row = Math.floor((e.clientY - rect.top) * scaleY / 65);
-  
-  if (row < 0 || row >= 8 || col < 0 || col >= 8) return;
-  
-  const squareName = getSquareName(row, col);
-  
-  if (selectedSquare) {
-    const move = { 
-      from: getSquareName(selectedSquare.row, selectedSquare.col), 
-      to: squareName, 
-      promotion: 'q' 
-    };
-    
-    if (chess.move(move)) {
-      const serverPath = `chessRooms_server${currentServers.chess}`;
-      db.ref(`${serverPath}/${chessCurrentRoom}`).update({ fen: chess.fen(), turn: chess.turn() });
-      selectedSquare = null; 
-      possibleMoves = [];
-    } else {
-      const piece = chess.board()[row][col];
-      if (piece && ((piece.color === 'w' && chessPlayerColor === 'white') || 
-                   (piece.color === 'b' && chessPlayerColor === 'black'))) {
-        selectedSquare = { row, col };
-        possibleMoves = chess.moves({ square: squareName, verbose: true });
-      } else {
-        selectedSquare = null; 
-        possibleMoves = [];
-      }
-    }
-  } else {
-    const piece = chess.board()[row][col];
-    if (piece && ((piece.color === 'w' && chessPlayerColor === 'white') || 
-                 (piece.color === 'b' && chessPlayerColor === 'black'))) {
-      selectedSquare = { row, col };
-      possibleMoves = chess.moves({ square: squareName, verbose: true });
-    }
-  }
-  
-  drawChessBoard();
-  updateTurnIndicator();
-}
-
-// Ateş ve Su Oyunu
-function initFirewater() {
-  firewaterCanvas = document.getElementById('firewater-canvas');
-  firewaterCtx = firewaterCanvas.getContext('2d');
-  listenFirewaterRooms();
-  
-  // Klavye kontrolleri
-  document.addEventListener('keydown', handleFirewaterKeydown);
-}
-
-function listenFirewaterRooms() {
-  const serverPath = `firewaterRooms_server${currentServers.firewater}`;
-  db.ref(serverPath).on('value', (snap) => {
-    const rooms = snap.val() || {};
-    displayFirewaterRooms(rooms);
-  });
-}
-
-function displayFirewaterRooms(rooms) {
-  const container = document.getElementById('firewater-rooms-list');
-  container.innerHTML = '';
-  
-  Object.entries(rooms).forEach(([roomId, room]) => {
-    const roomDiv = document.createElement('div');
-    roomDiv.className = 'room-item';
-    roomDiv.onclick = () => joinFirewaterRoom(roomId, room);
-    roomDiv.innerHTML = `
-      <div class="room-name">${room.name || roomId}</div>
-      <div class="room-players">🔥 ${room.fire?.name || 'Boş'} | 💧 ${room.water?.name || 'Boş'}</div>
-    `;
-    container.appendChild(roomDiv);
-  });
-}
-
-window.createFirewaterRoom = () => {
-  const roomName = document.getElementById('new-firewater-room').value.trim();
-  if (!roomName) { showNotification('Oda adı girin!'); return; }
-  
-  const serverPath = `firewaterRooms_server${currentServers.firewater}`;
-  const roomId = 'fw_' + Date.now();
+  const serverPath = `snakeRooms_server${currentServers.snake}`;
+  const roomId = 'snake_' + Date.now();
   db.ref(`${serverPath}/${roomId}`).set({
     name: roomName,
-    fire: null,
-    water: null,
+    player: null,
     gameStarted: false,
     gameState: {
-      fire: { x: 1, y: 1 },
-      water: { x: 8, y: 8 },
-      level: 1
+      snake: [{x: 10, y: 10}],
+      direction: {x: 1, y: 0},
+      apple: {x: 15, y: 15},
+      score: 0,
+      speed: 150
     },
     createdBy: username,
     lastActivity: Date.now()
   });
-  document.getElementById('new-firewater-room').value = '';
-  showNotification('🔥💧 Oda oluşturuldu!');
+  document.getElementById('new-snake-room').value = '';
+  showNotification('🐍 Oda oluşturuldu!');
 }
 
-window.joinFirewaterRoom = (roomId, room) => {
-  if (room.fire && room.water) {
+window.joinSnakeRoom = (roomId, room) => {
+  if (room.player) {
     showNotification('Oda dolu!'); return;
   }
   
-  firewaterCurrentRoom = roomId;
-  firewaterPlayerRole = !room.fire ? 'fire' : 'water';
+  gameRooms.snake.current = roomId;
+  gameRooms.snake.player = true;
   
   const playerData = { name: username, ready: false, lastActive: Date.now() };
-  const serverPath = `firewaterRooms_server${currentServers.firewater}`;
-  const update = firewaterPlayerRole === 'fire' ? { fire: playerData } : { water: playerData };
-  db.ref(`${serverPath}/${roomId}`).update(update);
+  const serverPath = `snakeRooms_server${currentServers.snake}`;
+  db.ref(`${serverPath}/${roomId}/player`).set(playerData);
   
-  if (firewaterListener) db.ref(`${serverPath}/${roomId}`).off('value', firewaterListener);
+  if (gameRooms.snake.listener) db.ref(`${serverPath}/${roomId}`).off('value', gameRooms.snake.listener);
   
-  firewaterListener = db.ref(`${serverPath}/${roomId}`).on('value', (snap) => {
+  gameRooms.snake.listener = db.ref(`${serverPath}/${roomId}`).on('value', (snap) => {
     const data = snap.val();
     if (!data) return;
     
-    document.getElementById('fire-player').textContent = data.fire?.name || 'Boş';
-    document.getElementById('water-player').textContent = data.water?.name || 'Boş';
-    document.getElementById('fire-ready').className = data.fire?.ready ? 'ready' : 'not-ready';
-    document.getElementById('water-ready').className = data.water?.ready ? 'ready' : 'not-ready';
-    document.getElementById('firewater-waiting-title').textContent = data.name;
+    document.getElementById('snake-player1').textContent = data.player?.name || 'Boş';
+    const slot = document.getElementById('snake-player1-slot');
+    const status = document.getElementById('snake-player1-status');
     
-    if (data.fire?.ready && data.water?.ready && !data.gameStarted) {
-      startFirewaterGame(roomId);
+    if (data.player) {
+      slot.classList.add('filled');
+      if (data.player.ready) {
+        slot.classList.add('ready');
+        status.textContent = 'Hazır!';
+        status.className = 'ready';
+      } else {
+        slot.classList.remove('ready');
+        status.textContent = 'Bekliyor';
+        status.className = 'not-ready';
+      }
+    }
+    
+    document.getElementById('snake-waiting-title').textContent = data.name;
+    
+    if (data.player?.ready && !data.gameStarted) {
+      startSnakeGame(roomId);
     }
     
     if (data.gameStarted) {
-      document.getElementById('firewater-waiting').style.display = 'none';
-      document.getElementById('firewater-canvas').style.display = 'block';
-      document.getElementById('firewater-controls').style.display = 'flex';
-      firewaterGameState = data.gameState;
-      drawFirewaterGame();
+      document.getElementById('snake-waiting').style.display = 'none';
+      document.getElementById('snake-canvas').style.display = 'block';
+      document.getElementById('snake-joystick').style.display = 'block';
+      document.getElementById('snake-hud').style.display = 'flex';
+      initSnakeJoystick();
+      startSnakeLoop(data.gameState);
     }
   });
 }
 
-window.toggleFirewaterReady = () => {
-  if (!firewaterCurrentRoom || !firewaterPlayerRole) return;
-  firewaterIsReady = !firewaterIsReady;
-  const serverPath = `firewaterRooms_server${currentServers.firewater}`;
-  db.ref(`${serverPath}/${firewaterCurrentRoom}/${firewaterPlayerRole}/ready`).set(firewaterIsReady);
+window.toggleSnakeReady = () => {
+  if (!gameRooms.snake.current) return;
+  gameRooms.snake.ready = !gameRooms.snake.ready;
+  const serverPath = `snakeRooms_server${currentServers.snake}`;
+  db.ref(`${serverPath}/${gameRooms.snake.current}/player/ready`).set(gameRooms.snake.ready);
+  document.getElementById('snake-ready-btn').classList.toggle('ready', gameRooms.snake.ready);
 }
 
-function startFirewaterGame(roomId) {
-  const serverPath = `firewaterRooms_server${currentServers.firewater}`;
+function startSnakeGame(roomId) {
+  const serverPath = `snakeRooms_server${currentServers.snake}`;
   db.ref(`${serverPath}/${roomId}`).update({ gameStarted: true });
 }
 
-window.leaveFirewaterRoom = () => {
-  if (!firewaterCurrentRoom) return;
-  const serverPath = `firewaterRooms_server${currentServers.firewater}`;
-  db.ref(`${serverPath}/${firewaterCurrentRoom}/${firewaterPlayerRole}`).remove();
-  if (firewaterListener) db.ref(`${serverPath}/${firewaterCurrentRoom}`).off('value', firewaterListener);
-  firewaterCurrentRoom = null;
-  firewaterPlayerRole = null;
-  firewaterIsReady = false;
-  document.getElementById('firewater-waiting').style.display = 'block';
-  document.getElementById('firewater-canvas').style.display = 'none';
-  document.getElementById('firewater-controls').style.display = 'none';
+window.leaveSnakeRoom = () => {
+  leaveGameRoom('snake');
 }
 
-function handleFirewaterKeydown(e) {
-  if (!firewaterCurrentRoom || !firewaterGameState) return;
+// 360 Derece Joystick
+let joystickActive = false;
+let joystickAngle = 0;
+
+function initSnakeJoystick() {
+  const container = document.getElementById('snake-joystick');
+  const stick = document.getElementById('snake-joystick-stick');
   
-  const serverPath = `firewaterRooms_server${currentServers.firewater}`;
-  let dx = 0, dy = 0;
+  const handleStart = (e) => {
+    e.preventDefault();
+    joystickActive = true;
+    updateJoystick(e);
+  };
   
-  switch(e.key.toLowerCase()) {
-    case 'w': dy = -1; break;
-    case 's': dy = 1; break;
-    case 'a': dx = -1; break;
-    case 'd': dx = 1; break;
-    default: return;
-  }
+  const handleMove = (e) => {
+    e.preventDefault();
+    if (!joystickActive) return;
+    updateJoystick(e);
+  };
   
-  e.preventDefault();
+  const handleEnd = () => {
+    joystickActive = false;
+    stick.style.transform = 'translate(-50%, -50%)';
+  };
   
-  const player = firewaterGameState[firewaterPlayerRole];
-  const newX = player.x + dx;
-  const newY = player.y + dy;
+  const updateJoystick = (e) => {
+    const rect = container.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    
+    const dx = clientX - centerX;
+    const dy = clientY - centerY;
+    const distance = Math.min(Math.sqrt(dx*dx + dy*dy), 40);
+    const angle = Math.atan2(dy, dx);
+    
+    const x = Math.cos(angle) * distance;
+    const y = Math.sin(angle) * distance;
+    
+    stick.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+    
+    // Yılan yönünü güncelle
+    joystickAngle = angle;
+    updateSnakeDirection(angle);
+  };
   
-  // Sınır kontrolü
-  if (newX < 0 || newX >= 10 || newY < 0 || newY >= 10) return;
-  
-  // Güncelle
-  player.x = newX;
-  player.y = newY;
-  
-  db.ref(`${serverPath}/${firewaterCurrentRoom}/gameState/${firewaterPlayerRole}`).update({ x: newX, y: newY });
+  container.addEventListener('touchstart', handleStart, {passive: false});
+  container.addEventListener('touchmove', handleMove, {passive: false});
+  container.addEventListener('touchend', handleEnd);
+  container.addEventListener('mousedown', handleStart);
+  document.addEventListener('mousemove', handleMove);
+  document.addEventListener('mouseup', handleEnd);
 }
 
-function drawFirewaterGame() {
-  if (!firewaterCtx || !firewaterGameState) return;
+function updateSnakeDirection(angle) {
+  // Açıyı 8 yöne böl
+  const directions = [
+    {x: 1, y: 0},   // Sağ
+    {x: 1, y: 1},   // Sağ-alt
+    {x: 0, y: 1},   // Alt
+    {x: -1, y: 1},  // Sol-alt
+    {x: -1, y: 0},  // Sol
+    {x: -1, y: -1}, // Sol-üst
+    {x: 0, y: -1},  // Üst
+    {x: 1, y: -1}   // Sağ-üst
+  ];
   
-  const ctx = firewaterCtx;
-  const cellSize = 60;
+  const sector = Math.round((angle + Math.PI) / (Math.PI / 4)) % 8;
+  snakeDirection = directions[sector];
+}
+
+let snakeDirection = {x: 1, y: 0};
+let snakeLoop = null;
+
+function startSnakeLoop(initialState) {
+  const canvas = document.getElementById('snake-canvas');
+  const ctx = canvas.getContext('2d');
+  const gridSize = 20;
+  const tileCount = canvas.width / gridSize;
   
-  // Arkaplan
-  ctx.fillStyle = '#1a1a2a';
-  ctx.fillRect(0, 0, 600, 600);
+  let snake = [...initialState.snake];
+  let apple = {...initialState.apple};
+  let score = initialState.score;
+  let speed = initialState.speed;
   
-  // Izgara
-  for (let i = 0; i <= 10; i++) {
-    ctx.strokeStyle = '#2a3a4a';
+  if (snakeLoop) clearInterval(snakeLoop);
+  
+  snakeLoop = setInterval(() => {
+    // Yılanı hareket ettir
+    const head = {x: snake[0].x + snakeDirection.x, y: snake[0].y + snakeDirection.y};
+    
+    // Duvar kontrolü - Duvara çarpma yok, karşıdan çık
+    if (head.x < 0) head.x = tileCount - 1;
+    if (head.x >= tileCount) head.x = 0;
+    if (head.y < 0) head.y = tileCount - 1;
+    if (head.y >= tileCount) head.y = 0;
+    
+    // Kendine çarpma kontrolü - ÇARPMA YOK, geçebilir
+    // (Yılan kendi üzerinden geçebilir)
+    
+    snake.unshift(head);
+    
+    // Elma yeme
+    if (head.x === apple.x && head.y === apple.y) {
+      score += 10;
+      speed = Math.max(50, speed - 2);
+      document.getElementById('snake-score').textContent = score;
+      
+      // Yeni elma
+      apple = {
+        x: Math.floor(Math.random() * tileCount),
+        y: Math.floor(Math.random() * tileCount)
+      };
+      
+      // Firebase güncelle
+      const serverPath = `snakeRooms_server${currentServers.snake}`;
+      db.ref(`${serverPath}/${gameRooms.snake.current}/gameState`).update({
+        snake: snake,
+        apple: apple,
+        score: score,
+        speed: speed
+      });
+    } else {
+      snake.pop();
+    }
+    
+    // Çizim
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Izgara
+    ctx.strokeStyle = '#1a1a2a';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < tileCount; i++) {
+      ctx.beginPath();
+      ctx.moveTo(i * gridSize, 0);
+      ctx.lineTo(i * gridSize, canvas.height);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(0, i * gridSize);
+      ctx.lineTo(canvas.width, i * gridSize);
+      ctx.stroke();
+    }
+    
+    // Elma (🍎)
+    ctx.fillStyle = '#ff4444';
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = '#ff4444';
     ctx.beginPath();
-    ctx.moveTo(i * cellSize, 0);
-    ctx.lineTo(i * cellSize, 600);
-    ctx.moveTo(0, i * cellSize);
-    ctx.lineTo(600, i * cellSize);
-    ctx.stroke();
+    ctx.arc(
+      apple.x * gridSize + gridSize/2,
+      apple.y * gridSize + gridSize/2,
+      gridSize/2 - 2,
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    
+    // Yaprak
+    ctx.fillStyle = '#4aff4a';
+    ctx.beginPath();
+    ctx.ellipse(
+      apple.x * gridSize + gridSize/2 + 5,
+      apple.y * gridSize + 5,
+      4,
+      8,
+      Math.PI / 4,
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
+    
+    // Yılan
+    snake.forEach((segment, index) => {
+      const gradient = ctx.createRadialGradient(
+        segment.x * gridSize + gridSize/2,
+        segment.y * gridSize + gridSize/2,
+        0,
+        segment.x * gridSize + gridSize/2,
+        segment.y * gridSize + gridSize/2,
+        gridSize/2
+      );
+      
+      if (index === 0) {
+        // Kafa
+        gradient.addColorStop(0, '#6aff6a');
+        gradient.addColorStop(1, '#4aff4a');
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = '#4aff4a';
+      } else {
+        // Vücut
+        const alpha = 1 - (index / snake.length) * 0.5;
+        gradient.addColorStop(0, `rgba(74, 255, 74, ${alpha})`);
+        gradient.addColorStop(1, `rgba(42, 200, 42, ${alpha})`);
+        ctx.shadowBlur = 0;
+      }
+      
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.roundRect(
+        segment.x * gridSize + 1,
+        segment.y * gridSize + 1,
+        gridSize - 2,
+        gridSize - 2,
+        8
+      );
+      ctx.fill();
+      
+      // Gözler (kafa için)
+      if (index === 0) {
+        ctx.fillStyle = '#000';
+        ctx.shadowBlur = 0;
+        ctx.beginPath();
+        ctx.arc(
+          segment.x * gridSize + gridSize/2 - 4,
+          segment.y * gridSize + gridSize/2 - 2,
+          3,
+          0,
+          Math.PI * 2
+        );
+        ctx.arc(
+          segment.x * gridSize + gridSize/2 + 4,
+          segment.y * gridSize + gridSize/2 - 2,
+          3,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
+      }
+    });
+    
+    ctx.shadowBlur = 0;
+  }, speed);
+}
+
+// Araba Oyunu - 3D Efektli
+function initCar() {
+  listenCarRooms();
+}
+
+function listenCarRooms() {
+  const serverPath = `carRooms_server${currentServers.car}`;
+  db.ref(serverPath).on('value', (snap) => {
+    const rooms = snap.val() || {};
+    displayCarRooms(rooms);
+  });
+}
+
+function displayCarRooms(rooms) {
+  const container = document.getElementById('car-rooms-list');
+  container.innerHTML = '';
+  
+  Object.entries(rooms).forEach(([roomId, room]) => {
+    const count = (room.player1 ? 1 : 0) + (room.player2 ? 1 : 0);
+    const roomDiv = document.createElement('div');
+    roomDiv.className = 'room-item';
+    roomDiv.onclick = () => joinCarRoom(roomId, room);
+    roomDiv.innerHTML = `
+      <div class="room-name">${room.name || roomId}</div>
+      <div class="room-players">🏎️ ${count}/2 Oyuncu</div>
+    `;
+    container.appendChild(roomDiv);
+  });
+}
+
+window.createCarRoom = () => {
+  const roomName = document.getElementById('new-car-room').value.trim();
+  if (!roomName) { showNotification('Oda adı girin!'); return; }
+  
+  const serverPath = `carRooms_server${currentServers.car}`;
+  const roomId = 'car_' + Date.now();
+  db.ref(`${serverPath}/${roomId}`).set({
+    name: roomName,
+    player1: null,
+    player2: null,
+    gameStarted: false,
+    gameState: {
+      cars: [{x: 150, y: 600, speed: 0, lane: 0}, {x: 250, y: 600, speed: 0, lane: 1}],
+      obstacles: [],
+      scores: [0, 0],
+      level: 1,
+      speed: 5
+    },
+    createdBy: username,
+    lastActivity: Date.now()
+  });
+  document.getElementById('new-car-room').value = '';
+  showNotification('🏎️ Oda oluşturuldu!');
+}
+
+window.joinCarRoom = (roomId, room) => {
+  if (room.player1 && room.player2) {
+    showNotification('Oda dolu!'); return;
   }
   
-  // Ateş karakteri
-  ctx.fillStyle = '#ff4a2a';
-  ctx.beginPath();
-  ctx.arc(
-    firewaterGameState.fire.x * cellSize + cellSize/2,
-    firewaterGameState.fire.y * cellSize + cellSize/2,
-    20, 0, 2 * Math.PI
-  );
-  ctx.fill();
-  ctx.fillStyle = '#fff';
-  ctx.font = '20px Arial';
-  ctx.fillText('🔥', firewaterGameState.fire.x * cellSize + 18, firewaterGameState.fire.y * cellSize + 40);
+  gameRooms.car.current = roomId;
+  gameRooms.car.player = !room.player1 ? 1 : 2;
   
-  // Su karakteri
-  ctx.fillStyle = '#4a9eff';
-  ctx.beginPath();
-  ctx.arc(
-    firewaterGameState.water.x * cellSize + cellSize/2,
-    firewaterGameState.water.y * cellSize + cellSize/2,
-    20, 0, 2 * Math.PI
-  );
-  ctx.fill();
-  ctx.fillStyle = '#fff';
-  ctx.fillText('💧', firewaterGameState.water.x * cellSize + 18, firewaterGameState.water.y * cellSize + 40);
+  const playerData = { name: username, ready: false, lastActive: Date.now() };
+  const serverPath = `carRooms_server${currentServers.car}`;
+  const playerKey = gameRooms.car.player === 1 ? 'player1' : 'player2';
+  db.ref(`${serverPath}/${roomId}/${playerKey}`).set(playerData);
   
-  requestAnimationFrame(drawFirewaterGame);
+  if (gameRooms.car.listener) db.ref(`${serverPath}/${roomId}`).off('value', gameRooms.car.listener);
+  
+  gameRooms.car.listener = db.ref(`${serverPath}/${roomId}`).on('value', (snap) => {
+    const data = snap.val();
+    if (!data) return;
+    
+    document.getElementById('car-player1').textContent = data.player1?.name || 'Boş';
+    document.getElementById('car-player2').textContent = data.player2?.name || 'Boş';
+    
+    const slot1 = document.getElementById('car-player1-slot');
+    const slot2 = document.getElementById('car-player2-slot');
+    
+    if (data.player1) {
+      slot1.classList.add('filled');
+      if (data.player1.ready) slot1.classList.add('ready');
+    }
+    if (data.player2) {
+      slot2.classList.add('filled');
+      if (data.player2.ready) slot2.classList.add('ready');
+    }
+    
+    document.getElementById('car-waiting-title').textContent = data.name;
+    
+    if (data.player1?.ready && data.player2?.ready && !data.gameStarted) {
+      startCarGame(roomId);
+    }
+    
+    if (data.gameStarted) {
+      document.getElementById('car-waiting').style.display = 'none';
+      document.getElementById('car-canvas').style.display = 'block';
+      document.getElementById('car-joystick').style.display = 'block';
+      document.getElementById('car-hud').style.display = 'flex';
+      initCarJoystick();
+      startCarLoop(data.gameState);
+    }
+  });
+}
+
+window.toggleCarReady = () => {
+  if (!gameRooms.car.current) return;
+  gameRooms.car.ready = !gameRooms.car.ready;
+  const serverPath = `carRooms_server${currentServers.car}`;
+  const playerKey = gameRooms.car.player === 1 ? 'player1' : 'player2';
+  db.ref(`${serverPath}/${gameRooms.car.current}/${playerKey}/ready`).set(gameRooms.car.ready);
+  document.getElementById('car-ready-btn').classList.toggle('ready', gameRooms.car.ready);
+}
+
+function startCarGame(roomId) {
+  const serverPath = `carRooms_server${currentServers.car}`;
+  db.ref(`${serverPath}/${roomId}`).update({ gameStarted: true });
+}
+
+window.leaveCarRoom = () => {
+  leaveGameRoom('car');
+}
+
+let carSteering = 0;
+
+function initCarJoystick() {
+  const container = document.getElementById('car-joystick');
+  const stick = document.getElementById('car-joystick-stick');
+  
+  const handleStart = (e) => {
+    e.preventDefault();
+    joystickActive = true;
+    updateCarJoystick(e);
+  };
+  
+  const handleMove = (e) => {
+    e.preventDefault();
+    if (!joystickActive) return;
+    updateCarJoystick(e);
+  };
+  
+  const handleEnd = () => {
+    joystickActive = false;
+    carSteering = 0;
+    stick.style.transform = 'translate(-50%, -50%)';
+  };
+  
+  const updateCarJoystick = (e) => {
+    const rect = container.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const dx = Math.max(-50, Math.min(50, clientX - centerX));
+    
+    const x = dx;
+    stick.style.transform = `translate(calc(-50% + ${x}px), -50%)`;
+    
+    carSteering = dx / 50; // -1 ile 1 arası
+  };
+  
+  container.addEventListener('touchstart', handleStart, {passive: false});
+  container.addEventListener('touchmove', handleMove, {passive: false});
+  container.addEventListener('touchend', handleEnd);
+  container.addEventListener('mousedown', handleStart);
+  document.addEventListener('mousemove', handleMove);
+  document.addEventListener('mouseup', handleEnd);
+}
+
+let carLoop = null;
+
+function startCarLoop(initialState) {
+  const canvas = document.getElementById('car-canvas');
+  const ctx = canvas.getContext('2d');
+  
+  let cars = initialState.cars.map(c => ({...c}));
+  let obstacles = initialState.obstacles.map(o => ({...o}));
+  let score = initialState.scores[gameRooms.car.player - 1];
+  let level = initialState.level;
+  let gameSpeed = initialState.speed;
+  let myCar = cars[gameRooms.car.player - 1];
+  
+  if (carLoop) cancelAnimationFrame(carLoop);
+  
+  let lastTime = 0;
+  let obstacleTimer = 0;
+  
+  function gameLoop(timestamp) {
+    const deltaTime = timestamp - lastTime;
+    lastTime = timestamp;
+    
+    // Arabayı kontrol et
+    myCar.x += carSteering * 8;
+    myCar.x = Math.max(30, Math.min(canvas.width - 30, myCar.x));
+    
+    // Otomatik ilerleme
+    gameSpeed = Math.min(15, 5 + score / 100);
+    myCar.speed = gameSpeed * 20;
+    
+    // Engelleri güncelle
+    obstacleTimer += deltaTime;
+    if (obstacleTimer > 2000 - level * 200) {
+      obstacleTimer = 0;
+      const lane = Math.floor(Math.random() * 4);
+      const x = 50 + lane * 100;
+      obstacles.push({
+        x: x,
+        y: -100,
+        width: 60,
+        height: 100,
+        type: Math.random() > 0.5 ? 'car' : 'truck',
+        color: `hsl(${Math.random() * 360}, 70%, 50%)`
+      });
+    }
+    
+    obstacles.forEach(obs => {
+      obs.y += gameSpeed * 2;
+    });
+    
+    obstacles = obstacles.filter(obs => obs.y < canvas.height + 100);
+    
+    // Çarpışma kontrolü
+    obstacles.forEach(obs => {
+      if (myCar.x - 25 < obs.x + obs.width/2 &&
+          myCar.x + 25 > obs.x - obs.width/2 &&
+          myCar.y - 40 < obs.y + obs.height/2 &&
+          myCar.y + 40 > obs.y - obs.height/2) {
+        // Çarpışma - Oyun bitti
+        showNotification('💥 Çarptın! Oyun bitti!');
+        obstacles = [];
+        score = Math.max(0, score - 50);
+      }
+    });
+    
+    // Skor
+    score += Math.floor(gameSpeed / 5);
+    document.getElementById('car-score').textContent = score;
+    document.getElementById('car-speed').textContent = Math.floor(myCar.speed);
+    
+    // Seviye atlama
+    if (score > level * 500) {
+      level++;
+      showNotification(`🎉 Seviye ${level}!`);
+    }
+    
+    // Çizim - 3D Efektli
+    ctx.fillStyle = '#1a1a2a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Yol - 3D perspektif
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, '#2a3a4a');
+    gradient.addColorStop(1, '#0a1a2a');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(20, 0, canvas.width - 40, canvas.height);
+    
+    // Şerit çizgileri - Hareketli
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+    ctx.lineWidth = 4;
+    ctx.setLineDash([40, 40]);
+    ctx.lineDashOffset = -Date.now() / 10 * gameSpeed;
+    
+    for (let i = 1; i < 4; i++) {
+      ctx.beginPath();
+      ctx.moveTo(i * 100, 0);
+      ctx.lineTo(i * 100, canvas.height);
+      ctx.stroke();
+    }
+    
+    ctx.setLineDash([]);
+    
+    // Engeller - 3D Arabalar
+    obstacles.forEach(obs => {
+      // Gölge
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+      ctx.beginPath();
+      ctx.ellipse(obs.x, obs.y + obs.height/2 + 10, obs.width/2, 10, 0, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Araba gövdesi - 3D efekt
+      const carGradient = ctx.createLinearGradient(obs.x - obs.width/2, obs.y - obs.height/2, obs.x + obs.width/2, obs.y + obs.height/2);
+      carGradient.addColorStop(0, obs.color);
+      carGradient.addColorStop(0.5, lightenColor(obs.color, 20));
+      carGradient.addColorStop(1, darkenColor(obs.color, 20));
+      
+      ctx.fillStyle = carGradient;
+      ctx.beginPath();
+      ctx.roundRect(obs.x - obs.width/2, obs.y - obs.height/2, obs.width, obs.height, 15);
+      ctx.fill();
+      
+      // Cam
+      ctx.fillStyle = '#4a9eff';
+      ctx.beginPath();
+      ctx.roundRect(obs.x - obs.width/3, obs.y - obs.height/3, obs.width/1.5, obs.height/3, 8);
+      ctx.fill();
+      
+      // Farlar
+      ctx.fillStyle = '#ffffaa';
+      ctx.shadowBlur = 20;
+      ctx.shadowColor = '#ffffaa';
+      ctx.beginPath();
+      ctx.arc(obs.x - obs.width/3, obs.y + obs.height/2 - 10, 6, 0, Math.PI * 2);
+      ctx.arc(obs.x + obs.width/3, obs.y + obs.height/2 - 10, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    });
+    
+    // Benim arabam - 3D
+    const myCarGradient = ctx.createLinearGradient(myCar.x - 25, myCar.y - 40, myCar.x + 25, myCar.y + 40);
+    myCarGradient.addColorStop(0, '#2a6eff');
+    myCarGradient.addColorStop(0.5, '#4a9eff');
+    myCarGradient.addColorStop(1, '#1a5eef');
+    
+    // Gölge
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+    ctx.beginPath();
+    ctx.ellipse(myCar.x, myCar.y + 50, 30, 12, 0, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Araba
+    ctx.fillStyle = myCarGradient;
+    ctx.beginPath();
+    ctx.roundRect(myCar.x - 25, myCar.y - 40, 50, 80, 20);
+    ctx.fill();
+    
+    // Cam
+    ctx.fillStyle = '#6a9aff';
+    ctx.beginPath();
+    ctx.roundRect(myCar.x - 18, myCar.y - 25, 36, 30, 10);
+    ctx.fill();
+    
+    // Farlar - Parlak
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowBlur = 30;
+    ctx.shadowColor = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(myCar.x - 15, myCar.y - 35, 8, 0, Math.PI * 2);
+    ctx.arc(myCar.x + 15, myCar.y - 35, 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    
+    // Stop lambaları
+    ctx.fillStyle = '#ff4444';
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = '#ff4444';
+    ctx.beginPath();
+    ctx.arc(myCar.x - 15, myCar.y + 35, 6, 0, Math.PI * 2);
+    ctx.arc(myCar.x + 15, myCar.y + 35, 6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    
+    // Hız efekti - Motion blur
+    if (gameSpeed > 10) {
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 5; i++) {
+        const y = Math.random() * canvas.height;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+    }
+    
+    // Firebase güncelle
+    if (Math.random() < 0.1) {
+      const serverPath = `carRooms_server${currentServers.car}`;
+      db.ref(`${serverPath}/${gameRooms.car.current}/gameState`).update({
+        cars: cars,
+        obstacles: obstacles,
+        scores: gameRooms.car.player === 1 ? [score, 0] : [0, score],
+        level: level,
+        speed: gameSpeed
+      });
+    }
+    
+    carLoop = requestAnimationFrame(gameLoop);
+  }
+  
+  carLoop = requestAnimationFrame(gameLoop);
+}
+
+// Yardımcı renk fonksiyonları
+function lightenColor(color, percent) {
+  const num = parseInt(color.replace("#",""), 16),
+  amt = Math.round(2.55 * percent),
+  R = (num >> 16) + amt,
+  B = (num >> 8 & 0x00FF) + amt,
+  G = (num & 0x0000FF) + amt;
+  return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (B<255?B<1?0:B:255)*0x100 + (G<255?G<1?0:G:255)).toString(16).slice(1);
+}
+
+function darkenColor(color, percent) {
+  const num = parseInt(color.replace("#",""), 16),
+  amt = Math.round(2.55 * percent),
+  R = (num >> 16) - amt,
+  B = (num >> 8 & 0x00FF) - amt,
+  G = (num & 0x0000FF) - amt;
+  return "#" + (0x1000000 + (R>0?R:0)*0x10000 + (B>0?B:0)*0x100 + (G>0?G:0)).toString(16).slice(1);
 }
 
 // XOX Oyunu
@@ -3664,12 +4348,13 @@ function displayTictactoeRooms(rooms) {
   container.innerHTML = '';
   
   Object.entries(rooms).forEach(([roomId, room]) => {
+    const count = (room.x ? 1 : 0) + (room.o ? 1 : 0);
     const roomDiv = document.createElement('div');
     roomDiv.className = 'room-item';
     roomDiv.onclick = () => joinTictactoeRoom(roomId, room);
     roomDiv.innerHTML = `
       <div class="room-name">${room.name || roomId}</div>
-      <div class="room-players">⭕ ${room.x?.name || 'Boş'} | ❌ ${room.o?.name || 'Boş'}</div>
+      <div class="room-players">⭕❌ ${count}/2 Oyuncu</div>
     `;
     container.appendChild(roomDiv);
   });
@@ -3701,24 +4386,35 @@ window.joinTictactoeRoom = (roomId, room) => {
     showNotification('Oda dolu!'); return;
   }
   
-  tictactoeCurrentRoom = roomId;
-  tictactoePlayerRole = !room.x ? 'x' : 'o';
+  gameRooms.tictactoe.current = roomId;
+  gameRooms.tictactoe.player = !room.x ? 'x' : 'o';
   
   const playerData = { name: username, ready: false, lastActive: Date.now() };
   const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
-  const update = tictactoePlayerRole === 'x' ? { x: playerData } : { o: playerData };
-  db.ref(`${serverPath}/${roomId}`).update(update);
+  const playerKey = gameRooms.tictactoe.player;
+  db.ref(`${serverPath}/${roomId}/${playerKey}`).set(playerData);
   
-  if (tictactoeListener) db.ref(`${serverPath}/${roomId}`).off('value', tictactoeListener);
+  if (gameRooms.tictactoe.listener) db.ref(`${serverPath}/${roomId}`).off('value', gameRooms.tictactoe.listener);
   
-  tictactoeListener = db.ref(`${serverPath}/${roomId}`).on('value', (snap) => {
+  gameRooms.tictactoe.listener = db.ref(`${serverPath}/${roomId}`).on('value', (snap) => {
     const data = snap.val();
     if (!data) return;
     
-    document.getElementById('x-player').textContent = data.x?.name || 'Boş';
-    document.getElementById('o-player').textContent = data.o?.name || 'Boş';
-    document.getElementById('x-ready').className = data.x?.ready ? 'ready' : 'not-ready';
-    document.getElementById('o-ready').className = data.o?.ready ? 'ready' : 'not-ready';
+    document.getElementById('tictactoe-x').textContent = data.x?.name || 'Boş';
+    document.getElementById('tictactoe-o').textContent = data.o?.name || 'Boş';
+    
+    const xSlot = document.getElementById('tictactoe-x-slot');
+    const oSlot = document.getElementById('tictactoe-o-slot');
+    
+    if (data.x) {
+      xSlot.classList.add('filled');
+      if (data.x.ready) xSlot.classList.add('ready');
+    }
+    if (data.o) {
+      oSlot.classList.add('filled');
+      if (data.o.ready) oSlot.classList.add('ready');
+    }
+    
     document.getElementById('tictactoe-waiting-title').textContent = data.name;
     
     if (data.x?.ready && data.o?.ready && !data.gameStarted) {
@@ -3727,17 +4423,21 @@ window.joinTictactoeRoom = (roomId, room) => {
     
     if (data.gameStarted) {
       document.getElementById('tictactoe-waiting').style.display = 'none';
-      document.getElementById('tictactoe-board-container').style.display = 'flex';
+      document.getElementById('tictactoe-board').style.display = 'grid';
+      document.getElementById('tictactoe-status').style.display = 'block';
+      document.getElementById('tictactoe-reset').style.display = 'block';
       updateTictactoeBoard(data);
     }
   });
 }
 
 window.toggleTictactoeReady = () => {
-  if (!tictactoeCurrentRoom || !tictactoePlayerRole) return;
-  tictactoeIsReady = !tictactoeIsReady;
+  if (!gameRooms.tictactoe.current) return;
+  gameRooms.tictactoe.ready = !gameRooms.tictactoe.ready;
   const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
-  db.ref(`${serverPath}/${tictactoeCurrentRoom}/${tictactoePlayerRole}/ready`).set(tictactoeIsReady);
+  const playerKey = gameRooms.tictactoe.player;
+  db.ref(`${serverPath}/${gameRooms.tictactoe.current}/${playerKey}/ready`).set(gameRooms.tictactoe.ready);
+  document.getElementById('tictactoe-ready-btn').classList.toggle('ready', gameRooms.tictactoe.ready);
 }
 
 function startTictactoeGame(roomId) {
@@ -3746,21 +4446,7 @@ function startTictactoeGame(roomId) {
 }
 
 window.leaveTictactoeRoom = () => {
-  if (!tictactoeCurrentRoom) return;
-  const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
-  db.ref(`${serverPath}/${tictactoeCurrentRoom}/${tictactoePlayerRole}`).remove();
-  if (tictactoeListener) db.ref(`${serverPath}/${tictactoeCurrentRoom}`).off('value', tictactoeListener);
-  tictactoeCurrentRoom = null;
-  tictactoePlayerRole = null;
-  tictactoeIsReady = false;
-  document.getElementById('tictactoe-waiting').style.display = 'block';
-  document.getElementById('tictactoe-board-container').style.display = 'none';
-  
-  // Reset board
-  document.querySelectorAll('.tictactoe-cell').forEach(cell => {
-    cell.textContent = '';
-    cell.className = 'tictactoe-cell';
-  });
+  leaveGameRoom('tictactoe');
 }
 
 function updateTictactoeBoard(data) {
@@ -3772,29 +4458,36 @@ function updateTictactoeBoard(data) {
   
   const status = document.getElementById('tictactoe-status');
   if (data.winner) {
-    status.textContent = data.winner === 'draw' ? 'Berabere!' : `Kazanan: ${data.winner === 'x' ? '⭕' : '❌'}`;
+    if (data.winner === 'draw') {
+      status.textContent = '🤝 Berabere!';
+      status.style.color = '#ffaa2a';
+    } else {
+      status.textContent = `🎉 Kazanan: ${data.winner === 'x' ? '⭕' : '❌'}`;
+      status.style.color = data.winner === gameRooms.tictactoe.player ? '#4aff4a' : '#ff5a5a';
+    }
   } else {
-    status.textContent = `Sıra: ${data.currentTurn === 'x' ? '⭕' : '❌'}`;
+    const isMyTurn = data.currentTurn === gameRooms.tictactoe.player;
+    status.textContent = isMyTurn ? '🎯 Sıra sende!' : '⏳ Rakibin sırası...';
+    status.style.color = isMyTurn ? '#4aff4a' : '#8892a6';
   }
 }
 
 window.makeTictactoeMove = (index) => {
-  if (!tictactoeCurrentRoom) return;
+  if (!gameRooms.tictactoe.current) return;
   
   const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
-  db.ref(`${serverPath}/${tictactoeCurrentRoom}`).once('value', (snap) => {
+  db.ref(`${serverPath}/${gameRooms.tictactoe.current}`).once('value', (snap) => {
     const data = snap.val();
-    if (!data || data.board[index] || data.winner || data.currentTurn !== tictactoePlayerRole) return;
+    if (!data || data.board[index] || data.winner || data.currentTurn !== gameRooms.tictactoe.player) return;
     
     const newBoard = [...data.board];
-    newBoard[index] = tictactoePlayerRole;
+    newBoard[index] = gameRooms.tictactoe.player;
     
-    // Kazanan kontrolü
     const winner = checkTictactoeWinner(newBoard);
     
-    db.ref(`${serverPath}/${tictactoeCurrentRoom}`).update({
+    db.ref(`${serverPath}/${gameRooms.tictactoe.current}`).update({
       board: newBoard,
-      currentTurn: tictactoePlayerRole === 'x' ? 'o' : 'x',
+      currentTurn: gameRooms.tictactoe.player === 'x' ? 'o' : 'x',
       winner: winner
     });
   });
@@ -3819,13 +4512,51 @@ function checkTictactoeWinner(board) {
 }
 
 window.resetTictactoe = () => {
-  if (!tictactoeCurrentRoom) return;
+  if (!gameRooms.tictactoe.current) return;
   const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
-  db.ref(`${serverPath}/${tictactoeCurrentRoom}`).update({
+  db.ref(`${serverPath}/${gameRooms.tictactoe.current}`).update({
     board: ['', '', '', '', '', '', '', '', ''],
     currentTurn: 'x',
     winner: null
   });
+}
+
+// Oda'dan çıkma - Genel fonksiyon
+function leaveGameRoom(game) {
+  const room = gameRooms[game];
+  if (!room.current) return;
+  
+  const serverPath = `${game}Rooms_server${currentServers[game]}`;
+  
+  if (game === 'snake') {
+    db.ref(`${serverPath}/${room.current}/player`).remove();
+    if (snakeLoop) clearInterval(snakeLoop);
+    document.getElementById('snake-waiting').style.display = 'flex';
+    document.getElementById('snake-canvas').style.display = 'none';
+    document.getElementById('snake-joystick').style.display = 'none';
+    document.getElementById('snake-hud').style.display = 'none';
+  } else if (game === 'car') {
+    const playerKey = room.player === 1 ? 'player1' : 'player2';
+    db.ref(`${serverPath}/${room.current}/${playerKey}`).remove();
+    if (carLoop) cancelAnimationFrame(carLoop);
+    document.getElementById('car-waiting').style.display = 'flex';
+    document.getElementById('car-canvas').style.display = 'none';
+    document.getElementById('car-joystick').style.display = 'none';
+    document.getElementById('car-hud').style.display = 'none';
+  } else if (game === 'tictactoe') {
+    db.ref(`${serverPath}/${room.current}/${room.player}`).remove();
+    document.getElementById('tictactoe-waiting').style.display = 'flex';
+    document.getElementById('tictactoe-board').style.display = 'none';
+    document.getElementById('tictactoe-status').style.display = 'none';
+    document.getElementById('tictactoe-reset').style.display = 'none';
+  }
+  
+  if (room.listener) db.ref(`${serverPath}/${room.current}`).off('value', room.listener);
+  
+  room.current = null;
+  room.player = null;
+  room.ready = false;
+  room.listener = null;
 }
 
 // Sayı Tahmin
@@ -3903,7 +4634,7 @@ window.makeGuess = () => {
     const feedback = document.getElementById('guess-feedback');
     feedback.textContent = '🎉';
     feedback.className = 'correct';
-    setTimeout(() => { feedback.textContent = ''; }, 800);
+    setTimeout(() => { feedback.textContent = ''; }, 1000);
     
   } else if (guess < guessTarget) {
     if (guess > guessMin) guessMin = guess + 1;
@@ -3947,8 +4678,8 @@ window.startNewGuessGame = () => {
   showNotification('🔄 Yeni sayı belirlendi!');
 }
 
-// Puan ve Mağaza
-function loadUserPoints() {
+// Kullanıcı verileri
+function loadUserData() {
   db.ref(`users/${username}/points`).on('value', (snap) => {
     userPoints = snap.val() || 0;
     document.getElementById('user-points').textContent = userPoints;
@@ -3961,11 +4692,53 @@ function loadUserPoints() {
   db.ref(`users/${username}/activeStyle`).on('value', (snap) => {
     currentStyle = snap.val() || 'default';
   });
+  
+  db.ref(`users/${username}/themes`).on('value', (snap) => {
+    purchasedThemes = snap.val() || ['default'];
+  });
+  
+  db.ref(`users/${username}/activeTheme`).on('value', (snap) => {
+    currentTheme = snap.val() || 'default';
+    applyTheme(currentTheme);
+  });
+}
+
+function applyTheme(themeId) {
+  const theme = THEME_DEFINITIONS[themeId];
+  if (!theme) return;
+  
+  if (themeId === 'default') {
+    document.body.style.background = '';
+  } else {
+    document.body.style.background = theme.bg;
+  }
+}
+
+// Mağaza
+let currentShopTab = 'bubbles';
+
+window.switchShopTab = (tab) => {
+  currentShopTab = tab;
+  document.querySelectorAll('.shop-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.shop-section').forEach(s => s.classList.remove('active'));
+  
+  event.target.classList.add('active');
+  document.getElementById('shop-' + tab).classList.add('active');
+  
+  if (tab === 'bubbles') renderBubbleShop();
+  else renderThemeShop();
 }
 
 window.openShop = () => {
-  const shopItems = document.getElementById('shop-items');
-  shopItems.innerHTML = '';
+  renderBubbleShop();
+  renderThemeShop();
+  document.getElementById('shop-panel').style.display = 'flex';
+  closeMenu();
+}
+
+function renderBubbleShop() {
+  const container = document.getElementById('shop-bubbles');
+  container.innerHTML = '';
   
   Object.entries(STYLE_DEFINITIONS).forEach(([styleId, style]) => {
     if (styleId === 'default') return;
@@ -3974,7 +4747,7 @@ window.openShop = () => {
     const div = document.createElement('div');
     div.className = `shop-item ${owned ? 'disabled' : ''}`;
     div.innerHTML = `
-      <div class="shop-item-preview" style="background: ${style.color}; border: 2px solid ${styleId === 'blackwhite' ? '#fff' : 'transparent'};">
+      <div class="shop-item-preview" style="background: ${style.color}; border: ${styleId === 'blackwhite' ? '3px solid #fff' : 'none'};">
         ${style.emoji}
       </div>
       <div class="shop-item-info">
@@ -3985,27 +4758,65 @@ window.openShop = () => {
         ${owned ? '✓ SAHİP' : `${style.price}💰`}
       </div>
     `;
-    if (!owned) div.onclick = () => buyStyle(styleId, style.price);
-    shopItems.appendChild(div);
+    if (!owned) div.onclick = () => buyItem('style', styleId, style.price);
+    container.appendChild(div);
   });
-  
-  document.getElementById('shop-panel').style.display = 'block';
-  closeMenu();
 }
 
-window.buyStyle = (style, price) => {
+function renderThemeShop() {
+  const container = document.getElementById('shop-themes');
+  container.innerHTML = '';
+  
+  Object.entries(THEME_DEFINITIONS).forEach(([themeId, theme]) => {
+    if (themeId === 'default') return;
+    
+    const owned = purchasedThemes.includes(themeId);
+    const div = document.createElement('div');
+    div.className = `shop-item ${owned ? 'disabled' : ''}`;
+    div.innerHTML = `
+      <div class="shop-item-preview" style="background: ${theme.bg}; border: 2px solid #4a9eff;">
+        ${theme.emoji}
+      </div>
+      <div class="shop-item-info">
+        <h3>${theme.name}</h3>
+        <p>Uygulama teması</p>
+      </div>
+      <div class="shop-item-price">
+        ${owned ? '✓ SAHİP' : `${theme.price}💰`}
+      </div>
+    `;
+    if (!owned) div.onclick = () => buyItem('theme', themeId, theme.price);
+    container.appendChild(div);
+  });
+}
+
+window.buyItem = (type, id, price) => {
   if (userPoints < price) { showNotification('Yetersiz puan!'); return; }
-  userPoints -= price; 
-  purchasedStyles.push(style);
-  currentStyle = style;
   
+  userPoints -= price;
   db.ref(`users/${username}/points`).set(userPoints);
-  db.ref(`users/${username}/styles`).set(purchasedStyles);
-  db.ref(`users/${username}/activeStyle`).set(style);
   
-  showNotification('✨ Stil satın alındı!');
-  closeShop();
-  openInventory();
+  if (type === 'style') {
+    purchasedStyles.push(id);
+    currentStyle = id;
+    db.ref(`users/${username}/styles`).set(purchasedStyles);
+    db.ref(`users/${username}/activeStyle`).set(id);
+    renderBubbleShop();
+  } else {
+    purchasedThemes.push(id);
+    currentTheme = id;
+    db.ref(`users/${username}/themes`).set(purchasedThemes);
+    db.ref(`users/${username}/activeTheme`).set(id);
+    applyTheme(id);
+    renderThemeShop();
+  }
+  
+  showNotification('✨ Satın alındı!');
+}
+
+window.scrollShop = (direction) => {
+  const section = document.getElementById('shop-' + currentShopTab);
+  section.scrollBy({ top: direction * 200, behavior: 'smooth' });
 }
 
 window.closeShop = () => {
@@ -4014,33 +4825,61 @@ window.closeShop = () => {
 
 // Envanter
 window.openInventory = () => {
-  const inventoryGrid = document.getElementById('inventory-grid');
-  inventoryGrid.innerHTML = '';
+  const grid = document.getElementById('inventory-grid');
+  grid.innerHTML = '';
   
+  // Stiller
   purchasedStyles.forEach(styleId => {
     const style = STYLE_DEFINITIONS[styleId];
     const div = document.createElement('div');
     div.className = `inventory-item ${currentStyle === styleId ? 'active' : ''}`;
     div.innerHTML = `
-      <div class="inventory-item-preview" style="background: ${style.color}; border: 2px solid ${styleId === 'blackwhite' ? '#fff' : 'transparent'};">
+      <div class="inventory-item-preview" style="background: ${style.color}; border: ${styleId === 'blackwhite' ? '2px solid #fff' : 'none'};">
         ${style.emoji}
       </div>
       <div class="inventory-item-name">${style.name}</div>
       ${currentStyle === styleId ? '<div class="inventory-item-badge">✓</div>' : ''}
     `;
-    div.onclick = () => equipStyle(styleId);
-    inventoryGrid.appendChild(div);
+    div.onclick = () => equipItem('style', styleId);
+    grid.appendChild(div);
   });
   
-  document.getElementById('inventory-panel').style.display = 'block';
+  // Temalar
+  purchasedThemes.forEach(themeId => {
+    const theme = THEME_DEFINITIONS[themeId];
+    const div = document.createElement('div');
+    div.className = `inventory-item ${currentTheme === themeId ? 'active' : ''}`;
+    div.innerHTML = `
+      <div class="inventory-item-preview" style="background: ${theme.bg}; border: 2px solid #4a9eff;">
+        ${theme.emoji}
+      </div>
+      <div class="inventory-item-name">${theme.name}</div>
+      ${currentTheme === themeId ? '<div class="inventory-item-badge">✓</div>' : ''}
+    `;
+    div.onclick = () => equipItem('theme', themeId);
+    grid.appendChild(div);
+  });
+  
+  document.getElementById('inventory-panel').style.display = 'flex';
   closeMenu();
 }
 
-window.equipStyle = (styleId) => {
-  currentStyle = styleId;
-  db.ref(`users/${username}/activeStyle`).set(styleId);
-  showNotification(`✨ ${STYLE_DEFINITIONS[styleId].name} kuşanıldı!`);
-  openInventory(); // Yenile
+window.equipItem = (type, id) => {
+  if (type === 'style') {
+    currentStyle = id;
+    db.ref(`users/${username}/activeStyle`).set(id);
+  } else {
+    currentTheme = id;
+    db.ref(`users/${username}/activeTheme`).set(id);
+    applyTheme(id);
+  }
+  showNotification(`✨ ${type === 'style' ? STYLE_DEFINITIONS[id].name : THEME_DEFINITIONS[id].name} kuşanıldı!`);
+  openInventory();
+}
+
+window.scrollInventory = (direction) => {
+  const grid = document.getElementById('inventory-grid');
+  grid.scrollBy({ top: direction * 150, behavior: 'smooth' });
 }
 
 window.closeInventory = () => {
@@ -4098,7 +4937,7 @@ function loadFeedbackHistory() {
           <span class="feedback-type-badge">${f.type}</span>
         </div>
         <div>${f.text}</div>
-        <div style="font-size: 10px; color: #8892a6; margin-top: 5px;">${f.timeStr}</div>
+        <div style="font-size: 11px; color: #8892a6; margin-top: 6px;">${f.timeStr}</div>
       `;
       listDiv.appendChild(div);
     });
@@ -4118,6 +4957,7 @@ function showNotification(text) {
 window.onload = () => {
   switchScreen('chat');
   
+  // Input olayları
   document.getElementById('guess-input').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') makeGuess();
   });
@@ -4126,17 +4966,21 @@ window.onload = () => {
     if (e.key === 'Enter') sendToAltun();
   });
   
+  // Sayfa kapanışı
   window.addEventListener('beforeunload', () => {
     if (username) {
       db.ref(`typing/${username}`).remove();
       if (onlineRef) onlineRef.remove();
+      Object.keys(gameRooms).forEach(game => {
+        if (gameRooms[game].current) leaveGameRoom(game);
+      });
     }
   });
   
-  // Smooth scroll için
-  document.querySelectorAll('.scrollable, #chat, #altun-messages, #guess-container, #score-list, #history-list, #shop-items').forEach(el => {
-    if (el) el.style.overscrollBehavior = 'contain';
-  });
+  // PWA desteği
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('data:text/javascript,').catch(() => {});
+  }
 }
 </script>
 
