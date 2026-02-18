@@ -6,6 +6,7 @@
 <title>7/D Sohbet + Oyunlar + Premium</title>
 
 <style>
+/* Tüm stiller aynı kalacak - değişiklik yok */
 * {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
@@ -2706,7 +2707,7 @@ textarea {
           <h2 id="snake-waiting-title">Bekleme Odası</h2>
           <div class="player-slots">
             <div class="player-slot" id="snake-player1-slot">
-              <span>🐍 Oyuncu 1: <span id="snake-player1">Boş</span></span>
+              <span>🐍 Oyuncu: <span id="snake-player1">Boş</span></span>
               <span id="snake-player1-status" class="not-ready">Bekliyor</span>
             </div>
           </div>
@@ -3001,6 +3002,9 @@ let gameRooms = {
   tictactoe: { current: null, player: null, ready: false, listener: null }
 };
 
+// Oda temizleme zamanlayıcıları
+let roomCleanupTimers = {};
+
 // Sayı Tahmin Değişkenleri
 let guessTarget = Math.floor(Math.random() * 100) + 1;
 let guessMin = 1, guessMax = 100;
@@ -3046,6 +3050,34 @@ const THEME_DEFINITIONS = {
   'space': { name: 'Uzay', emoji: '🚀', price: 600, bg: 'linear-gradient(45deg, #0a0a1a, #000)' },
   'cyberpunk': { name: 'Cyberpunk', emoji: '🤖', price: 700, bg: 'linear-gradient(45deg, #1a0a1a, #2a1a3a)' }
 };
+
+// Oda temizleme fonksiyonu
+function startRoomCleanupTimer(roomType, serverNum, roomId) {
+  const timerKey = `${roomType}_${serverNum}_${roomId}`;
+  if (roomCleanupTimers[timerKey]) clearTimeout(roomCleanupTimers[timerKey]);
+  
+  roomCleanupTimers[timerKey] = setTimeout(() => {
+    const serverPath = `${roomType}Rooms_server${serverNum}`;
+    db.ref(`${serverPath}/${roomId}`).once('value', (snap) => {
+      const room = snap.val();
+      if (room && !room.gameStarted) {
+        const lastActive = room.lastActivity || 0;
+        if (Date.now() - lastActive > 40000) {
+          db.ref(`${serverPath}/${roomId}`).remove();
+          console.log(`Oda silindi: ${roomId} (40 saniye hareketsiz)`);
+        }
+      }
+    });
+    delete roomCleanupTimers[timerKey];
+  }, 41000); // 41 saniye sonra kontrol et
+}
+
+// Oda aktivitesini güncelle
+function updateRoomActivity(roomType, serverNum, roomId) {
+  const serverPath = `${roomType}Rooms_server${serverNum}`;
+  db.ref(`${serverPath}/${roomId}/lastActivity`).set(Date.now());
+  startRoomCleanupTimer(roomType, serverNum, roomId);
+}
 
 // Sayfa kaymasını engelle
 document.body.addEventListener('touchmove', function(e) {
@@ -3158,6 +3190,13 @@ function startAfkMonitoring() {
 function updateActivity() {
   lastActivityTime = Date.now();
   document.getElementById('afk-warning').style.display = 'none';
+  
+  // Aktif oda varsa aktiviteyi güncelle
+  Object.keys(gameRooms).forEach(game => {
+    if (gameRooms[game].current) {
+      updateRoomActivity(game, currentServers[game], gameRooms[game].current);
+    }
+  });
 }
 
 ['mousedown', 'mousemove', 'keydown', 'touchstart', 'touchmove'].forEach(ev => {
@@ -3569,7 +3608,7 @@ window.sendToAltun = async () => {
   }
 }
 
-// Yılan Oyunu - 360 Derece Joystickli
+// Yılan Oyunu - Multiplayer, Duvar Çarpması Ölüm, Serbest Dolaşım
 function initSnake() {
   listenSnakeRooms();
 }
@@ -3609,16 +3648,17 @@ window.createSnakeRoom = () => {
     player: null,
     gameStarted: false,
     gameState: {
-      snake: [{x: 10, y: 10}],
-      direction: {x: 1, y: 0},
+      snake: [{x: 10, y: 10, dir: {x: 0, y: 0}}],
       apple: {x: 15, y: 15},
       score: 0,
-      speed: 150
+      speed: 150,
+      gameOver: false
     },
     createdBy: username,
     lastActivity: Date.now()
   });
   document.getElementById('new-snake-room').value = '';
+  startRoomCleanupTimer('snake', currentServers.snake, roomId);
   showNotification('🐍 Oda oluşturuldu!');
 }
 
@@ -3633,6 +3673,7 @@ window.joinSnakeRoom = (roomId, room) => {
   const playerData = { name: username, ready: false, lastActive: Date.now() };
   const serverPath = `snakeRooms_server${currentServers.snake}`;
   db.ref(`${serverPath}/${roomId}/player`).set(playerData);
+  updateRoomActivity('snake', currentServers.snake, roomId);
   
   if (gameRooms.snake.listener) db.ref(`${serverPath}/${roomId}`).off('value', gameRooms.snake.listener);
   
@@ -3669,8 +3710,10 @@ window.joinSnakeRoom = (roomId, room) => {
       document.getElementById('snake-joystick').style.display = 'block';
       document.getElementById('snake-hud').style.display = 'flex';
       initSnakeJoystick();
-      startSnakeLoop(data.gameState);
+      startSnakeLoop(data.gameState, roomId);
     }
+    
+    updateRoomActivity('snake', currentServers.snake, roomId);
   });
 }
 
@@ -3680,6 +3723,7 @@ window.toggleSnakeReady = () => {
   const serverPath = `snakeRooms_server${currentServers.snake}`;
   db.ref(`${serverPath}/${gameRooms.snake.current}/player/ready`).set(gameRooms.snake.ready);
   document.getElementById('snake-ready-btn').classList.toggle('ready', gameRooms.snake.ready);
+  updateRoomActivity('snake', currentServers.snake, gameRooms.snake.current);
 }
 
 function startSnakeGame(roomId) {
@@ -3714,6 +3758,8 @@ function initSnakeJoystick() {
   const handleEnd = () => {
     joystickActive = false;
     stick.style.transform = 'translate(-50%, -50%)';
+    // Hareket durduğunda yılanı durdur
+    snakeDirection = {x: 0, y: 0};
   };
   
   const updateJoystick = (e) => {
@@ -3727,16 +3773,31 @@ function initSnakeJoystick() {
     const dx = clientX - centerX;
     const dy = clientY - centerY;
     const distance = Math.min(Math.sqrt(dx*dx + dy*dy), 40);
-    const angle = Math.atan2(dy, dx);
     
-    const x = Math.cos(angle) * distance;
-    const y = Math.sin(angle) * distance;
-    
-    stick.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
-    
-    // Yılan yönünü güncelle
-    joystickAngle = angle;
-    updateSnakeDirection(angle);
+    if (distance > 10) { // Deadzone
+      const angle = Math.atan2(dy, dx);
+      const x = Math.cos(angle) * distance;
+      const y = Math.sin(angle) * distance;
+      
+      stick.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+      
+      // Yılan yönünü güncelle - 8 yön
+      const dirAngle = Math.round((angle + Math.PI) / (Math.PI / 4)) % 8;
+      const directions = [
+        {x: 1, y: 0},   // Sağ
+        {x: 1, y: -1},  // Sağ-üst
+        {x: 0, y: -1},  // Üst
+        {x: -1, y: -1}, // Sol-üst
+        {x: -1, y: 0},  // Sol
+        {x: -1, y: 1},  // Sol-alt
+        {x: 0, y: 1},   // Alt
+        {x: 1, y: 1}    // Sağ-alt
+      ];
+      snakeDirection = directions[dirAngle];
+    } else {
+      stick.style.transform = 'translate(-50%, -50%)';
+      snakeDirection = {x: 0, y: 0};
+    }
   };
   
   container.addEventListener('touchstart', handleStart, {passive: false});
@@ -3747,76 +3808,70 @@ function initSnakeJoystick() {
   document.addEventListener('mouseup', handleEnd);
 }
 
-function updateSnakeDirection(angle) {
-  // Açıyı 8 yöne böl
-  const directions = [
-    {x: 1, y: 0},   // Sağ
-    {x: 1, y: 1},   // Sağ-alt
-    {x: 0, y: 1},   // Alt
-    {x: -1, y: 1},  // Sol-alt
-    {x: -1, y: 0},  // Sol
-    {x: -1, y: -1}, // Sol-üst
-    {x: 0, y: -1},  // Üst
-    {x: 1, y: -1}   // Sağ-üst
-  ];
-  
-  const sector = Math.round((angle + Math.PI) / (Math.PI / 4)) % 8;
-  snakeDirection = directions[sector];
-}
-
-let snakeDirection = {x: 1, y: 0};
+let snakeDirection = {x: 0, y: 0};
 let snakeLoop = null;
 
-function startSnakeLoop(initialState) {
+function startSnakeLoop(initialState, roomId) {
   const canvas = document.getElementById('snake-canvas');
   const ctx = canvas.getContext('2d');
   const gridSize = 20;
   const tileCount = canvas.width / gridSize;
   
-  let snake = [...initialState.snake];
+  let snake = initialState.snake.map(seg => ({...seg}));
   let apple = {...initialState.apple};
   let score = initialState.score;
   let speed = initialState.speed;
+  let gameOver = initialState.gameOver || false;
   
   if (snakeLoop) clearInterval(snakeLoop);
   
   snakeLoop = setInterval(() => {
-    // Yılanı hareket ettir
-    const head = {x: snake[0].x + snakeDirection.x, y: snake[0].y + snakeDirection.y};
+    if (gameOver || !gameRooms.snake.current) return;
     
-    // Duvar kontrolü - Duvara çarpma yok, karşıdan çık
-    if (head.x < 0) head.x = tileCount - 1;
-    if (head.x >= tileCount) head.x = 0;
-    if (head.y < 0) head.y = tileCount - 1;
-    if (head.y >= tileCount) head.y = 0;
-    
-    // Kendine çarpma kontrolü - ÇARPMA YOK, geçebilir
-    // (Yılan kendi üzerinden geçebilir)
-    
-    snake.unshift(head);
-    
-    // Elma yeme
-    if (head.x === apple.x && head.y === apple.y) {
-      score += 10;
-      speed = Math.max(50, speed - 2);
-      document.getElementById('snake-score').textContent = score;
-      
-      // Yeni elma
-      apple = {
-        x: Math.floor(Math.random() * tileCount),
-        y: Math.floor(Math.random() * tileCount)
+    // Yılanı hareket ettir (sadece joystick aktifse)
+    if (snakeDirection.x !== 0 || snakeDirection.y !== 0) {
+      const head = {
+        x: snake[0].x + snakeDirection.x,
+        y: snake[0].y + snakeDirection.y
       };
       
-      // Firebase güncelle
-      const serverPath = `snakeRooms_server${currentServers.snake}`;
-      db.ref(`${serverPath}/${gameRooms.snake.current}/gameState`).update({
-        snake: snake,
-        apple: apple,
-        score: score,
-        speed: speed
-      });
-    } else {
-      snake.pop();
+      // Duvar kontrolü - Çarparsa öl
+      if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
+        gameOver = true;
+        showNotification('💥 Duvara çarptın! Oyun bitti!');
+        
+        // Firebase'e gameOver durumunu bildir
+        const serverPath = `snakeRooms_server${currentServers.snake}`;
+        db.ref(`${serverPath}/${roomId}/gameState/gameOver`).set(true);
+        
+        return;
+      }
+      
+      snake.unshift(head);
+      
+      // Elma yeme
+      if (head.x === apple.x && head.y === apple.y) {
+        score += 10;
+        speed = Math.max(50, speed - 2);
+        document.getElementById('snake-score').textContent = score;
+        
+        // Yeni elma
+        apple = {
+          x: Math.floor(Math.random() * tileCount),
+          y: Math.floor(Math.random() * tileCount)
+        };
+        
+        // Firebase güncelle
+        const serverPath = `snakeRooms_server${currentServers.snake}`;
+        db.ref(`${serverPath}/${roomId}/gameState`).update({
+          snake: snake,
+          apple: apple,
+          score: score,
+          speed: speed
+        });
+      } else {
+        snake.pop();
+      }
     }
     
     // Çizim
@@ -3926,10 +3981,24 @@ function startSnakeLoop(initialState) {
     });
     
     ctx.shadowBlur = 0;
+    
+    // Oyun bitti yazısı
+    if (gameOver) {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      ctx.font = 'bold 40px Inter';
+      ctx.fillStyle = '#ff5a5a';
+      ctx.shadowBlur = 30;
+      ctx.shadowColor = '#ff5a5a';
+      ctx.textAlign = 'center';
+      ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2);
+      ctx.shadowBlur = 0;
+    }
   }, speed);
 }
 
-// Araba Oyunu - 3D Efektli
+// Araba Oyunu - Düzeltilmiş Versiyon
 function initCar() {
   listenCarRooms();
 }
@@ -3971,16 +4040,21 @@ window.createCarRoom = () => {
     player2: null,
     gameStarted: false,
     gameState: {
-      cars: [{x: 150, y: 600, speed: 0, lane: 0}, {x: 250, y: 600, speed: 0, lane: 1}],
+      cars: [
+        {x: 150, y: 600, speed: 0, lane: 0, color: '#2a6eff'},
+        {x: 250, y: 600, speed: 0, lane: 1, color: '#ff5a5a'}
+      ],
       obstacles: [],
       scores: [0, 0],
       level: 1,
-      speed: 5
+      gameSpeed: 5,
+      gameOver: false
     },
     createdBy: username,
     lastActivity: Date.now()
   });
   document.getElementById('new-car-room').value = '';
+  startRoomCleanupTimer('car', currentServers.car, roomId);
   showNotification('🏎️ Oda oluşturuldu!');
 }
 
@@ -3996,6 +4070,7 @@ window.joinCarRoom = (roomId, room) => {
   const serverPath = `carRooms_server${currentServers.car}`;
   const playerKey = gameRooms.car.player === 1 ? 'player1' : 'player2';
   db.ref(`${serverPath}/${roomId}/${playerKey}`).set(playerData);
+  updateRoomActivity('car', currentServers.car, roomId);
   
   if (gameRooms.car.listener) db.ref(`${serverPath}/${roomId}`).off('value', gameRooms.car.listener);
   
@@ -4008,14 +4083,32 @@ window.joinCarRoom = (roomId, room) => {
     
     const slot1 = document.getElementById('car-player1-slot');
     const slot2 = document.getElementById('car-player2-slot');
+    const status1 = document.getElementById('car-player1-status');
+    const status2 = document.getElementById('car-player2-status');
     
     if (data.player1) {
       slot1.classList.add('filled');
-      if (data.player1.ready) slot1.classList.add('ready');
+      if (data.player1.ready) {
+        slot1.classList.add('ready');
+        status1.textContent = 'Hazır!';
+        status1.className = 'ready';
+      } else {
+        slot1.classList.remove('ready');
+        status1.textContent = 'Bekliyor';
+        status1.className = 'not-ready';
+      }
     }
     if (data.player2) {
       slot2.classList.add('filled');
-      if (data.player2.ready) slot2.classList.add('ready');
+      if (data.player2.ready) {
+        slot2.classList.add('ready');
+        status2.textContent = 'Hazır!';
+        status2.className = 'ready';
+      } else {
+        slot2.classList.remove('ready');
+        status2.textContent = 'Bekliyor';
+        status2.className = 'not-ready';
+      }
     }
     
     document.getElementById('car-waiting-title').textContent = data.name;
@@ -4030,8 +4123,10 @@ window.joinCarRoom = (roomId, room) => {
       document.getElementById('car-joystick').style.display = 'block';
       document.getElementById('car-hud').style.display = 'flex';
       initCarJoystick();
-      startCarLoop(data.gameState);
+      startCarLoop(data.gameState, roomId);
     }
+    
+    updateRoomActivity('car', currentServers.car, roomId);
   });
 }
 
@@ -4042,6 +4137,7 @@ window.toggleCarReady = () => {
   const playerKey = gameRooms.car.player === 1 ? 'player1' : 'player2';
   db.ref(`${serverPath}/${gameRooms.car.current}/${playerKey}/ready`).set(gameRooms.car.ready);
   document.getElementById('car-ready-btn').classList.toggle('ready', gameRooms.car.ready);
+  updateRoomActivity('car', currentServers.car, gameRooms.car.current);
 }
 
 function startCarGame(roomId) {
@@ -4100,16 +4196,19 @@ function initCarJoystick() {
 
 let carLoop = null;
 
-function startCarLoop(initialState) {
+function startCarLoop(initialState, roomId) {
   const canvas = document.getElementById('car-canvas');
   const ctx = canvas.getContext('2d');
   
   let cars = initialState.cars.map(c => ({...c}));
   let obstacles = initialState.obstacles.map(o => ({...o}));
-  let score = initialState.scores[gameRooms.car.player - 1];
+  let scores = [...initialState.scores];
   let level = initialState.level;
-  let gameSpeed = initialState.speed;
-  let myCar = cars[gameRooms.car.player - 1];
+  let gameSpeed = initialState.gameSpeed;
+  let gameOver = initialState.gameOver || false;
+  
+  let myCarIndex = gameRooms.car.player - 1;
+  let myCar = cars[myCarIndex];
   
   if (carLoop) cancelAnimationFrame(carLoop);
   
@@ -4117,90 +4216,119 @@ function startCarLoop(initialState) {
   let obstacleTimer = 0;
   
   function gameLoop(timestamp) {
+    if (!lastTime) lastTime = timestamp;
     const deltaTime = timestamp - lastTime;
     lastTime = timestamp;
     
-    // Arabayı kontrol et
-    myCar.x += carSteering * 8;
-    myCar.x = Math.max(30, Math.min(canvas.width - 30, myCar.x));
-    
-    // Otomatik ilerleme
-    gameSpeed = Math.min(15, 5 + score / 100);
-    myCar.speed = gameSpeed * 20;
-    
-    // Engelleri güncelle
-    obstacleTimer += deltaTime;
-    if (obstacleTimer > 2000 - level * 200) {
-      obstacleTimer = 0;
-      const lane = Math.floor(Math.random() * 4);
-      const x = 50 + lane * 100;
-      obstacles.push({
-        x: x,
-        y: -100,
-        width: 60,
-        height: 100,
-        type: Math.random() > 0.5 ? 'car' : 'truck',
-        color: `hsl(${Math.random() * 360}, 70%, 50%)`
-      });
-    }
-    
-    obstacles.forEach(obs => {
-      obs.y += gameSpeed * 2;
-    });
-    
-    obstacles = obstacles.filter(obs => obs.y < canvas.height + 100);
-    
-    // Çarpışma kontrolü
-    obstacles.forEach(obs => {
-      if (myCar.x - 25 < obs.x + obs.width/2 &&
-          myCar.x + 25 > obs.x - obs.width/2 &&
-          myCar.y - 40 < obs.y + obs.height/2 &&
-          myCar.y + 40 > obs.y - obs.height/2) {
-        // Çarpışma - Oyun bitti
-        showNotification('💥 Çarptın! Oyun bitti!');
-        obstacles = [];
-        score = Math.max(0, score - 50);
+    if (!gameOver && gameRooms.car.current) {
+      // Arabayı kontrol et
+      myCar.x += carSteering * 8;
+      myCar.x = Math.max(50, Math.min(canvas.width - 50, myCar.x));
+      
+      // Otomatik ilerleme
+      gameSpeed = Math.min(15, 5 + scores[myCarIndex] / 100);
+      
+      // Engelleri güncelle
+      obstacleTimer += deltaTime;
+      if (obstacleTimer > Math.max(500, 2000 - level * 100)) {
+        obstacleTimer = 0;
+        const lane = Math.floor(Math.random() * 3);
+        const x = 80 + lane * 120;
+        const obsType = Math.random();
+        obstacles.push({
+          x: x,
+          y: -100,
+          width: obsType > 0.3 ? 60 : 80,
+          height: obsType > 0.3 ? 100 : 150,
+          type: obsType > 0.3 ? 'car' : 'truck',
+          color: `hsl(${Math.random() * 360}, 70%, 50%)`
+        });
       }
-    });
-    
-    // Skor
-    score += Math.floor(gameSpeed / 5);
-    document.getElementById('car-score').textContent = score;
-    document.getElementById('car-speed').textContent = Math.floor(myCar.speed);
-    
-    // Seviye atlama
-    if (score > level * 500) {
-      level++;
-      showNotification(`🎉 Seviye ${level}!`);
+      
+      obstacles.forEach(obs => {
+        obs.y += gameSpeed * 3;
+      });
+      
+      // Çarpışma kontrolü
+      obstacles = obstacles.filter(obs => {
+        if (obs.y < canvas.height + 100) {
+          // Çarpışma kontrolü
+          if (myCar.x - 30 < obs.x + obs.width/2 &&
+              myCar.x + 30 > obs.x - obs.width/2 &&
+              myCar.y - 50 < obs.y + obs.height/2 &&
+              myCar.y + 50 > obs.y - obs.height/2) {
+            // Çarpışma
+            gameOver = true;
+            scores[myCarIndex] = Math.max(0, scores[myCarIndex] - 50);
+            showNotification('💥 Çarptın! Oyun bitti!');
+            
+            // Firebase güncelle
+            const serverPath = `carRooms_server${currentServers.car}`;
+            db.ref(`${serverPath}/${roomId}/gameState`).update({
+              gameOver: true,
+              scores: scores
+            });
+            return false;
+          }
+          return true;
+        }
+        return false;
+      });
+      
+      // Skor
+      if (!gameOver) {
+        scores[myCarIndex] += Math.floor(gameSpeed / 10);
+        document.getElementById('car-score').textContent = scores[myCarIndex];
+        document.getElementById('car-speed').textContent = Math.floor(gameSpeed * 10);
+      }
+      
+      // Seviye atlama
+      if (scores[myCarIndex] > level * 200) {
+        level++;
+        showNotification(`🎉 Seviye ${level}!`);
+      }
+      
+      // Firebase güncelle (periyodik)
+      if (Math.random() < 0.05) {
+        const serverPath = `carRooms_server${currentServers.car}`;
+        db.ref(`${serverPath}/${roomId}/gameState`).update({
+          cars: cars,
+          obstacles: obstacles,
+          scores: scores,
+          level: level,
+          gameSpeed: gameSpeed,
+          gameOver: gameOver
+        });
+      }
     }
     
-    // Çizim - 3D Efektli
+    // Çizim
     ctx.fillStyle = '#1a1a2a';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Yol - 3D perspektif
+    // Yol
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
     gradient.addColorStop(0, '#2a3a4a');
     gradient.addColorStop(1, '#0a1a2a');
     ctx.fillStyle = gradient;
     ctx.fillRect(20, 0, canvas.width - 40, canvas.height);
     
-    // Şerit çizgileri - Hareketli
+    // Şerit çizgileri
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
     ctx.lineWidth = 4;
     ctx.setLineDash([40, 40]);
-    ctx.lineDashOffset = -Date.now() / 10 * gameSpeed;
+    ctx.lineDashOffset = -Date.now() / 20 * gameSpeed;
     
     for (let i = 1; i < 4; i++) {
       ctx.beginPath();
-      ctx.moveTo(i * 100, 0);
-      ctx.lineTo(i * 100, canvas.height);
+      ctx.moveTo(40 + i * 100, 0);
+      ctx.lineTo(40 + i * 100, canvas.height);
       ctx.stroke();
     }
     
     ctx.setLineDash([]);
     
-    // Engeller - 3D Arabalar
+    // Engeller
     obstacles.forEach(obs => {
       // Gölge
       ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
@@ -4208,126 +4336,98 @@ function startCarLoop(initialState) {
       ctx.ellipse(obs.x, obs.y + obs.height/2 + 10, obs.width/2, 10, 0, 0, Math.PI * 2);
       ctx.fill();
       
-      // Araba gövdesi - 3D efekt
-      const carGradient = ctx.createLinearGradient(obs.x - obs.width/2, obs.y - obs.height/2, obs.x + obs.width/2, obs.y + obs.height/2);
-      carGradient.addColorStop(0, obs.color);
-      carGradient.addColorStop(0.5, lightenColor(obs.color, 20));
-      carGradient.addColorStop(1, darkenColor(obs.color, 20));
-      
-      ctx.fillStyle = carGradient;
+      // Araba gövdesi
+      ctx.fillStyle = obs.color;
+      ctx.shadowBlur = 20;
+      ctx.shadowColor = obs.color;
       ctx.beginPath();
       ctx.roundRect(obs.x - obs.width/2, obs.y - obs.height/2, obs.width, obs.height, 15);
       ctx.fill();
       
       // Cam
       ctx.fillStyle = '#4a9eff';
+      ctx.shadowBlur = 0;
       ctx.beginPath();
       ctx.roundRect(obs.x - obs.width/3, obs.y - obs.height/3, obs.width/1.5, obs.height/3, 8);
       ctx.fill();
       
       // Farlar
       ctx.fillStyle = '#ffffaa';
-      ctx.shadowBlur = 20;
+      ctx.shadowBlur = 15;
       ctx.shadowColor = '#ffffaa';
       ctx.beginPath();
       ctx.arc(obs.x - obs.width/3, obs.y + obs.height/2 - 10, 6, 0, Math.PI * 2);
       ctx.arc(obs.x + obs.width/3, obs.y + obs.height/2 - 10, 6, 0, Math.PI * 2);
       ctx.fill();
-      ctx.shadowBlur = 0;
     });
     
-    // Benim arabam - 3D
-    const myCarGradient = ctx.createLinearGradient(myCar.x - 25, myCar.y - 40, myCar.x + 25, myCar.y + 40);
-    myCarGradient.addColorStop(0, '#2a6eff');
-    myCarGradient.addColorStop(0.5, '#4a9eff');
-    myCarGradient.addColorStop(1, '#1a5eef');
+    // Oyuncu arabaları
+    cars.forEach((car, index) => {
+      const isMyCar = index === myCarIndex;
+      
+      // Gölge
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+      ctx.shadowBlur = 0;
+      ctx.beginPath();
+      ctx.ellipse(car.x, car.y + 50, 30, 12, 0, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Araba
+      ctx.fillStyle = car.color;
+      ctx.shadowBlur = isMyCar ? 30 : 15;
+      ctx.shadowColor = car.color;
+      ctx.beginPath();
+      ctx.roundRect(car.x - 25, car.y - 40, 50, 80, 20);
+      ctx.fill();
+      
+      // Cam
+      ctx.fillStyle = '#6a9aff';
+      ctx.shadowBlur = 0;
+      ctx.beginPath();
+      ctx.roundRect(car.x - 18, car.y - 25, 36, 30, 10);
+      ctx.fill();
+      
+      // Farlar
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowBlur = 20;
+      ctx.shadowColor = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(car.x - 15, car.y - 35, 8, 0, Math.PI * 2);
+      ctx.arc(car.x + 15, car.y - 35, 8, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Stop lambaları
+      ctx.fillStyle = '#ff4444';
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = '#ff4444';
+      ctx.beginPath();
+      ctx.arc(car.x - 15, car.y + 35, 6, 0, Math.PI * 2);
+      ctx.arc(car.x + 15, car.y + 35, 6, 0, Math.PI * 2);
+      ctx.fill();
+    });
     
-    // Gölge
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-    ctx.beginPath();
-    ctx.ellipse(myCar.x, myCar.y + 50, 30, 12, 0, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // Araba
-    ctx.fillStyle = myCarGradient;
-    ctx.beginPath();
-    ctx.roundRect(myCar.x - 25, myCar.y - 40, 50, 80, 20);
-    ctx.fill();
-    
-    // Cam
-    ctx.fillStyle = '#6a9aff';
-    ctx.beginPath();
-    ctx.roundRect(myCar.x - 18, myCar.y - 25, 36, 30, 10);
-    ctx.fill();
-    
-    // Farlar - Parlak
-    ctx.fillStyle = '#ffffff';
-    ctx.shadowBlur = 30;
-    ctx.shadowColor = '#ffffff';
-    ctx.beginPath();
-    ctx.arc(myCar.x - 15, myCar.y - 35, 8, 0, Math.PI * 2);
-    ctx.arc(myCar.x + 15, myCar.y - 35, 8, 0, Math.PI * 2);
-    ctx.fill();
     ctx.shadowBlur = 0;
     
-    // Stop lambaları
-    ctx.fillStyle = '#ff4444';
-    ctx.shadowBlur = 15;
-    ctx.shadowColor = '#ff4444';
-    ctx.beginPath();
-    ctx.arc(myCar.x - 15, myCar.y + 35, 6, 0, Math.PI * 2);
-    ctx.arc(myCar.x + 15, myCar.y + 35, 6, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.shadowBlur = 0;
+    // HUD
+    ctx.font = 'bold 20px Inter';
+    ctx.fillStyle = '#fff';
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = '#000';
+    ctx.fillText(`Seviye: ${level}`, 20, 40);
     
-    // Hız efekti - Motion blur
-    if (gameSpeed > 10) {
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-      ctx.lineWidth = 2;
-      for (let i = 0; i < 5; i++) {
-        const y = Math.random() * canvas.height;
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
-        ctx.stroke();
-      }
-    }
-    
-    // Firebase güncelle
-    if (Math.random() < 0.1) {
-      const serverPath = `carRooms_server${currentServers.car}`;
-      db.ref(`${serverPath}/${gameRooms.car.current}/gameState`).update({
-        cars: cars,
-        obstacles: obstacles,
-        scores: gameRooms.car.player === 1 ? [score, 0] : [0, score],
-        level: level,
-        speed: gameSpeed
-      });
+    if (gameOver) {
+      ctx.font = 'bold 40px Inter';
+      ctx.fillStyle = '#ff5a5a';
+      ctx.shadowBlur = 30;
+      ctx.shadowColor = '#ff5a5a';
+      ctx.textAlign = 'center';
+      ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2);
     }
     
     carLoop = requestAnimationFrame(gameLoop);
   }
   
   carLoop = requestAnimationFrame(gameLoop);
-}
-
-// Yardımcı renk fonksiyonları
-function lightenColor(color, percent) {
-  const num = parseInt(color.replace("#",""), 16),
-  amt = Math.round(2.55 * percent),
-  R = (num >> 16) + amt,
-  B = (num >> 8 & 0x00FF) + amt,
-  G = (num & 0x0000FF) + amt;
-  return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (B<255?B<1?0:B:255)*0x100 + (G<255?G<1?0:G:255)).toString(16).slice(1);
-}
-
-function darkenColor(color, percent) {
-  const num = parseInt(color.replace("#",""), 16),
-  amt = Math.round(2.55 * percent),
-  R = (num >> 16) - amt,
-  B = (num >> 8 & 0x00FF) - amt,
-  G = (num & 0x0000FF) - amt;
-  return "#" + (0x1000000 + (R>0?R:0)*0x10000 + (B>0?B:0)*0x100 + (G>0?G:0)).toString(16).slice(1);
 }
 
 // XOX Oyunu
@@ -4378,6 +4478,7 @@ window.createTictactoeRoom = () => {
     lastActivity: Date.now()
   });
   document.getElementById('new-tictactoe-room').value = '';
+  startRoomCleanupTimer('tictactoe', currentServers.tictactoe, roomId);
   showNotification('⭕❌ Oda oluşturuldu!');
 }
 
@@ -4393,6 +4494,7 @@ window.joinTictactoeRoom = (roomId, room) => {
   const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
   const playerKey = gameRooms.tictactoe.player;
   db.ref(`${serverPath}/${roomId}/${playerKey}`).set(playerData);
+  updateRoomActivity('tictactoe', currentServers.tictactoe, roomId);
   
   if (gameRooms.tictactoe.listener) db.ref(`${serverPath}/${roomId}`).off('value', gameRooms.tictactoe.listener);
   
@@ -4405,14 +4507,32 @@ window.joinTictactoeRoom = (roomId, room) => {
     
     const xSlot = document.getElementById('tictactoe-x-slot');
     const oSlot = document.getElementById('tictactoe-o-slot');
+    const xStatus = document.getElementById('tictactoe-x-status');
+    const oStatus = document.getElementById('tictactoe-o-status');
     
     if (data.x) {
       xSlot.classList.add('filled');
-      if (data.x.ready) xSlot.classList.add('ready');
+      if (data.x.ready) {
+        xSlot.classList.add('ready');
+        xStatus.textContent = 'Hazır!';
+        xStatus.className = 'ready';
+      } else {
+        xSlot.classList.remove('ready');
+        xStatus.textContent = 'Bekliyor';
+        xStatus.className = 'not-ready';
+      }
     }
     if (data.o) {
       oSlot.classList.add('filled');
-      if (data.o.ready) oSlot.classList.add('ready');
+      if (data.o.ready) {
+        oSlot.classList.add('ready');
+        oStatus.textContent = 'Hazır!';
+        oStatus.className = 'ready';
+      } else {
+        oSlot.classList.remove('ready');
+        oStatus.textContent = 'Bekliyor';
+        oStatus.className = 'not-ready';
+      }
     }
     
     document.getElementById('tictactoe-waiting-title').textContent = data.name;
@@ -4428,6 +4548,8 @@ window.joinTictactoeRoom = (roomId, room) => {
       document.getElementById('tictactoe-reset').style.display = 'block';
       updateTictactoeBoard(data);
     }
+    
+    updateRoomActivity('tictactoe', currentServers.tictactoe, roomId);
   });
 }
 
@@ -4438,6 +4560,7 @@ window.toggleTictactoeReady = () => {
   const playerKey = gameRooms.tictactoe.player;
   db.ref(`${serverPath}/${gameRooms.tictactoe.current}/${playerKey}/ready`).set(gameRooms.tictactoe.ready);
   document.getElementById('tictactoe-ready-btn').classList.toggle('ready', gameRooms.tictactoe.ready);
+  updateRoomActivity('tictactoe', currentServers.tictactoe, gameRooms.tictactoe.current);
 }
 
 function startTictactoeGame(roomId) {
@@ -4488,8 +4611,11 @@ window.makeTictactoeMove = (index) => {
     db.ref(`${serverPath}/${gameRooms.tictactoe.current}`).update({
       board: newBoard,
       currentTurn: gameRooms.tictactoe.player === 'x' ? 'o' : 'x',
-      winner: winner
+      winner: winner,
+      lastActivity: Date.now()
     });
+    
+    updateRoomActivity('tictactoe', currentServers.tictactoe, gameRooms.tictactoe.current);
   });
 }
 
@@ -4517,8 +4643,10 @@ window.resetTictactoe = () => {
   db.ref(`${serverPath}/${gameRooms.tictactoe.current}`).update({
     board: ['', '', '', '', '', '', '', '', ''],
     currentTurn: 'x',
-    winner: null
+    winner: null,
+    lastActivity: Date.now()
   });
+  updateRoomActivity('tictactoe', currentServers.tictactoe, gameRooms.tictactoe.current);
 }
 
 // Oda'dan çıkma - Genel fonksiyon
@@ -4550,6 +4678,9 @@ function leaveGameRoom(game) {
     document.getElementById('tictactoe-status').style.display = 'none';
     document.getElementById('tictactoe-reset').style.display = 'none';
   }
+  
+  // Odayı temizleme zamanlayıcısını güncelle
+  updateRoomActivity(game, currentServers[game], room.current);
   
   if (room.listener) db.ref(`${serverPath}/${room.current}`).off('value', room.listener);
   
@@ -4953,6 +5084,22 @@ function showNotification(text) {
   setTimeout(() => notif.remove(), 3000);
 }
 
+// Yardımcı roundRect fonksiyonu
+CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+  if (w < 2 * r) r = w / 2;
+  if (h < 2 * r) r = h / 2;
+  this.moveTo(x + r, y);
+  this.lineTo(x + w - r, y);
+  this.quadraticCurveTo(x + w, y, x + w, y + r);
+  this.lineTo(x + w, y + h - r);
+  this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  this.lineTo(x + r, y + h);
+  this.quadraticCurveTo(x, y + h, x, y + h - r);
+  this.lineTo(x, y + r);
+  this.quadraticCurveTo(x, y, x + r, y);
+  return this;
+};
+
 // Sayfa yüklendiğinde
 window.onload = () => {
   switchScreen('chat');
@@ -4975,6 +5122,9 @@ window.onload = () => {
         if (gameRooms[game].current) leaveGameRoom(game);
       });
     }
+    
+    // Tüm zamanlayıcıları temizle
+    Object.values(roomCleanupTimers).forEach(timer => clearTimeout(timer));
   });
   
   // PWA desteği
