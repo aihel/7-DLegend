@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-<title>7/D Sohbet + Altun.ai + Tam Ekran Satranç</title>
+<title>7/D Sohbet + Altun.ai + Multiplayer Macera</title>
 
 <style>
 * {
@@ -556,540 +556,328 @@ body::before {
  pointer-events: auto;
 }
 
-/* Tam Ekran Satranç Oyunu */
-#chess-screen {
- height: 100%;
- width: 100%;
- background: linear-gradient(135deg, #0a0a1f, #1a1a3a);
- display: flex;
- overflow: hidden;
+/* Multiplayer Macera Oyunu */
+#game-screen {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1a1a3a, #2a1a4a);
+  position: relative;
+  overflow: hidden;
 }
 
-/* Oda Listesi Sidebar */
-#chess-sidebar {
- width: 280px;
- background: rgba(0,0,0,0.9);
- backdrop-filter: blur(10px);
- border-right: 2px solid #00ffcc;
- display: flex;
- flex-direction: column;
- padding: 20px;
- overflow-y: auto;
+#gameCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #1a2a3a;
+  cursor: none;
 }
 
-#chess-sidebar h2 {
- color: #00ffcc;
- text-align: center;
- margin: 0 0 20px 0;
- text-shadow: 0 0 10px #00ffcc;
- font-size: 24px;
+/* Oda Paneli */
+#roomPanel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(10, 10, 30, 0.98);
+  backdrop-filter: blur(10px);
+  border: 3px solid #FFD700;
+  border-radius: 30px;
+  padding: 40px;
+  min-width: 500px;
+  text-align: center;
+  z-index: 100;
+  box-shadow: 0 0 50px gold;
 }
 
-#create-room-section {
- margin-bottom: 30px;
- padding: 20px;
- background: rgba(255,255,255,0.05);
- border-radius: 15px;
- border: 1px solid #00ffcc;
+#roomPanel h2 {
+  font-size: 48px;
+  color: #FFD700;
+  margin-bottom: 30px;
+  text-shadow: 3px 3px 0 #FF4500;
 }
 
-#create-room-section h3 {
- color: #00ffcc;
- margin: 0 0 15px 0;
- font-size: 18px;
+.roomInput {
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0;
+  border: 3px solid #FFD700;
+  border-radius: 30px;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  font-size: 18px;
+  text-align: center;
 }
 
-#create-room-section input {
- width: 100%;
- padding: 12px;
- margin-bottom: 15px;
- border-radius: 8px;
- border: 1px solid #00ffcc;
- background: rgba(0,0,0,0.5);
- color: white;
- font-size: 14px;
+.roomOptions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 30px 0;
 }
 
-#create-room-section button {
- width: 100%;
- padding: 12px;
- background: linear-gradient(90deg, #00ffcc, #0099ff);
- border: none;
- border-radius: 8px;
- color: black;
- font-weight: bold;
- cursor: pointer;
- transition: 0.3s;
- font-size: 16px;
+.roomOption {
+  width: 100px;
+  height: 100px;
+  border: 3px solid #FFD700;
+  border-radius: 20px;
+  background: rgba(0,0,0,0.3);
+  color: white;
+  font-size: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-#create-room-section button:hover {
- transform: scale(1.02);
- box-shadow: 0 0 20px #00ffcc;
+.roomOption.selected {
+  background: #FFD700;
+  color: black;
+  transform: scale(1.1);
+  box-shadow: 0 0 30px gold;
 }
 
-#rooms-list-section {
- flex: 1;
+.roomOption span {
+  font-size: 14px;
+  margin-top: 5px;
 }
 
-#rooms-list-section h3 {
- color: #00ffcc;
- margin: 0 0 15px 0;
- font-size: 18px;
+.roomBtn {
+  padding: 15px 40px;
+  margin: 10px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #FF4500, #FF6347);
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 0 20px #FF4500;
 }
 
-#rooms-container {
- display: flex;
- flex-direction: column;
- gap: 12px;
+.roomBtn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 40px #FF4500;
 }
 
-.room-item {
- background: rgba(255,255,255,0.05);
- border: 1px solid #00ffcc;
- border-radius: 12px;
- padding: 15px;
- cursor: pointer;
- transition: 0.3s;
+.roomBtn.secondary {
+  background: linear-gradient(135deg, #4a4a8a, #6a6a8a);
+  box-shadow: 0 0 20px #4a4a8a;
 }
 
-.room-item:hover {
- background: rgba(0,255,200,0.1);
- transform: translateX(5px);
- box-shadow: 0 0 15px rgba(0,255,200,0.3);
+#roomsList {
+  margin-top: 20px;
+  max-height: 200px;
+  overflow-y: auto;
+  background: rgba(0,0,0,0.5);
+  border-radius: 20px;
+  padding: 10px;
 }
 
-.room-item.full {
- opacity: 0.6;
- cursor: not-allowed;
- border-color: #ff4444;
+.roomItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  margin: 5px 0;
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-.room-item.full:hover {
- transform: none;
- background: rgba(255,68,68,0.1);
+.roomItem:hover {
+  background: rgba(255,215,0,0.3);
 }
 
-.room-name {
- font-weight: bold;
- color: #00ffcc;
- margin-bottom: 8px;
- font-size: 16px;
+/* Oyun UI */
+#gameUI {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  display: none;
 }
 
-.room-players {
- display: flex;
- justify-content: space-between;
- font-size: 13px;
- color: #888;
- margin-bottom: 8px;
+#topBar {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(5px);
+  border-radius: 50px;
+  padding: 10px 20px;
+  border: 2px solid gold;
 }
 
-.room-status {
- display: inline-block;
- padding: 4px 10px;
- border-radius: 15px;
- font-size: 12px;
- font-weight: bold;
+.levelInfo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: gold;
+  font-size: 18px;
 }
 
-.room-status.waiting {
- background: rgba(0,255,200,0.2);
- color: #00ffcc;
+.levelBar {
+  width: 150px;
+  height: 15px;
+  background: #333;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-.room-status.playing {
- background: rgba(0,255,0,0.2);
- color: #00ff00;
+.levelFill {
+  height: 100%;
+  background: linear-gradient(90deg, gold, orange);
+  width: 0%;
 }
 
-.room-status.full {
- background: rgba(255,68,68,0.2);
- color: #ff4444;
+.playersInfo {
+  display: flex;
+  gap: 10px;
 }
 
-/* Bekleme Odası */
-#waiting-room {
- flex: 1;
- display: flex;
- justify-content: center;
- align-items: center;
+.playerBadge {
+  background: #4a4a8a;
+  padding: 5px 15px;
+  border-radius: 20px;
+  border: 2px solid #8a8aff;
+  color: white;
+  font-size: 14px;
 }
 
-.waiting-container {
- background: rgba(0,0,0,0.8);
- backdrop-filter: blur(10px);
- border: 3px solid #00ffcc;
- border-radius: 30px;
- padding: 40px;
- text-align: center;
- min-width: 400px;
- box-shadow: 0 0 50px rgba(0,255,200,0.3);
+/* Chat Alanı */
+#chatArea {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  width: 300px;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(5px);
+  border-radius: 20px;
+  border: 2px solid gold;
+  overflow: hidden;
+  pointer-events: all;
+  z-index: 20;
 }
 
-.waiting-container h2 {
- color: #00ffcc;
- margin: 0 0 30px 0;
- font-size: 32px;
- text-shadow: 0 0 10px #00ffcc;
+#chatMessages {
+  height: 150px;
+  overflow-y: auto;
+  padding: 10px;
+  color: white;
+  font-size: 14px;
 }
 
-.waiting-players {
- display: flex;
- justify-content: space-around;
- margin: 30px 0;
+.chatMessage {
+  margin: 5px 0;
+  word-wrap: break-word;
 }
 
-.player-slot {
- text-align: center;
- padding: 20px;
- background: rgba(255,255,255,0.05);
- border-radius: 15px;
- min-width: 120px;
+.chatName {
+  color: gold;
+  font-weight: bold;
 }
 
-.player-slot.white {
- border-top: 3px solid white;
+#chatInput {
+  display: flex;
+  border-top: 1px solid gold;
 }
 
-.player-slot.black {
- border-top: 3px solid black;
+#chatInputField {
+  flex: 1;
+  padding: 10px;
+  background: rgba(0,0,0,0.5);
+  border: none;
+  color: white;
+  font-size: 14px;
 }
 
-.player-slot .color-icon {
- font-size: 24px;
- margin-bottom: 10px;
+#emojiBtn {
+  padding: 10px 15px;
+  background: gold;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
 }
 
-.player-slot .player-name {
- font-size: 16px;
- font-weight: bold;
- margin-bottom: 10px;
+#emojiPanel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 10px;
+  background: rgba(0,0,0,0.9);
+  border-top: 1px solid gold;
 }
 
-.player-slot .ready-status {
- font-size: 14px;
- padding: 5px 15px;
- border-radius: 20px;
- display: inline-block;
+.emoji {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  border-radius: 10px;
 }
 
-.player-slot .ready-status.ready {
- background: #00ff00;
- color: black;
-}
-
-.player-slot .ready-status.not-ready {
- background: #ff4444;
- color: white;
-}
-
-#ready-button {
- margin-top: 20px;
- padding: 15px 50px;
- background: linear-gradient(90deg, #00ffcc, #0099ff);
- border: none;
- border-radius: 30px;
- color: black;
- font-weight: bold;
- font-size: 20px;
- cursor: pointer;
- transition: 0.3s;
-}
-
-#ready-button:hover {
- transform: scale(1.05);
- box-shadow: 0 0 30px #00ffcc;
-}
-
-#ready-button.ready {
- background: linear-gradient(90deg, #ff4444, #cc0000);
-}
-
-/* Oyun Alanı */
-#chess-game-area {
- flex: 1;
- display: flex;
- flex-direction: column;
- padding: 20px;
- overflow: hidden;
-}
-
-#game-top-bar {
- display: flex;
- justify-content: space-between;
- align-items: center;
- padding: 10px 20px;
- background: rgba(0,0,0,0.5);
- border-radius: 15px;
- margin-bottom: 20px;
- border: 1px solid #00ffcc;
-}
-
-#game-top-bar .room-info {
- display: flex;
- gap: 30px;
-}
-
-#game-top-bar .player-badge {
- display: flex;
- align-items: center;
- gap: 10px;
-}
-
-#game-top-bar .player-badge.white .color-dot {
- width: 20px;
- height: 20px;
- border-radius: 10px;
- background: white;
- box-shadow: 0 0 10px white;
-}
-
-#game-top-bar .player-badge.black .color-dot {
- width: 20px;
- height: 20px;
- border-radius: 10px;
- background: black;
- border: 2px solid white;
-}
-
-#turn-status {
- font-size: 18px;
- font-weight: bold;
- padding: 8px 20px;
- border-radius: 20px;
- background: linear-gradient(90deg, #00ffcc, #0099ff);
- color: black;
-}
-
-#game-main-area {
- flex: 1;
- display: flex;
- gap: 20px;
- min-height: 0;
-}
-
-#chess-board-container {
- flex: 2;
- display: flex;
- justify-content: center;
- align-items: center;
-}
-
-#chess-canvas {
- width: min(70vh, 560px);
- height: min(70vh, 560px);
- border: 4px solid #00ffcc;
- border-radius: 15px;
- box-shadow: 0 0 50px rgba(0,255,200,0.4);
- background: #f0d9b5;
- cursor: pointer;
-}
-
-#game-chat {
- flex: 1;
- background: rgba(0,0,0,0.7);
- backdrop-filter: blur(10px);
- border: 2px solid #00ffcc;
- border-radius: 15px;
- display: flex;
- flex-direction: column;
- min-width: 250px;
-}
-
-#game-chat-header {
- padding: 15px;
- border-bottom: 1px solid #00ffcc;
- color: #00ffcc;
- font-weight: bold;
- text-align: center;
-}
-
-#game-chat-messages {
- flex: 1;
- overflow-y: auto;
- padding: 15px;
- display: flex;
- flex-direction: column;
- gap: 10px;
-}
-
-.game-chat-message {
- padding: 8px 12px;
- border-radius: 10px;
- max-width: 85%;
- word-wrap: break-word;
-}
-
-.game-chat-message.me {
- background: #2563eb;
- align-self: flex-end;
-}
-
-.game-chat-message.opponent {
- background: #1e293b;
- align-self: flex-start;
-}
-
-.game-chat-message .msg-sender {
- font-size: 11px;
- color: #00ffcc;
- margin-bottom: 3px;
-}
-
-.game-chat-message .msg-text {
- font-size: 13px;
-}
-
-#game-chat-input-area {
- display: flex;
- padding: 10px;
- gap: 10px;
- border-top: 1px solid #00ffcc;
-}
-
-#game-chat-input {
- flex: 1;
- padding: 10px;
- border-radius: 8px;
- border: 1px solid #00ffcc;
- background: rgba(0,0,0,0.3);
- color: white;
- font-size: 13px;
-}
-
-#game-chat-send {
- padding: 10px 15px;
- border-radius: 8px;
- border: none;
- background: linear-gradient(90deg, #00ffcc, #0099ff);
- color: black;
- font-weight: bold;
- cursor: pointer;
-}
-
-#turn-warning {
- position: fixed;
- top: 20px;
- left: 50%;
- transform: translateX(-50%);
- background: #ff4444;
- color: white;
- padding: 10px 20px;
- border-radius: 10px;
- font-weight: bold;
- z-index: 1000;
- display: none;
- animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
- from { transform: translate(-50%, -100%); }
- to { transform: translate(-50%, 0); }
-}
-
-#room-full-message {
- position: fixed;
- top: 50%;
- left: 50%;
- transform: translate(-50%, -50%);
- background: rgba(0,0,0,0.95);
- backdrop-filter: blur(10px);
- border: 3px solid #ff4444;
- border-radius: 30px;
- padding: 40px;
- text-align: center;
- z-index: 200;
- box-shadow: 0 0 50px #ff4444;
- display: none;
-}
-
-#room-full-message h2 {
- color: #ff4444;
- margin: 0 0 15px 0;
- font-size: 32px;
-}
-
-#room-full-message p {
- color: white;
- margin-bottom: 25px;
- font-size: 18px;
-}
-
-#room-full-message button {
- padding: 12px 40px;
- background: white;
- border: none;
- border-radius: 25px;
- color: #ff4444;
- font-weight: bold;
- font-size: 16px;
- cursor: pointer;
-}
-
-input, button {
- outline: none;
+.emoji:hover {
+  background: gold;
+  transform: scale(1.2);
 }
 
 .hidden {
- display: none !important;
+  display: none !important;
 }
 
-.mute-notification {
- position: fixed;
- top: 20px;
- right: 20px;
- background: #ffaa00;
- color: black;
- padding: 10px 20px;
- border-radius: 10px;
- font-weight: bold;
- z-index: 200;
- animation: slideIn 0.3s ease;
- pointer-events: none;
+/* AFK uyarı */
+#afk-warning {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #ffaa00;
+  color: black;
+  padding: 15px 25px;
+  border-radius: 10px;
+  font-weight: bold;
+  z-index: 1000;
+  animation: slideIn 0.3s ease;
+  display: none;
+  border: 2px solid #ff8800;
 }
 
 @keyframes slideIn {
- from { transform: translateX(100%); }
- to { transform: translateX(0); }
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
 }
 
-/* Tam ekran ayarları */
-:fullscreen #chess-screen {
- padding: 0;
-}
-
-:-webkit-full-screen #chess-screen {
- padding: 0;
-}
-
-/* Mobil dokunmatik düzeltmeler */
-input, textarea, button, [contenteditable] {
-  -webkit-touch-callout: default;
-  -webkit-user-select: text;
-  -khtml-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
-  user-select: text;
-}
-
-/* Scrollbar stilleri */
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-::-webkit-scrollbar-track {
-  background: #1e293b;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #2563eb;
-  border-radius: 5px;
+.mute-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #ffaa00;
+  color: black;
+  padding: 10px 20px;
+  border-radius: 10px;
+  z-index: 200;
+  animation: slideIn 0.3s ease;
 }
 </style>
 
 <!-- Chess.js Kütüphanesi -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+<!-- Firebase Kütüphaneleri -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 
 <body>
@@ -1106,6 +894,9 @@ input, textarea, button, [contenteditable] {
  <div id="login-error"></div>
 </div>
 
+<!-- AFK Uyarı -->
+<div id="afk-warning">⚠️ 2 dakika hareketsizsin! Yakında atılacaksın...</div>
+
 <!-- Menü butonu -->
 <button id="menu-btn" onclick="toggleMenu()">☰</button>
 
@@ -1117,9 +908,10 @@ input, textarea, button, [contenteditable] {
   <div id="sidebar-header">
     <h3>MENÜ</h3>
   </div>
-  <button class="sidebar-btn active" onclick="switchScreen('chat'); closeMenu()" id="btn-chat">💬 7/D Sohbet</button>
-  <button class="sidebar-btn" onclick="switchScreen('altun'); closeMenu()" id="btn-altun">🤖 Altun.ai</button>
-  <button class="sidebar-btn" onclick="switchScreen('chess'); closeMenu()" id="btn-chess">♟️ Tam Ekran Satranç</button>
+  <button class="sidebar-btn active" onclick="switchScreen('chat')" id="btn-chat">💬 7/D Sohbet</button>
+  <button class="sidebar-btn" onclick="switchScreen('altun')" id="btn-altun">🤖 Altun.ai</button>
+  <button class="sidebar-btn" onclick="switchScreen('chess')" id="btn-chess">♟️ Satranç</button>
+  <button class="sidebar-btn" onclick="switchScreen('game')" id="btn-game">🎮 Multiplayer Macera</button>
 </div>
 
 <!-- Ana İçerik -->
@@ -1154,118 +946,138 @@ input, textarea, button, [contenteditable] {
     </div>
   </div>
 
-  <!-- Tam Ekran Satranç -->
+  <!-- Satranç Ekranı -->
   <div id="chess-screen" class="hidden">
-    <!-- Oda Listesi -->
-    <div id="chess-sidebar">
+    <div id="chess-header">
       <h2>♟️ SATRANÇ</h2>
-      
-      <div id="create-room-section">
-        <h3>➕ Oda Oluştur</h3>
-        <input type="text" id="new-room-name" placeholder="Oda adı" maxlength="20" value="Oda">
+      <div>
+        <input type="text" id="new-room-name" placeholder="Oda adı" style="padding:8px; border-radius:5px; border:1px solid #00ffcc; background:rgba(0,0,0,0.5); color:white; margin-right:10px;">
         <button onclick="createChessRoom()">Oda Oluştur</button>
       </div>
-      
-      <div id="rooms-list-section">
+    </div>
+    
+    <div id="chess-main">
+      <div id="chess-sidebar">
         <h3>📋 Aktif Odalar</h3>
-        <div id="rooms-container"></div>
-      </div>
-    </div>
-    
-    <!-- Bekleme Odası -->
-    <div id="waiting-room">
-      <div class="waiting-container" id="waiting-room-container" style="display: none;">
-        <h2 id="waiting-room-title">BEKLEME ODASI</h2>
-        
-        <div class="waiting-players">
-          <div class="player-slot white">
-            <div class="color-icon">⚪</div>
-            <div class="player-name" id="waiting-white-name">Boş</div>
-            <div class="ready-status not-ready" id="waiting-white-ready">Hazır Değil</div>
-          </div>
-          
-          <div class="player-slot black">
-            <div class="color-icon">⚫</div>
-            <div class="player-name" id="waiting-black-name">Boş</div>
-            <div class="ready-status not-ready" id="waiting-black-ready">Hazır Değil</div>
-          </div>
-        </div>
-        
-        <button id="ready-button" onclick="toggleReady()">HAZIR OL</button>
-      </div>
-    </div>
-    
-    <!-- Oyun Alanı -->
-    <div id="chess-game-area" style="display: none;">
-      <div id="game-top-bar">
-        <div class="room-info">
-          <span id="game-room-name">Oda</span>
-          <div class="player-badge white">
-            <span class="color-dot"></span>
-            <span id="game-white-player">Beyaz</span>
-          </div>
-          <div class="player-badge black">
-            <span class="color-dot"></span>
-            <span id="game-black-player">Siyah</span>
-          </div>
-        </div>
-        <div id="turn-status">Sıra Sende</div>
+        <div id="rooms-list"></div>
       </div>
       
-      <div id="game-main-area">
-        <div id="chess-board-container">
-          <canvas id="chess-canvas" width="560" height="560"></canvas>
-        </div>
-        
-        <div id="game-chat">
-          <div id="game-chat-header">💬 OYUN SOHBETİ</div>
-          <div id="game-chat-messages"></div>
-          <div id="game-chat-input-area">
-            <input type="text" id="game-chat-input" placeholder="Mesaj yaz..." maxlength="100">
-            <button id="game-chat-send" onclick="sendGameChat()">Gönder</button>
+      <div id="chess-game-area">
+        <div id="waiting-area">
+          <div class="waiting-box">
+            <h2 id="waiting-room-title">Bekleme Odası</h2>
+            <div class="player-slot">
+              <span>⚪ Beyaz: <span id="white-player">Boş</span></span>
+              <span id="white-ready" class="not-ready">Hazır Değil</span>
+            </div>
+            <div class="player-slot">
+              <span>⚫ Siyah: <span id="black-player">Boş</span></span>
+              <span id="black-ready" class="not-ready">Hazır Değil</span>
+            </div>
+            <button id="ready-btn" onclick="toggleReady()">HAZIR OL</button>
           </div>
         </div>
+        
+        <canvas id="chess-canvas" width="560" height="560" style="display: none;"></canvas>
       </div>
     </div>
     
-    <!-- Uyarılar -->
-    <div id="turn-warning">⚠ Sıra sende değil!</div>
+    <div id="turn-indicator" class="hidden"></div>
     <div id="room-full-message">
       <h2>⚠️ ODA DOLU</h2>
-      <p>Bu oda şu anda dolu. Başka bir oda seçin.</p>
+      <p>Bu oda şu anda dolu.</p>
       <button onclick="closeFullRoomMessage()">Tamam</button>
+    </div>
+  </div>
+
+  <!-- Multiplayer Macera Oyunu -->
+  <div id="game-screen" class="hidden">
+    <canvas id="gameCanvas" width="1200" height="700"></canvas>
+
+    <!-- Oda Paneli -->
+    <div id="roomPanel">
+      <h2>🎮 MULTIPLAYER MACERA</h2>
+      
+      <input type="text" id="playerName" class="roomInput" placeholder="Oyuncu Adın" maxlength="15">
+      
+      <div class="roomOptions">
+        <div class="roomOption" onclick="selectRoomSize(2)" id="size2">
+          2 👥
+          <span>2 Kişilik</span>
+        </div>
+        <div class="roomOption selected" onclick="selectRoomSize(3)" id="size3">
+          3 👥
+          <span>3 Kişilik</span>
+        </div>
+        <div class="roomOption" onclick="selectRoomSize(4)" id="size4">
+          4 👥
+          <span>4 Kişilik</span>
+        </div>
+      </div>
+
+      <div>
+        <button class="roomBtn" onclick="createRoom()">🎮 Oda Oluştur</button>
+        <button class="roomBtn secondary" onclick="refreshRooms()">🔄 Odaları Yenile</button>
+      </div>
+
+      <div id="roomsList"></div>
+    </div>
+
+    <!-- Oyun UI -->
+    <div id="gameUI">
+      <div id="topBar">
+        <div class="levelInfo">
+          <span>👤 <span id="playerNameDisplay"></span></span>
+          <span>📊 Level <span id="currentLevel">1</span>/50</span>
+          <div class="levelBar">
+            <div class="levelFill" id="levelFill"></div>
+          </div>
+          <span>✨ <span id="playerXP">0</span>/<span id="nextLevelXP">100</span></span>
+        </div>
+        <div class="playersInfo" id="playersInfo"></div>
+      </div>
+
+      <!-- Chat ve Emoji Alanı -->
+      <div id="chatArea">
+        <div id="chatMessages"></div>
+        <div id="chatInput">
+          <input type="text" id="chatInputField" placeholder="Mesaj yaz..." maxlength="50">
+          <button id="emojiBtn" onclick="toggleEmoji()">😊</button>
+        </div>
+        <div id="emojiPanel" class="hidden">
+          <span class="emoji" onclick="sendEmoji('😊')">😊</span>
+          <span class="emoji" onclick="sendEmoji('😂')">😂</span>
+          <span class="emoji" onclick="sendEmoji('😍')">😍</span>
+          <span class="emoji" onclick="sendEmoji('🥺')">🥺</span>
+          <span class="emoji" onclick="sendEmoji('😎')">😎</span>
+          <span class="emoji" onclick="sendEmoji('😭')">😭</span>
+          <span class="emoji" onclick="sendEmoji('😡')">😡</span>
+          <span class="emoji" onclick="sendEmoji('👍')">👍</span>
+          <span class="emoji" onclick="sendEmoji('👎')">👎</span>
+          <span class="emoji" onclick="sendEmoji('❤️')">❤️</span>
+          <span class="emoji" onclick="sendEmoji('🔥')">🔥</span>
+          <span class="emoji" onclick="sendEmoji('🎉')">🎉</span>
+        </div>
+      </div>
     </div>
   </div>
 
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-import { 
- getDatabase, ref, push, onChildAdded, set,
- onValue, onDisconnect, update, remove
-} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
-
+<!-- Firebase Config ve Oyun Kodları -->
+<script>
+// Firebase Config
 const firebaseConfig = {
- apiKey: "AIzaSyBVMvgD3u-UT5dAk72pXqLub05qNPjqPW8",
- authDomain: "dsohbet.firebaseapp.com",
- databaseURL: "https://dsohbet-default-rtdb.europe-west1.firebasedatabase.app",
- projectId: "dsohbet"
+  apiKey: "AIzaSyBVMvgD3u-UT5dAk72pXqLub05qNPjqPW8",
+  authDomain: "dsohbet.firebaseapp.com",
+  databaseURL: "https://dsohbet-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "dsohbet"
 };
 
-const app = initializeApp(firebaseConfig);
-window.db = getDatabase(app);
-window.ref = ref;
-window.push = push;
-window.onChildAdded = onChildAdded;
-window.set = set;
-window.onValue = onValue;
-window.onDisconnect = onDisconnect;
-window.update = update;
-window.remove = remove;
-</script>
+// Firebase'i başlat
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-<script>
 // Altun.ai API
 const API_KEY = "6f49a41b-ee0f-47f3-a4ea-05d3f4f373a7";
 
@@ -1275,15 +1087,76 @@ let onlineRef;
 let currentScreen = 'chat';
 let mutedUsers = {};
 let bannedUsers = {};
-let currentRoom = null;
-let playerColor = null;
+let chessCurrentRoom = null;
+let chessPlayerColor = null;
 let chess = null;
 let selectedSquare = null;
 let possibleMoves = [];
 let isPlayerReady = false;
-let lastMoveTime = Date.now();
-let inactivityTimer = null;
-let gameChatRef = null;
+let roomListener = null;
+let lastActivityTime = Date.now();
+let afkKickTimer = null;
+const AFK_WARNING = 90000;
+const AFK_LIMIT = 120000;
+
+// Oyun Değişkenleri
+let playerId = 'player_' + Math.random().toString(36).slice(2, 8);
+let playerName = '';
+let gameCurrentRoom = null;
+let roomSize = 3;
+let players = {};
+let messages = [];
+let speechBubbles = {};
+
+let myPlayer = {
+    x: 200,
+    y: 400,
+    width: 48,
+    height: 64,
+    vx: 0,
+    vy: 0,
+    level: 1,
+    xp: 0,
+    health: 100,
+    maxHealth: 100,
+    direction: 1,
+    isJumping: false,
+    animFrame: 0,
+    lastMessage: '',
+    messageTime: 0
+};
+
+const xpPerLevel = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 
+                   1000, 1200, 1400, 1600, 1800, 2000, 2200, 2400, 2600, 2800,
+                   3000, 3300, 3600, 3900, 4200, 4500, 4800, 5100, 5400, 5700,
+                   6000, 6400, 6800, 7200, 7600, 8000, 8400, 8800, 9200, 9600,
+                   10000, 10500, 11000, 11500, 12000, 12500, 13000, 13500, 14000, 14500];
+
+const gravity = 0.5;
+const jumpPower = -12;
+
+const platforms = [
+    { x: 0, y: 650, width: 5000, height: 50 },
+    { x: 300, y: 550, width: 150, height: 20 },
+    { x: 600, y: 450, width: 150, height: 20 },
+    { x: 900, y: 350, width: 150, height: 20 },
+    { x: 1200, y: 250, width: 150, height: 20 },
+    { x: 1500, y: 350, width: 150, height: 20 },
+    { x: 1800, y: 450, width: 150, height: 20 },
+    { x: 2100, y: 550, width: 150, height: 20 }
+];
+
+let stars = [];
+for (let i = 0; i < 30; i++) {
+    stars.push({
+        x: 400 + i * 150,
+        y: 200 + (i % 5) * 100,
+        collected: false,
+        value: 10 + (i % 10) * 5
+    });
+}
+
+const keys = { left: false, right: false, space: false };
 
 // Sayfa kaymasını engelle
 document.body.addEventListener('touchmove', function(e) {
@@ -1291,21 +1164,6 @@ document.body.addEventListener('touchmove', function(e) {
     e.preventDefault();
   }
 }, { passive: false });
-
-// Profil fotoğrafı preview
-window.previewPFP = function() {
-  const file = document.getElementById('pfpInput').files[0];
-  const preview = document.getElementById('pfp-preview');
-  
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = e => {
-      preview.src = e.target.result;
-      preview.style.display = 'block';
-    };
-    reader.readAsDataURL(file);
-  }
-}
 
 // Menü fonksiyonları
 window.toggleMenu = function() {
@@ -1324,33 +1182,740 @@ window.closeMenu = function() {
 
 // Ekran değiştirme
 window.switchScreen = function(screen) {
+  updateActivity();
   currentScreen = screen;
   
   document.getElementById('btn-chat').classList.remove('active');
   document.getElementById('btn-altun').classList.remove('active');
   document.getElementById('btn-chess').classList.remove('active');
+  document.getElementById('btn-game').classList.remove('active');
   document.getElementById('btn-' + screen).classList.add('active');
   
-  if (screen === 'chat') {
-    document.getElementById('chat-screen').classList.remove('hidden');
-    document.getElementById('altun-screen').classList.add('hidden');
-    document.getElementById('chess-screen').classList.add('hidden');
-  } else if (screen === 'altun') {
-    document.getElementById('chat-screen').classList.add('hidden');
-    document.getElementById('altun-screen').classList.remove('hidden');
-    document.getElementById('chess-screen').classList.add('hidden');
+  document.getElementById('chat-screen').classList.add('hidden');
+  document.getElementById('altun-screen').classList.add('hidden');
+  document.getElementById('chess-screen').classList.add('hidden');
+  document.getElementById('game-screen').classList.add('hidden');
+  
+  document.getElementById(screen + '-screen').classList.remove('hidden');
+  
+  if (screen === 'altun') {
     loadAltunHistory();
   } else if (screen === 'chess') {
-    document.getElementById('chat-screen').classList.add('hidden');
-    document.getElementById('altun-screen').classList.add('hidden');
-    document.getElementById('chess-screen').classList.remove('hidden');
-    initChessScreen();
-    
-    // Tam ekran yap
-    if (document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen();
-    }
+    initChess();
+  } else if (screen === 'game') {
+    initGame();
   }
+  
+  closeMenu();
+}
+
+// Oyun başlatma
+function initGame() {
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+    
+    // Oyun döngüsünü başlat
+    if (!window.gameLoopRunning) {
+        window.gameLoopRunning = true;
+        gameLoop();
+    }
+}
+
+// Oda boyutu seç
+window.selectRoomSize = function(size) {
+    roomSize = size;
+    document.querySelectorAll('.roomOption').forEach(opt => opt.classList.remove('selected'));
+    document.getElementById(`size${size}`).classList.add('selected');
+};
+
+// Oda oluştur
+window.createRoom = function() {
+    const name = document.getElementById('playerName').value.trim();
+    if (!name) {
+        alert('Oyuncu adını gir!');
+        return;
+    }
+    playerName = name;
+
+    const roomId = 'room_' + Date.now();
+    const roomRef = db.ref(`gameRooms/${roomId}`);
+    
+    roomRef.set({
+        name: `${playerName}'in Odası`,
+        size: roomSize,
+        players: {},
+        maxPlayers: roomSize,
+        createdAt: Date.now(),
+        gameStarted: false,
+        host: playerId
+    });
+
+    setTimeout(() => {
+        roomRef.once('value', (snap) => {
+            const room = snap.val();
+            if (room && !room.gameStarted) {
+                const playerCount = Object.keys(room.players || {}).length;
+                if (playerCount < 2) {
+                    roomRef.remove();
+                }
+            }
+        });
+    }, 40000);
+
+    joinRoom(roomId);
+};
+
+// Odaya katıl
+window.joinRoom = function(roomId) {
+    gameCurrentRoom = roomId;
+    document.getElementById('roomPanel').style.display = 'none';
+    document.getElementById('gameUI').style.display = 'block';
+    document.getElementById('playerNameDisplay').textContent = playerName;
+
+    const playerRef = db.ref(`gameRooms/${roomId}/players/${playerId}`);
+    
+    playerRef.set({
+        name: playerName,
+        x: myPlayer.x,
+        y: myPlayer.y,
+        level: myPlayer.level,
+        xp: myPlayer.xp,
+        health: myPlayer.health,
+        lastUpdate: Date.now()
+    });
+
+    playerRef.onDisconnect().remove();
+
+    db.ref(`gameRooms/${roomId}/players`).on('value', (snap) => {
+        players = snap.val() || {};
+        updatePlayersInfo();
+    });
+
+    db.ref(`gameRooms/${roomId}/chat`).on('child_added', (snap) => {
+        const msg = snap.val();
+        messages.push(msg);
+        addChatMessage(msg);
+        
+        if (msg.senderId) {
+            speechBubbles[msg.senderId] = {
+                text: msg.text,
+                time: Date.now()
+            };
+        }
+    });
+
+    setTimeout(() => {
+        if (gameCurrentRoom === roomId) {
+            db.ref(`gameRooms/${roomId}`).once('value', (snap) => {
+                const room = snap.val();
+                if (room && !room.gameStarted) {
+                    const playerCount = Object.keys(room.players || {}).length;
+                    if (playerCount < 2) {
+                        alert('Odada yeterli oyuncu yok!');
+                        leaveRoom();
+                    }
+                }
+            });
+        }
+    }, 40000);
+};
+
+// Odadan ayrıl
+function leaveRoom() {
+    if (gameCurrentRoom) {
+        db.ref(`gameRooms/${gameCurrentRoom}/players/${playerId}`).remove();
+        gameCurrentRoom = null;
+    }
+    document.getElementById('roomPanel').style.display = 'block';
+    document.getElementById('gameUI').style.display = 'none';
+}
+
+// Odaları yenile
+window.refreshRooms = function() {
+    db.ref('gameRooms').once('value', (snap) => {
+        const rooms = snap.val() || {};
+        const listDiv = document.getElementById('roomsList');
+        listDiv.innerHTML = '';
+
+        Object.entries(rooms).forEach(([id, room]) => {
+            const playerCount = Object.keys(room.players || {}).length;
+            
+            const div = document.createElement('div');
+            div.className = 'roomItem';
+            div.onclick = () => joinRoom(id);
+            div.innerHTML = `
+                <span>${room.name}</span>
+                <span>${playerCount}/${room.maxPlayers} 👥</span>
+            `;
+            listDiv.appendChild(div);
+        });
+    });
+};
+
+// Oyuncu bilgilerini güncelle
+function updatePlayersInfo() {
+    const infoDiv = document.getElementById('playersInfo');
+    infoDiv.innerHTML = '';
+    
+    Object.entries(players).forEach(([id, p]) => {
+        const badge = document.createElement('span');
+        badge.className = 'playerBadge';
+        badge.textContent = `${p.name} Lv.${p.level || 1}`;
+        if (id === playerId) badge.style.background = '#8a4a8a';
+        infoDiv.appendChild(badge);
+    });
+}
+
+// Sohbet
+function addChatMessage(msg) {
+    const container = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = 'chatMessage';
+    div.innerHTML = `<span class="chatName">${msg.name}:</span> ${msg.text}`;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+}
+
+window.toggleEmoji = function() {
+    document.getElementById('emojiPanel').classList.toggle('hidden');
+};
+
+window.sendEmoji = function(emoji) {
+    sendMessage(emoji);
+    toggleEmoji();
+};
+
+function sendMessage(text) {
+    if (!gameCurrentRoom || !text) return;
+    
+    db.ref(`gameRooms/${gameCurrentRoom}/chat`).push({
+        name: playerName,
+        text: text,
+        senderId: playerId,
+        time: Date.now()
+    });
+    
+    document.getElementById('chatInputField').value = '';
+}
+
+document.addEventListener('keydown', (e) => {
+    if (!gameCurrentRoom) return;
+    
+    if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        keys.left = true;
+        myPlayer.direction = -1;
+    }
+    if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+        keys.right = true;
+        myPlayer.direction = 1;
+    }
+    if (e.key === ' ' || e.key === 'Space') {
+        keys.space = true;
+        e.preventDefault();
+    }
+});
+
+document.addEventListener('keyup', (e) => {
+    if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        keys.left = false;
+    }
+    if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+        keys.right = false;
+    }
+    if (e.key === ' ' || e.key === 'Space') {
+        keys.space = false;
+    }
+});
+
+document.getElementById('chatInputField').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        sendMessage(e.target.value);
+    }
+});
+
+function addXP(amount) {
+    myPlayer.xp += amount;
+    
+    while (myPlayer.level < 50 && myPlayer.xp >= xpPerLevel[myPlayer.level]) {
+        myPlayer.xp -= xpPerLevel[myPlayer.level];
+        myPlayer.level++;
+        myPlayer.maxHealth += 20;
+        myPlayer.health = myPlayer.maxHealth;
+        sendMessage('🎉 LEVEL ATLADIM! 🎉');
+    }
+    
+    updateLevelBar();
+}
+
+function updateLevelBar() {
+    const nextXP = xpPerLevel[myPlayer.level] || 0;
+    const percent = (myPlayer.xp / nextXP) * 100;
+    document.getElementById('currentLevel').textContent = myPlayer.level;
+    document.getElementById('playerXP').textContent = myPlayer.xp;
+    document.getElementById('nextLevelXP').textContent = nextXP;
+    document.getElementById('levelFill').style.width = percent + '%';
+}
+
+// Oyun döngüsü
+function gameLoop() {
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    if (gameCurrentRoom) {
+        // Fizik
+        myPlayer.vy += gravity;
+
+        if (keys.left) {
+            myPlayer.vx = -4;
+        } else if (keys.right) {
+            myPlayer.vx = 4;
+        } else {
+            myPlayer.vx *= 0.8;
+        }
+
+        if (keys.space && !myPlayer.isJumping) {
+            myPlayer.vy = jumpPower;
+            myPlayer.isJumping = true;
+        }
+
+        myPlayer.x += myPlayer.vx;
+        myPlayer.y += myPlayer.vy;
+
+        myPlayer.isJumping = true;
+        for (let platform of platforms) {
+            if (myPlayer.x < platform.x + platform.width &&
+                myPlayer.x + myPlayer.width > platform.x &&
+                myPlayer.y < platform.y + platform.height &&
+                myPlayer.y + myPlayer.height > platform.y) {
+                
+                if (myPlayer.vy > 0 && myPlayer.y + myPlayer.height - myPlayer.vy <= platform.y) {
+                    myPlayer.y = platform.y - myPlayer.height;
+                    myPlayer.vy = 0;
+                    myPlayer.isJumping = false;
+                } else if (myPlayer.vy < 0) {
+                    myPlayer.y = platform.y + platform.height;
+                    myPlayer.vy = 0;
+                }
+            }
+        }
+
+        for (let star of stars) {
+            if (!star.collected) {
+                if (myPlayer.x < star.x + 20 &&
+                    myPlayer.x + myPlayer.width > star.x - 20 &&
+                    myPlayer.y < star.y + 20 &&
+                    myPlayer.y + myPlayer.height > star.y - 20) {
+                    
+                    star.collected = true;
+                    addXP(star.value);
+                }
+            }
+        }
+
+        if (gameCurrentRoom) {
+            db.ref(`gameRooms/${gameCurrentRoom}/players/${playerId}`).update({
+                x: myPlayer.x,
+                y: myPlayer.y,
+                level: myPlayer.level,
+                xp: myPlayer.xp,
+                health: myPlayer.health,
+                lastUpdate: Date.now()
+            });
+        }
+    }
+
+    // Çizim
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const camX = myPlayer.x - canvas.width / 2;
+    ctx.save();
+    ctx.translate(-camX, 0);
+
+    ctx.fillStyle = '#1a3a4a';
+    ctx.fillRect(0, 0, 5000, 700);
+
+    ctx.fillStyle = '#8B4513';
+    ctx.shadowColor = '#4a2a0a';
+    ctx.shadowBlur = 10;
+    for (let platform of platforms) {
+        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+        ctx.fillStyle = '#5D3A1A';
+        ctx.fillRect(platform.x, platform.y - 5, platform.width, 10);
+        ctx.fillStyle = '#8B4513';
+    }
+
+    for (let star of stars) {
+        if (!star.collected) {
+            ctx.shadowColor = '#FFD700';
+            ctx.shadowBlur = 15;
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, 15, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    for (const [id, p] of Object.entries(players)) {
+        if (id === playerId) continue;
+
+        ctx.fillStyle = '#ff4a4a';
+        ctx.fillRect(p.x, p.y, 48, 64);
+        
+        ctx.shadowBlur = 4;
+        ctx.font = 'bold 14px Arial';
+        ctx.fillStyle = 'white';
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 3;
+        ctx.textAlign = 'center';
+        ctx.strokeText(p.name, p.x + 24, p.y - 10);
+        ctx.fillText(p.name, p.x + 24, p.y - 10);
+        
+        ctx.font = '12px Arial';
+        ctx.fillStyle = 'gold';
+        ctx.fillText(`Lv.${p.level || 1}`, p.x + 24, p.y - 25);
+
+        const bubble = speechBubbles[id];
+        if (bubble && Date.now() - bubble.time < 3000) {
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'gold';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.roundRect(p.x - 10, p.y - 60, 100, 30, 10);
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.fillStyle = 'black';
+            ctx.font = '14px Arial';
+            ctx.fillText(bubble.text, p.x + 40, p.y - 40);
+        }
+    }
+
+    ctx.fillStyle = '#4a7aff';
+    ctx.fillRect(myPlayer.x, myPlayer.y, myPlayer.width, myPlayer.height);
+    
+    ctx.font = 'bold 14px Arial';
+    ctx.fillStyle = 'white';
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 3;
+    ctx.strokeText(playerName, myPlayer.x + 24, myPlayer.y - 10);
+    ctx.fillText(playerName, myPlayer.x + 24, myPlayer.y - 10);
+    
+    ctx.font = '12px Arial';
+    ctx.fillStyle = 'gold';
+    ctx.fillText(`Lv.${myPlayer.level}`, myPlayer.x + 24, myPlayer.y - 25);
+
+    ctx.restore();
+
+    requestAnimationFrame(gameLoop);
+}
+
+CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+    if (w < 2 * r) r = w / 2;
+    if (h < 2 * r) r = h / 2;
+    this.moveTo(x + r, y);
+    this.lineTo(x + w - r, y);
+    this.quadraticCurveTo(x + w, y, x + w, y + r);
+    this.lineTo(x + w, y + h - r);
+    this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    this.lineTo(x + r, y + h);
+    this.quadraticCurveTo(x, y + h, x, y + h - r);
+    this.lineTo(x, y + r);
+    this.quadraticCurveTo(x, y, x + r, y);
+    this.closePath();
+    return this;
+};
+
+// Profil fotoğrafı preview
+window.previewPFP = function() {
+  const file = document.getElementById('pfpInput').files[0];
+  const preview = document.getElementById('pfp-preview');
+  
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+// AFK kontrolü
+function startAfkMonitoring() {
+  if (afkKickTimer) clearInterval(afkKickTimer);
+  
+  afkKickTimer = setInterval(() => {
+    const afkTime = Date.now() - lastActivityTime;
+    
+    if (afkTime > AFK_WARNING && afkTime < AFK_LIMIT) {
+      document.getElementById('afk-warning').style.display = 'block';
+    } else if (afkTime >= AFK_LIMIT) {
+      document.getElementById('afk-warning').style.display = 'none';
+      
+      if (onlineRef) {
+        onlineRef.remove();
+      }
+      
+      if (chessCurrentRoom) {
+        leaveChessRoom();
+      }
+      
+      if (gameCurrentRoom) {
+        leaveRoom();
+      }
+      
+      alert('2 dakika hareketsiz kaldığınız için oturumunuz sonlandırıldı!');
+      location.reload();
+    }
+  }, 1000);
+}
+
+function updateActivity() {
+  lastActivityTime = Date.now();
+  document.getElementById('afk-warning').style.display = 'none';
+}
+
+['mousedown', 'mousemove', 'keydown', 'touchstart', 'scroll', 'wheel'].forEach(eventType => {
+  document.addEventListener(eventType, updateActivity);
+});
+
+// Giriş fonksiyonu
+window.enter = function() {
+  username = document.getElementById('nameInput').value.trim();
+  const code = document.getElementById('codeInput').value.trim();
+  const errorDiv = document.getElementById('login-error');
+  
+  if (!username) {
+    errorDiv.textContent = "İsim girmelisin!";
+    return;
+  }
+
+  const validCodes = ['deop', 'kmja', 'Alex'];
+  if (!validCodes.includes(code)) {
+    errorDiv.textContent = "Geçersiz kod!";
+    return;
+  }
+
+  if (code === "deop") {
+    role = "admin";
+    document.getElementById('admin-badge').style.display = 'block';
+  } else {
+    role = "user";
+  }
+
+  const file = document.getElementById('pfpInput').files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      pfp = e.target.result;
+      setupPresence();
+    };
+    reader.readAsDataURL(file);
+  } else {
+    pfp = "https://via.placeholder.com/50/1e293b/ffffff?text=" + username.charAt(0).toUpperCase();
+    setupPresence();
+  }
+
+  document.getElementById('login').style.display = "none";
+  
+  updateActivity();
+  startAfkMonitoring();
+
+  listenMessages();
+  listenOnline();
+}
+
+// Online presence
+function setupPresence() {
+  onlineRef = db.ref("online/" + username);
+  onlineRef.set({
+    name: username,
+    role: role,
+    pfp: pfp,
+    time: Date.now(),
+    lastActive: Date.now()
+  });
+  
+  setInterval(() => {
+    if (onlineRef) {
+      onlineRef.update({ lastActive: Date.now() });
+    }
+  }, 30000);
+  
+  onlineRef.onDisconnect().remove();
+}
+
+// Online listesi
+function listenOnline() {
+  db.ref("online").on('value', (snap) => {
+    const onlinePanel = document.getElementById('onlinePanel');
+    onlinePanel.innerHTML = "";
+    
+    const now = Date.now();
+    
+    snap.forEach(child => {
+      const u = child.val();
+      if (!u.lastActive || now - u.lastActive <= AFK_LIMIT) {
+        const div = document.createElement("div");
+        div.className = "userItem";
+        
+        const pfpImg = document.createElement("img");
+        pfpImg.className = "user-pfp";
+        pfpImg.src = u.pfp || "https://via.placeholder.com/50/1e293b/ffffff?text=" + u.name.charAt(0).toUpperCase();
+        pfpImg.onerror = () => pfpImg.src = "https://via.placeholder.com/50/1e293b/ffffff?text=" + u.name.charAt(0).toUpperCase();
+        
+        const infoDiv = document.createElement("div");
+        infoDiv.className = "user-info";
+        infoDiv.textContent = u.name + (u.role === "admin" ? " (admin)" : "");
+        
+        div.appendChild(pfpImg);
+        div.appendChild(infoDiv);
+        
+        if (role === "admin" && u.name !== username) {
+          const actions = document.createElement("div");
+          actions.className = "admin-actions";
+          
+          const muteBtn = document.createElement("button");
+          muteBtn.textContent = "🔇";
+          muteBtn.title = "10 dk sustur";
+          muteBtn.onclick = () => muteUser(u.name);
+          
+          const banBtn = document.createElement("button");
+          banBtn.textContent = "🚫";
+          banBtn.title = "10 dk banla";
+          banBtn.onclick = () => banUser(u.name);
+          
+          actions.appendChild(muteBtn);
+          actions.appendChild(banBtn);
+          div.appendChild(actions);
+        }
+        
+        onlinePanel.appendChild(div);
+      }
+    });
+  });
+}
+
+// Mesajları dinle
+function listenMessages() {
+  db.ref("messages").on('child_added', (snap) => {
+    render(snap.val());
+    document.getElementById('notify').play();
+  });
+}
+
+// Mesaj gönder
+window.send = function() {
+  updateActivity();
+  
+  if (bannedUsers[username] && bannedUsers[username] > Date.now()) {
+    showNotification("Banlandınız! 10 dakika boyunca mesaj gönderemezsiniz.");
+    return;
+  }
+  
+  if (mutedUsers[username] && mutedUsers[username] > Date.now()) {
+    showNotification("Susturuldunuz! 10 dakika boyunca mesaj gönderemezsiniz.");
+    return;
+  }
+  
+  const value = document.getElementById('text').value.trim();
+  const file = document.getElementById('imgInput').files[0];
+
+  if (!value && !file) return;
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      db.ref("messages").push({
+        name: username,
+        role: role,
+        pfp: pfp,
+        text: value,
+        img: e.target.result
+      });
+    };
+    reader.readAsDataURL(file);
+  } else {
+    db.ref("messages").push({
+      name: username,
+      role: role,
+      pfp: pfp,
+      text: value
+    });
+  }
+
+  document.getElementById('text').value = "";
+  document.getElementById('imgInput').value = "";
+}
+
+// Mesaj render
+function render(m) {
+  const chat = document.getElementById('chat');
+  const div = document.createElement("div");
+
+  let cls = "msg user";
+  if (m.name === username) cls = "msg me";
+  if (m.role === "admin") cls = "msg admin";
+
+  div.className = cls;
+  
+  const header = document.createElement("div");
+  header.className = "msg-header";
+  
+  const pfpImg = document.createElement("img");
+  pfpImg.className = "msg-pfp";
+  pfpImg.src = m.pfp || "https://via.placeholder.com/50/1e293b/ffffff?text=" + m.name.charAt(0).toUpperCase();
+  pfpImg.onerror = () => pfpImg.src = "https://via.placeholder.com/50/1e293b/ffffff?text=" + m.name.charAt(0).toUpperCase();
+  
+  const nameSpan = document.createElement("span");
+  nameSpan.className = "msg-username";
+  nameSpan.textContent = m.name;
+  
+  header.appendChild(pfpImg);
+  header.appendChild(nameSpan);
+  div.appendChild(header);
+  
+  const textDiv = document.createElement("div");
+  textDiv.textContent = m.text || "";
+  div.appendChild(textDiv);
+
+  if (m.img) {
+    const img = document.createElement("img");
+    img.src = m.img;
+    div.appendChild(img);
+  }
+
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+// Online panel toggle
+window.toggleOnline = function() {
+  updateActivity();
+  const panel = document.getElementById('onlinePanel');
+  panel.style.display = panel.style.display === "block" ? "none" : "block";
+}
+
+// Admin fonksiyonları
+function muteUser(targetUser) {
+  mutedUsers[targetUser] = Date.now() + 600000;
+  showNotification(`${targetUser} 10 dakika susturuldu!`);
+}
+
+function banUser(targetUser) {
+  bannedUsers[targetUser] = Date.now() + 600000;
+  showNotification(`${targetUser} 10 dakika banlandı!`);
+}
+
+function showNotification(text) {
+  const notif = document.createElement('div');
+  notif.className = 'mute-notification';
+  notif.textContent = text;
+  document.body.appendChild(notif);
+  setTimeout(() => notif.remove(), 3000);
 }
 
 // Altun.ai fonksiyonları
@@ -1397,6 +1962,7 @@ function removeAltunTyping() {
 }
 
 window.sendToAltun = async function() {
+  updateActivity();
   const input = document.getElementById("altun-input");
   const text = input.value.trim();
   if (!text) return;
@@ -1432,296 +1998,42 @@ window.sendToAltun = async function() {
   }
 }
 
-// Giriş fonksiyonu
-window.enter = function() {
-  username = document.getElementById('nameInput').value.trim();
-  const code = document.getElementById('codeInput').value.trim();
-  const errorDiv = document.getElementById('login-error');
-  
-  if (!username) {
-    errorDiv.textContent = "İsim girmelisin!";
-    return;
-  }
-
-  const validCodes = ['deop', 'kmja', 'Alex'];
-  if (!validCodes.includes(code)) {
-    errorDiv.textContent = "Geçersiz kod!";
-    return;
-  }
-
-  if (code === "deop") {
-    role = "admin";
-    document.getElementById('admin-badge').style.display = 'block';
-  } else {
-    role = "user";
-  }
-
-  const file = document.getElementById('pfpInput').files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = e => {
-      pfp = e.target.result;
-      setupPresence();
-    };
-    reader.readAsDataURL(file);
-  } else {
-    pfp = "https://via.placeholder.com/50/1e293b/ffffff?text=" + username.charAt(0).toUpperCase();
-    setupPresence();
-  }
-
-  document.getElementById('login').style.display = "none";
-
-  listenMessages();
-  listenOnline();
-  
-  document.getElementById("altun-input").addEventListener("keydown", e => {
-    if (e.key === "Enter") sendToAltun();
-  });
-}
-
-function setupPresence() {
-  onlineRef = ref(db, "online/" + username);
-  set(onlineRef, {
-    name: username,
-    role: role,
-    pfp: pfp,
-    time: Date.now()
-  });
-  onDisconnect(onlineRef).remove();
-}
-
-function listenOnline() {
-  onValue(ref(db, "online"), snap => {
-    const onlinePanel = document.getElementById('onlinePanel');
-    onlinePanel.innerHTML = "";
-    snap.forEach(child => {
-      const u = child.val();
-      const div = document.createElement("div");
-      div.className = "userItem";
-      
-      const pfpImg = document.createElement("img");
-      pfpImg.className = "user-pfp";
-      pfpImg.src = u.pfp || "https://via.placeholder.com/50/1e293b/ffffff?text=" + u.name.charAt(0).toUpperCase();
-      pfpImg.onerror = () => pfpImg.src = "https://via.placeholder.com/50/1e293b/ffffff?text=" + u.name.charAt(0).toUpperCase();
-      
-      const infoDiv = document.createElement("div");
-      infoDiv.className = "user-info";
-      infoDiv.textContent = u.name + (u.role === "admin" ? " (admin)" : "");
-      
-      div.appendChild(pfpImg);
-      div.appendChild(infoDiv);
-      
-      if (role === "admin" && u.name !== username) {
-        const actions = document.createElement("div");
-        actions.className = "admin-actions";
-        
-        const muteBtn = document.createElement("button");
-        muteBtn.textContent = "🔇";
-        muteBtn.title = "10 dk sustur";
-        muteBtn.onclick = () => muteUser(u.name);
-        
-        const banBtn = document.createElement("button");
-        banBtn.textContent = "🚫";
-        banBtn.title = "10 dk banla";
-        banBtn.onclick = () => banUser(u.name);
-        
-        actions.appendChild(muteBtn);
-        actions.appendChild(banBtn);
-        div.appendChild(actions);
-      }
-      
-      onlinePanel.appendChild(div);
-    });
-  });
-}
-
-function muteUser(targetUser) {
-  mutedUsers[targetUser] = Date.now() + 600000;
-  showNotification(`${targetUser} 10 dakika susturuldu!`);
-}
-
-function banUser(targetUser) {
-  bannedUsers[targetUser] = Date.now() + 600000;
-  showNotification(`${targetUser} 10 dakika banlandı!`);
-}
-
-function showNotification(text) {
-  const notif = document.createElement('div');
-  notif.className = 'mute-notification';
-  notif.textContent = text;
-  document.body.appendChild(notif);
-  setTimeout(() => notif.remove(), 3000);
-}
-
-function listenMessages() {
-  onChildAdded(ref(db, "messages"), snap => {
-    render(snap.val());
-    document.getElementById('notify').play();
-  });
-}
-
-window.send = function() {
-  if (bannedUsers[username] && bannedUsers[username] > Date.now()) {
-    showNotification("Banlandınız! 10 dakika boyunca mesaj gönderemezsiniz.");
-    return;
-  }
-  
-  if (mutedUsers[username] && mutedUsers[username] > Date.now()) {
-    showNotification("Susturuldunuz! 10 dakika boyunca mesaj gönderemezsiniz.");
-    return;
-  }
-  
-  const value = document.getElementById('text').value.trim();
-  const file = document.getElementById('imgInput').files[0];
-
-  if (!value && !file) return;
-
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = e => {
-      push(ref(db, "messages"), {
-        name: username,
-        role: role,
-        pfp: pfp,
-        text: value,
-        img: e.target.result
-      });
-    };
-    reader.readAsDataURL(file);
-  } else {
-    push(ref(db, "messages"), {
-      name: username,
-      role: role,
-      pfp: pfp,
-      text: value
-    });
-  }
-
-  document.getElementById('text').value = "";
-  document.getElementById('imgInput').value = "";
-}
-
-function render(m) {
-  const chat = document.getElementById('chat');
-  const div = document.createElement("div");
-
-  let cls = "msg user";
-  if (m.name === username) cls = "msg me";
-  if (m.role === "admin") cls = "msg admin";
-
-  div.className = cls;
-  
-  const header = document.createElement("div");
-  header.className = "msg-header";
-  
-  const pfpImg = document.createElement("img");
-  pfpImg.className = "msg-pfp";
-  pfpImg.src = m.pfp || "https://via.placeholder.com/50/1e293b/ffffff?text=" + m.name.charAt(0).toUpperCase();
-  pfpImg.onerror = () => pfpImg.src = "https://via.placeholder.com/50/1e293b/ffffff?text=" + m.name.charAt(0).toUpperCase();
-  
-  const nameSpan = document.createElement("span");
-  nameSpan.className = "msg-username";
-  nameSpan.textContent = m.name;
-  
-  header.appendChild(pfpImg);
-  header.appendChild(nameSpan);
-  div.appendChild(header);
-  
-  const textDiv = document.createElement("div");
-  textDiv.textContent = m.text || "";
-  div.appendChild(textDiv);
-
-  if (m.img) {
-    const img = document.createElement("img");
-    img.src = m.img;
-    div.appendChild(img);
-  }
-
-  chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
-}
-
-window.toggleOnline = function() {
-  const panel = document.getElementById('onlinePanel');
-  panel.style.display = panel.style.display === "block" ? "none" : "block";
-}
-
-/* SATRANÇ FONKSİYONLARI */
+// SATRANÇ FONKSİYONLARI
 let chessCanvas, chessCtx;
 
-function initChessScreen() {
+function initChess() {
   chessCanvas = document.getElementById('chess-canvas');
   chessCtx = chessCanvas.getContext('2d');
   
-  // Oda listesini dinle
   listenChessRooms();
-  
-  // Canvas tıklama olayı
-  chessCanvas.addEventListener('click', handleChessClick);
-  
-  // Chat input enter tuşu
-  document.getElementById('game-chat-input').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') sendGameChat();
+  chessCanvas.addEventListener('click', (e) => {
+    updateActivity();
+    handleChessClick(e);
   });
-  
-  // Inactivity timer'ı başlat
-  startInactivityTimer();
-}
-
-function startInactivityTimer() {
-  if (inactivityTimer) clearInterval(inactivityTimer);
-  
-  inactivityTimer = setInterval(() => {
-    if (currentRoom && chess) {
-      const timeSinceLastMove = Date.now() - lastMoveTime;
-      if (timeSinceLastMove > 60000) { // 60 saniye
-        // Hareketsizlik nedeniyle odadan çıkar
-        leaveChessRoom();
-        showNotification('Hareketsizlik nedeniyle odadan çıkarıldınız!');
-      }
-    }
-  }, 10000); // 10 saniyede bir kontrol et
 }
 
 function listenChessRooms() {
-  onValue(ref(db, 'chessRooms'), (snap) => {
+  db.ref('chessRooms').on('value', (snap) => {
     const rooms = snap.val() || {};
     displayRooms(rooms);
   });
 }
 
 function displayRooms(rooms) {
-  const container = document.getElementById('rooms-container');
+  const container = document.getElementById('rooms-list');
   container.innerHTML = '';
   
   Object.entries(rooms).forEach(([roomId, room]) => {
     const whitePlayer = room.white?.name || 'Boş';
     const blackPlayer = room.black?.name || 'Boş';
-    const whiteReady = room.white?.ready || false;
-    const blackReady = room.black?.ready || false;
-    
-    let status = 'waiting';
-    let statusText = 'Bekliyor';
-    
-    if (room.gameStarted) {
-      status = 'playing';
-      statusText = 'Oynanıyor';
-    } else if (room.white && room.black) {
-      status = 'full';
-      statusText = 'Dolu';
-    }
     
     const roomDiv = document.createElement('div');
-    roomDiv.className = `room-item ${status === 'full' ? 'full' : ''}`;
+    roomDiv.className = 'room-item';
     roomDiv.onclick = () => joinChessRoom(roomId, room);
     
     roomDiv.innerHTML = `
       <div class="room-name">${room.name || roomId}</div>
-      <div class="room-players">
-        <span>⚪ ${whitePlayer} ${whiteReady ? '✅' : ''}</span>
-        <span>⚫ ${blackPlayer} ${blackReady ? '✅' : ''}</span>
-      </div>
-      <div class="room-status ${status}">${statusText}</div>
+      <div class="room-players">⚪ ${whitePlayer} | ⚫ ${blackPlayer}</div>
     `;
     
     container.appendChild(roomDiv);
@@ -1729,204 +2041,151 @@ function displayRooms(rooms) {
 }
 
 window.createChessRoom = function() {
+  updateActivity();
   const roomName = document.getElementById('new-room-name').value.trim();
   if (!roomName) {
     showNotification('Oda adı girin!');
     return;
   }
   
-  const roomId = 'room_' + Date.now();
-  const roomRef = ref(db, `chessRooms/${roomId}`);
+  const roomId = 'chess_' + Date.now();
+  const roomRef = db.ref(`chessRooms/${roomId}`);
   
-  set(roomRef, {
+  roomRef.set({
     name: roomName,
     white: null,
     black: null,
     gameStarted: false,
     fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
     turn: 'w',
-    createdAt: Date.now()
+    createdBy: username,
+    createdAt: Date.now(),
+    lastActivity: Date.now()
   });
   
   document.getElementById('new-room-name').value = '';
-  showNotification('Oda oluşturuldu!');
 };
 
 window.joinChessRoom = function(roomId, room) {
-  // Oda dolu ve oyun başlamışsa kontrol et
-  if (room.gameStarted || (room.white && room.black)) {
+  updateActivity();
+  
+  if (room.white && room.black) {
     document.getElementById('room-full-message').style.display = 'block';
     return;
   }
   
-  // Önceki odadan ayrıl
-  if (currentRoom) {
+  if (chessCurrentRoom) {
     leaveChessRoom();
   }
   
-  currentRoom = roomId;
+  chessCurrentRoom = roomId;
   
-  // Rengi belirle
   if (!room.white) {
-    playerColor = 'white';
+    chessPlayerColor = 'white';
   } else {
-    playerColor = 'black';
+    chessPlayerColor = 'black';
   }
   
   isPlayerReady = false;
   
-  // Oyuncuyu odaya ekle
   const playerData = {
     name: username,
-    ready: false
+    ready: false,
+    lastActive: Date.now()
   };
   
-  const roomRef = ref(db, `chessRooms/${roomId}`);
-  if (playerColor === 'white') {
-    update(roomRef, { white: playerData });
+  const roomRef = db.ref(`chessRooms/${roomId}`);
+  if (chessPlayerColor === 'white') {
+    roomRef.update({ white: playerData });
   } else {
-    update(roomRef, { black: playerData });
+    roomRef.update({ black: playerData });
   }
   
-  // Oda değişikliklerini dinle
-  onValue(roomRef, (snap) => {
+  roomRef.update({ lastActivity: Date.now() });
+  
+  if (roomListener) {
+    roomRef.off('value', roomListener);
+  }
+  
+  roomListener = roomRef.on('value', (snap) => {
     const roomData = snap.val();
     if (!roomData) return;
     
-    // Bekleme odasını göster
-    document.getElementById('waiting-room-container').style.display = 'block';
-    document.getElementById('chess-game-area').style.display = 'none';
+    document.getElementById('waiting-area').style.display = 'block';
+    document.getElementById('chess-canvas').style.display = 'none';
+    document.getElementById('turn-indicator').classList.add('hidden');
+    
     document.getElementById('waiting-room-title').textContent = roomData.name;
+    document.getElementById('white-player').textContent = roomData.white?.name || 'Boş';
+    document.getElementById('black-player').textContent = roomData.black?.name || 'Boş';
     
-    // Oyuncu bilgilerini güncelle
-    document.getElementById('waiting-white-name').textContent = roomData.white?.name || 'Boş';
-    document.getElementById('waiting-black-name').textContent = roomData.black?.name || 'Boş';
-    
-    // Hazır durumlarını güncelle
-    const whiteReadySpan = document.getElementById('waiting-white-ready');
-    const blackReadySpan = document.getElementById('waiting-black-ready');
+    const whiteReady = document.getElementById('white-ready');
+    const blackReady = document.getElementById('black-ready');
     
     if (roomData.white?.ready) {
-      whiteReadySpan.textContent = 'HAZIR';
-      whiteReadySpan.className = 'ready-status ready';
+      whiteReady.textContent = 'HAZIR';
+      whiteReady.className = 'ready';
     } else {
-      whiteReadySpan.textContent = 'Hazır Değil';
-      whiteReadySpan.className = 'ready-status not-ready';
+      whiteReady.textContent = 'Hazır Değil';
+      whiteReady.className = 'not-ready';
     }
     
     if (roomData.black?.ready) {
-      blackReadySpan.textContent = 'HAZIR';
-      blackReadySpan.className = 'ready-status ready';
+      blackReady.textContent = 'HAZIR';
+      blackReady.className = 'ready';
     } else {
-      blackReadySpan.textContent = 'Hazır Değil';
-      blackReadySpan.className = 'ready-status not-ready';
+      blackReady.textContent = 'Hazır Değil';
+      blackReady.className = 'not-ready';
     }
     
-    // Hazır butonunu güncelle
-    const readyButton = document.getElementById('ready-button');
-    if (isPlayerReady) {
-      readyButton.textContent = 'HAZIRDAN VAZGEÇ';
-      readyButton.classList.add('ready');
-    } else {
-      readyButton.textContent = 'HAZIR OL';
-      readyButton.classList.remove('ready');
-    }
+    const readyBtn = document.getElementById('ready-btn');
+    readyBtn.textContent = isPlayerReady ? 'HAZIRDAN VAZGEÇ' : 'HAZIR OL';
     
-    // İki oyuncu da hazırsa oyunu başlat
     if (roomData.white?.ready && roomData.black?.ready && !roomData.gameStarted) {
       startChessGame(roomId);
     }
     
-    // Oyun başladıysa satranç tahtasını göster
     if (roomData.gameStarted) {
-      document.getElementById('waiting-room-container').style.display = 'none';
-      document.getElementById('chess-game-area').style.display = 'flex';
-      document.getElementById('game-room-name').textContent = roomData.name;
-      document.getElementById('game-white-player').textContent = roomData.white.name;
-      document.getElementById('game-black-player').textContent = roomData.black.name;
+      document.getElementById('waiting-area').style.display = 'none';
+      document.getElementById('chess-canvas').style.display = 'block';
+      document.getElementById('turn-indicator').classList.remove('hidden');
       
-      // Satranç oyununu güncelle
       if (!chess) {
         chess = new Chess(roomData.fen);
       } else {
         chess.load(roomData.fen);
       }
       
-      // Oyun sohbetini dinle
-      listenGameChat(roomId);
-      
-      updateTurnStatus();
+      updateTurnIndicator();
       drawChessBoard();
     }
   });
   
-  // Çıkışta odadan ayrıl
-  onDisconnect(roomRef).update({
+  roomRef.onDisconnect().update({
     white: room.white?.name === username ? null : room.white,
     black: room.black?.name === username ? null : room.black
   });
 }
 
-function listenGameChat(roomId) {
-  gameChatRef = ref(db, `chessChat/${roomId}`);
-  onChildAdded(gameChatRef, (snap) => {
-    const msg = snap.val();
-    if (msg) {
-      addGameChatMessage(msg);
-    }
-  });
-}
-
-window.sendGameChat = function() {
-  if (!currentRoom) return;
-  
-  const input = document.getElementById('game-chat-input');
-  const text = input.value.trim();
-  if (!text) return;
-  
-  const message = {
-    sender: username,
-    text: text,
-    time: Date.now()
-  };
-  
-  push(ref(db, `chessChat/${currentRoom}`), message);
-  input.value = '';
-}
-
-function addGameChatMessage(msg) {
-  const container = document.getElementById('game-chat-messages');
-  const div = document.createElement('div');
-  div.className = `game-chat-message ${msg.sender === username ? 'me' : 'opponent'}`;
-  
-  div.innerHTML = `
-    <div class="msg-sender">${msg.sender === username ? 'Sen' : msg.sender}</div>
-    <div class="msg-text">${msg.text}</div>
-  `;
-  
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-}
-
 window.toggleReady = function() {
-  if (!currentRoom || !playerColor) return;
+  updateActivity();
+  if (!chessCurrentRoom || !chessPlayerColor) return;
   
   isPlayerReady = !isPlayerReady;
-  lastMoveTime = Date.now();
   
-  const roomRef = ref(db, `chessRooms/${currentRoom}`);
-  if (playerColor === 'white') {
-    update(roomRef, { 'white/ready': isPlayerReady });
+  const roomRef = db.ref(`chessRooms/${chessCurrentRoom}`);
+  if (chessPlayerColor === 'white') {
+    roomRef.update({ 'white/ready': isPlayerReady, 'white/lastActive': Date.now() });
   } else {
-    update(roomRef, { 'black/ready': isPlayerReady });
+    roomRef.update({ 'black/ready': isPlayerReady, 'black/lastActive': Date.now() });
   }
 }
 
 function startChessGame(roomId) {
   chess = new Chess();
   
-  const roomRef = ref(db, `chessRooms/${roomId}`);
-  update(roomRef, {
+  const roomRef = db.ref(`chessRooms/${roomId}`);
+  roomRef.update({
     gameStarted: true,
     fen: chess.fen(),
     turn: 'w'
@@ -1934,43 +2193,40 @@ function startChessGame(roomId) {
 }
 
 function leaveChessRoom() {
-  if (!currentRoom) return;
+  if (!chessCurrentRoom) return;
   
-  // Oyun sohbetini temizle
-  if (gameChatRef) {
-    gameChatRef = null;
+  const roomRef = db.ref(`chessRooms/${chessCurrentRoom}`);
+  if (chessPlayerColor === 'white') {
+    roomRef.update({ white: null });
+  } else if (chessPlayerColor === 'black') {
+    roomRef.update({ black: null });
   }
   
-  document.getElementById('game-chat-messages').innerHTML = '';
-  
-  const roomRef = ref(db, `chessRooms/${currentRoom}`);
-  if (playerColor === 'white') {
-    update(roomRef, { white: null });
-  } else if (playerColor === 'black') {
-    update(roomRef, { black: null });
+  if (roomListener) {
+    roomRef.off('value', roomListener);
   }
   
-  currentRoom = null;
-  playerColor = null;
+  chessCurrentRoom = null;
+  chessPlayerColor = null;
   chess = null;
   selectedSquare = null;
   possibleMoves = [];
   isPlayerReady = false;
 }
 
-function updateTurnStatus() {
-  if (!chess || !playerColor) return;
+function updateTurnIndicator() {
+  if (!chess || !chessPlayerColor) return;
   
-  const isMyTurn = (chess.turn() === 'w' && playerColor === 'white') || 
-                   (chess.turn() === 'b' && playerColor === 'black');
+  const isMyTurn = (chess.turn() === 'w' && chessPlayerColor === 'white') || 
+                   (chess.turn() === 'b' && chessPlayerColor === 'black');
   
-  const turnElement = document.getElementById('turn-status');
+  const indicator = document.getElementById('turn-indicator');
   if (isMyTurn) {
-    turnElement.textContent = 'Sıra Sende';
-    turnElement.style.background = 'linear-gradient(90deg, #00ffcc, #0099ff)';
+    indicator.textContent = 'SIRA SENDE';
+    indicator.className = 'my-turn';
   } else {
-    turnElement.textContent = 'Sıra Rakibinde';
-    turnElement.style.background = 'linear-gradient(90deg, #ff4444, #cc0000)';
+    indicator.textContent = 'SIRA RAKİBİNDE';
+    indicator.className = 'opponent-turn';
   }
 }
 
@@ -1990,17 +2246,14 @@ function drawChessBoard() {
       const x = col * squareSize;
       const y = row * squareSize;
       
-      // Kare rengi
       chessCtx.fillStyle = (row + col) % 2 === 0 ? '#f0d9b5' : '#b58863';
       chessCtx.fillRect(x, y, squareSize, squareSize);
       
-      // Seçili kare vurgusu
       if (selectedSquare && selectedSquare.row === row && selectedSquare.col === col) {
         chessCtx.fillStyle = 'rgba(0, 255, 200, 0.4)';
         chessCtx.fillRect(x, y, squareSize, squareSize);
       }
       
-      // Şah tehdidi altındaki kare (kırmızı)
       if (chess.in_check()) {
         const kingSquare = findKing(chess.turn());
         if (kingSquare && kingSquare.row === row && kingSquare.col === col) {
@@ -2009,19 +2262,13 @@ function drawChessBoard() {
         }
       }
       
-      // Olası hamleler (● ile göster)
       if (possibleMoves.some(m => m.to === getSquareName(row, col))) {
         chessCtx.beginPath();
         chessCtx.arc(x + squareSize/2, y + squareSize/2, 12, 0, 2 * Math.PI);
         chessCtx.fillStyle = 'rgba(0, 255, 0, 0.5)';
         chessCtx.fill();
-        chessCtx.shadowBlur = 10;
-        chessCtx.shadowColor = '#00ff00';
       }
       
-      chessCtx.shadowBlur = 0;
-      
-      // Taşları çiz
       const piece = board[row][col];
       if (piece) {
         const symbols = {
@@ -2031,16 +2278,12 @@ function drawChessBoard() {
         
         chessCtx.font = 'bold 50px Arial';
         chessCtx.fillStyle = piece.color === 'w' ? 'white' : 'black';
-        chessCtx.shadowBlur = 10;
-        chessCtx.shadowColor = piece.color === 'w' ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)';
         chessCtx.fillText(symbols[piece.type === 'p' ? (piece.color === 'w' ? 'P' : 'p') : 
                                     (piece.color === 'w' ? piece.type.toUpperCase() : piece.type)], 
                          x + 10, y + 55);
       }
     }
   }
-  
-  chessCtx.shadowBlur = 0;
 }
 
 function findKing(color) {
@@ -2057,21 +2300,15 @@ function findKing(color) {
 }
 
 function handleChessClick(e) {
-  if (!chess || !currentRoom) return;
+  updateActivity();
   
-  lastMoveTime = Date.now();
+  if (!chess || !chessCurrentRoom) return;
   
-  // Sıra sende mi kontrol et
-  const isMyTurn = (chess.turn() === 'w' && playerColor === 'white') || 
-                   (chess.turn() === 'b' && playerColor === 'black');
+  const isMyTurn = (chess.turn() === 'w' && chessPlayerColor === 'white') || 
+                   (chess.turn() === 'b' && chessPlayerColor === 'black');
   
   if (!isMyTurn) {
-    // Sıra sende değil uyarısı
-    const warning = document.getElementById('turn-warning');
-    warning.style.display = 'block';
-    setTimeout(() => {
-      warning.style.display = 'none';
-    }, 2000);
+    showNotification('Sıra sende değil!');
     return;
   }
   
@@ -2089,7 +2326,6 @@ function handleChessClick(e) {
     const squareName = getSquareName(row, col);
     
     if (selectedSquare) {
-      // Hamle yap
       const move = {
         from: getSquareName(selectedSquare.row, selectedSquare.col),
         to: squareName,
@@ -2099,54 +2335,41 @@ function handleChessClick(e) {
       const result = chess.move(move);
       
       if (result) {
-        // Hamle başarılı
-        const roomRef = ref(db, `chessRooms/${currentRoom}`);
-        update(roomRef, {
+        const roomRef = db.ref(`chessRooms/${chessCurrentRoom}`);
+        roomRef.update({
           fen: chess.fen(),
-          turn: chess.turn()
+          turn: chess.turn(),
+          lastActivity: Date.now()
         });
         
         selectedSquare = null;
         possibleMoves = [];
         
-        // Şah kontrolü
         if (chess.in_check()) {
-          if (chess.in_checkmate()) {
-            showNotification('ŞAH MAT! Oyun bitti!');
-          } else {
-            showNotification('ŞAH!');
-          }
+          showNotification('ŞAH!');
         }
       } else {
-        // Geçersiz hamle, yeni taş seç
         const piece = chess.board()[row][col];
-        if (piece && ((piece.color === 'w' && playerColor === 'white') || 
-                     (piece.color === 'b' && playerColor === 'black'))) {
+        if (piece && ((piece.color === 'w' && chessPlayerColor === 'white') || 
+                     (piece.color === 'b' && chessPlayerColor === 'black'))) {
           selectedSquare = { row, col };
-          possibleMoves = chess.moves({ 
-            square: squareName,
-            verbose: true 
-          });
+          possibleMoves = chess.moves({ square: squareName, verbose: true });
         } else {
           selectedSquare = null;
           possibleMoves = [];
         }
       }
     } else {
-      // Taş seç
       const piece = chess.board()[row][col];
-      if (piece && ((piece.color === 'w' && playerColor === 'white') || 
-                   (piece.color === 'b' && playerColor === 'black'))) {
+      if (piece && ((piece.color === 'w' && chessPlayerColor === 'white') || 
+                   (piece.color === 'b' && chessPlayerColor === 'black'))) {
         selectedSquare = { row, col };
-        possibleMoves = chess.moves({ 
-          square: squareName,
-          verbose: true 
-        });
+        possibleMoves = chess.moves({ square: squareName, verbose: true });
       }
     }
     
     drawChessBoard();
-    updateTurnStatus();
+    updateTurnIndicator();
   }
 }
 
@@ -2154,8 +2377,11 @@ window.closeFullRoomMessage = function() {
   document.getElementById('room-full-message').style.display = 'none';
 };
 
+// Sayfa yüklendiğinde
 window.onload = function() {
   switchScreen('chat');
+  refreshRooms();
+  setInterval(refreshRooms, 5000);
 }
 </script>
 
