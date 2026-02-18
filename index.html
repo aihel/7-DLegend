@@ -1,1 +1,3023 @@
-Updateyi bekle oe
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+<title>7/D Sohbet + Altun.ai + Premium</title>
+
+<style>
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+html, body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #0a0c12;
+  color: #e4e6f0;
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+/* Smooth gradient background */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 30% 40%, #1a2f4f 0%, #0a0f1f 80%);
+  opacity: 0.8;
+  z-index: -2;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 70% 60%, #2f1f4f 0%, transparent 70%);
+  opacity: 0.4;
+  z-index: -1;
+}
+
+/* Login ekranı */
+#login {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 12, 18, 0.98);
+  backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  z-index: 10;
+}
+
+#login input {
+  height: 44px;
+  width: 260px;
+  border-radius: 12px;
+  border: 1px solid #2a3a4a;
+  background: #1a1f2a;
+  padding: 0 15px;
+  font-size: 15px;
+  color: #fff;
+  transition: all 0.2s ease;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+#login input:focus {
+  outline: none;
+  border-color: #4a9eff;
+  box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.2);
+}
+
+#login input[type="password"] {
+  font-family: monospace;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+#login input[type="file"] {
+  padding: 8px;
+  background: #1a1f2a;
+  color: #e4e6f0;
+  border: 1px dashed #3a4a5a;
+}
+
+#login button {
+  height: 44px;
+  width: 260px;
+  border-radius: 12px;
+  border: none;
+  background: #2a6eff;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  pointer-events: auto;
+}
+
+#login button:hover {
+  background: #1a5eef;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(42, 110, 255, 0.3);
+}
+
+#login button:active {
+  transform: translateY(0);
+}
+
+#login-error {
+  color: #ff5a5a;
+  font-size: 14px;
+  min-height: 20px;
+  max-width: 260px;
+  text-align: center;
+}
+
+/* Profil fotoğrafı preview */
+#pfp-preview {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #1a1f2a;
+  margin-bottom: 8px;
+  object-fit: cover;
+  border: 3px solid #2a6eff;
+  display: none;
+  box-shadow: 0 8px 20px rgba(42, 110, 255, 0.3);
+}
+
+/* Menü butonu */
+#menu-btn {
+  position: fixed;
+  left: 16px;
+  top: 16px;
+  width: 44px;
+  height: 44px;
+  background: #1a1f2a;
+  border: 1px solid #2a3a4a;
+  border-radius: 12px;
+  color: #e4e6f0;
+  font-size: 22px;
+  cursor: pointer;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  pointer-events: auto;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+#menu-btn:hover {
+  background: #2a3a4a;
+  border-color: #4a9eff;
+  color: #fff;
+}
+
+/* Sidebar (Menü) */
+#sidebar {
+  position: fixed;
+  left: -280px;
+  top: 0;
+  bottom: 0;
+  width: 280px;
+  background: #0f1219;
+  border-right: 1px solid #1e2a3a;
+  padding: 80px 16px 20px;
+  z-index: 99;
+  transition: left 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+}
+
+#sidebar.open {
+  left: 0;
+}
+
+#sidebar-header {
+  padding: 0 8px 16px;
+  border-bottom: 1px solid #1e2a3a;
+  margin-bottom: 20px;
+}
+
+#sidebar-header h3 {
+  margin: 0;
+  color: #aab6c8;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.sidebar-btn {
+  width: 100%;
+  margin: 4px 0;
+  padding: 14px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  color: #b4c0d0;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+.sidebar-btn:hover {
+  background: #1a212e;
+  color: #fff;
+}
+
+.sidebar-btn.active {
+  background: #1e2a3a;
+  color: #fff;
+  font-weight: 600;
+}
+
+.sidebar-btn i {
+  font-size: 20px;
+  width: 28px;
+  opacity: 0.8;
+}
+
+/* Sidebar overlay */
+#sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 98;
+  display: none;
+  pointer-events: auto;
+}
+
+#sidebar-overlay.show {
+  display: block;
+}
+
+/* Ana içerik */
+#main-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: transparent;
+  overflow: hidden;
+}
+
+/* Sohbet ekranı */
+#chat-screen {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#topbar {
+  height: 64px;
+  background: #0f1219;
+  border-bottom: 1px solid #1e2a3a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  padding: 0 16px;
+}
+
+#admin-badge {
+  position: absolute;
+  left: 70px;
+  background: #ffaa2a;
+  color: #0a0c12;
+  padding: 4px 12px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+  display: none;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 8px rgba(255, 170, 42, 0.3);
+}
+
+#points-display {
+  position: absolute;
+  left: 70px;
+  background: #1e2a3a;
+  color: #ffaa2a;
+  padding: 6px 16px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #3a4a5a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+#onlineBtn {
+  position: absolute;
+  right: 16px;
+  background: transparent;
+  border: 1px solid #2a3a4a;
+  border-radius: 30px;
+  padding: 8px 18px;
+  color: #b4c0d0;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#onlineBtn:hover {
+  background: #1e2a3a;
+  border-color: #4a9eff;
+  color: #fff;
+}
+
+#shop-btn {
+  position: absolute;
+  right: 130px;
+  background: #1a2a3a;
+  border: 1px solid #2a6eff;
+  border-radius: 30px;
+  padding: 8px 18px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 10px rgba(42, 110, 255, 0.2);
+}
+
+#shop-btn:hover {
+  background: #2a6eff;
+  border-color: #2a6eff;
+  transform: translateY(-1px);
+}
+
+/* Yazıyor göstergesi */
+#typing-indicator {
+  position: absolute;
+  bottom: 80px;
+  left: 20px;
+  background: #1a212e;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 13px;
+  color: #aab6c8;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+  border: 1px solid #2a3a4a;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.typing-dots {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.typing-dots span {
+  width: 6px;
+  height: 6px;
+  background: #4a9eff;
+  border-radius: 50%;
+  display: inline-block;
+  animation: typingBounce 1.4s infinite ease-in-out;
+}
+
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-6px); }
+}
+
+#onlinePanel {
+  position: fixed;
+  top: 72px;
+  right: 16px;
+  background: #0f1219;
+  border: 1px solid #1e2a3a;
+  border-radius: 16px;
+  padding: 12px;
+  display: none;
+  min-width: 240px;
+  max-height: 320px;
+  overflow-y: auto;
+  z-index: 50;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+.userItem {
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.2s ease;
+}
+
+.userItem:hover {
+  background: #1a212e;
+}
+
+.userItem .user-pfp {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #2a3a4a;
+}
+
+.userItem .user-info {
+  flex: 1;
+  color: #e4e6f0;
+}
+
+.userItem .admin-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.userItem .admin-actions button {
+  padding: 4px 8px;
+  font-size: 11px;
+  background: #1e2a3a;
+  color: #b4c0d0;
+  border: 1px solid #2a3a4a;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.userItem .admin-actions button:hover {
+  background: #ff5a5a;
+  border-color: #ff5a5a;
+  color: white;
+}
+
+.userItem.banned {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.userItem.muted {
+  color: #ffaa2a;
+}
+
+#chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.msg {
+  max-width: 70%;
+  padding: 12px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  animation: fadeIn 0.2s ease-out;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.user { 
+  background: #1a212e; 
+  align-self: flex-start; 
+  border-bottom-left-radius: 6px;
+  border: 1px solid #2a3a4a;
+}
+
+.me { 
+  background: #1a3a6a; 
+  align-self: flex-end; 
+  border-bottom-right-radius: 6px;
+  border: 1px solid #2a6eff;
+}
+
+.admin { 
+  background: #4a2a2a; 
+  align-self: flex-start; 
+  border-bottom-left-radius: 6px;
+  border-left: 3px solid #ffaa2a;
+  border: 1px solid #ff5a5a;
+}
+
+/* Mesaj balonu stilleri */
+.msg.style-green {
+  background: linear-gradient(135deg, #1a4a2a, #0a3a1a);
+  border-color: #2a9a4a;
+}
+
+.msg.style-rgb {
+  background: linear-gradient(135deg, #4a2a6a, #2a4a6a, #4a6a2a);
+  background-size: 200% 200%;
+  animation: smoothGradient 8s ease infinite;
+  border: 1px solid #aab6c8;
+}
+
+@keyframes smoothGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.msg-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.msg-pfp {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.msg-username {
+  font-weight: 600;
+  color: #b4d0ff;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.admin-crown {
+  color: #ffaa2a;
+  font-size: 13px;
+}
+
+.msg-time {
+  color: #8892a6;
+  font-size: 11px;
+  margin-left: auto;
+}
+
+.msg .delete-btn {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ff5a5a;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 12px;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(255, 90, 90, 0.4);
+}
+
+.msg.admin .delete-btn {
+  display: flex;
+}
+
+.msg .video-container {
+  margin-top: 8px;
+  border-radius: 12px;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.msg video {
+  max-width: 100%;
+  max-height: 280px;
+  border-radius: 12px;
+}
+
+.msg img {
+  max-width: 200px;
+  border-radius: 12px;
+  margin-top: 8px;
+}
+
+#inputBar {
+  height: 72px;
+  background: #0f1219;
+  border-top: 1px solid #1e2a3a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  flex-shrink: 0;
+}
+
+#text {
+  flex: 1;
+  height: 44px;
+  border: 1px solid #2a3a4a;
+  border-radius: 22px;
+  background: #1a212e;
+  padding: 0 18px;
+  font-size: 15px;
+  color: #fff;
+  transition: all 0.2s ease;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+#text:focus {
+  outline: none;
+  border-color: #4a9eff;
+  box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.2);
+}
+
+#text:disabled {
+  opacity: 0.5;
+  background: #0a121a;
+}
+
+#imgInput, #videoInput {
+  display: none;
+}
+
+.media-btn {
+  width: 44px;
+  height: 44px;
+  background: #1a212e;
+  border: 1px solid #2a3a4a;
+  border-radius: 22px;
+  color: #b4c0d0;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.media-btn:hover {
+  background: #2a3a4a;
+  color: #fff;
+  border-color: #4a9eff;
+}
+
+.send-btn {
+  padding: 0 24px;
+  height: 44px;
+  background: #2a6eff;
+  border: none;
+  border-radius: 22px;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.send-btn:hover {
+  background: #1a5eef;
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(42, 110, 255, 0.3);
+}
+
+.send-btn:active {
+  transform: scale(0.98);
+}
+
+/* Altun.ai ekranı */
+#altun-screen {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #0a0c12;
+  overflow: hidden;
+}
+
+#altun-header {
+  padding: 18px;
+  background: #0f1219;
+  border-bottom: 1px solid #1e2a3a;
+  color: #e4e6f0;
+  font-weight: 600;
+  text-align: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
+}
+
+#altun-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.altun-message {
+  margin: 12px 0;
+  padding: 12px 18px;
+  border-radius: 20px;
+  max-width: 80%;
+  animation: popIn 0.2s ease;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.96); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.altun-user {
+  background: #1a3a6a;
+  margin-left: auto;
+  border-bottom-right-radius: 6px;
+  border: 1px solid #2a6eff;
+}
+
+.altun-bot {
+  background: #1a2a3a;
+  color: #e4e6f0;
+  border-bottom-left-radius: 6px;
+  border: 1px solid #2a3a4a;
+}
+
+.typing {
+  display: inline-block;
+  margin-left: 4px;
+}
+
+.dot {
+  animation: blink 1.4s infinite both;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes blink {
+  0% { opacity: 0.2; }
+  20% { opacity: 1; }
+  100% { opacity: 0.2; }
+}
+
+#altun-input-area {
+  display: flex;
+  padding: 16px;
+  background: #0f1219;
+  border-top: 1px solid #1e2a3a;
+  flex-shrink: 0;
+  gap: 10px;
+}
+
+#altun-input {
+  flex: 1;
+  padding: 12px 18px;
+  border-radius: 30px;
+  border: 1px solid #2a3a4a;
+  background: #1a212e;
+  outline: none;
+  font-size: 15px;
+  color: #fff;
+  transition: all 0.2s ease;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+#altun-input:focus {
+  border-color: #4a9eff;
+  box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.2);
+}
+
+.altun-btn {
+  padding: 0 24px;
+  border: none;
+  border-radius: 30px;
+  background: #2a6eff;
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.altun-btn:hover {
+  background: #1a5eef;
+  transform: scale(1.02);
+}
+
+/* Sayı Tahmin Oyunu */
+#guess-screen {
+  width: 100%;
+  height: 100%;
+  background: #0a0c12;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  overflow: hidden;
+}
+
+#guess-container {
+  width: 100%;
+  max-width: 900px;
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+#guess-scoreboard {
+  background: #0f1219;
+  border: 1px solid #1e2a3a;
+  border-radius: 24px;
+  padding: 20px;
+  flex-shrink: 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+#guess-scoreboard h2 {
+  color: #aab6c8;
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#score-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.score-item {
+  background: #1a212e;
+  padding: 8px 14px;
+  border-radius: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  border: 1px solid #2a3a4a;
+}
+
+.score-item.me {
+  background: #1a2a4a;
+  border-color: #2a6eff;
+}
+
+.score-item .rank {
+  font-weight: 600;
+  color: #4a9eff;
+  width: 32px;
+}
+
+.score-item .name {
+  flex: 1;
+  margin-left: 8px;
+  color: #e4e6f0;
+}
+
+.score-item .score {
+  background: #0f1a2a;
+  padding: 4px 12px;
+  border-radius: 30px;
+  color: #ffaa2a;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+#guess-game-panel {
+  background: #0f1219;
+  border: 1px solid #1e2a3a;
+  border-radius: 32px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 1;
+  min-height: 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+#guess-header {
+  text-align: center;
+  padding: 20px;
+  background: #1a212e;
+  border-radius: 28px;
+  border: 1px solid #2a3a4a;
+}
+
+#guess-header h1 {
+  font-size: 26px;
+  margin: 0 0 12px 0;
+  font-weight: 600;
+  background: linear-gradient(135deg, #aab6c8, #e4e6f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#target-number {
+  font-size: 72px;
+  font-weight: 700;
+  color: #4a9eff;
+  text-shadow: 0 4px 20px rgba(74, 158, 255, 0.3);
+  line-height: 1;
+  margin: 8px 0;
+}
+
+#range-info {
+  font-size: 16px;
+  color: #aab6c8;
+  background: #0f1a2a;
+  padding: 10px 24px;
+  border-radius: 40px;
+  display: inline-block;
+}
+
+#range-info span {
+  color: #ffaa2a;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+#guess-history {
+  background: #1a212e;
+  border-radius: 24px;
+  padding: 16px;
+  border: 1px solid #2a3a4a;
+}
+
+#guess-history h3 {
+  font-size: 15px;
+  color: #aab6c8;
+  margin: 0 0 12px 0;
+  font-weight: 500;
+}
+
+.history-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 48px;
+  max-height: 80px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.history-item {
+  padding: 6px 16px;
+  border-radius: 30px;
+  font-weight: 500;
+  font-size: 14px;
+  animation: historyPop 0.2s ease;
+}
+
+@keyframes historyPop {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.history-item.high { background: #4a2a2a; color: #ff8a8a; border: 1px solid #ff5a5a; }
+.history-item.low { background: #2a2a4a; color: #8a8aff; border: 1px solid #4a6eff; }
+.history-item.correct { background: #2a4a2a; color: #8aff8a; border: 1px solid #4aff4a; transform: scale(1.05); }
+
+#guess-input-area {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: #1a212e;
+  padding: 20px;
+  border-radius: 60px;
+  border: 1px solid #2a3a4a;
+}
+
+#guess-input {
+  flex: 1;
+  height: 56px;
+  font-size: 24px;
+  text-align: center;
+  background: #0f1a2a;
+  border: 1px solid #2a3a4a;
+  border-radius: 40px;
+  color: #fff;
+  font-weight: 500;
+  padding: 0 20px;
+  transition: all 0.2s ease;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+#guess-input:focus {
+  outline: none;
+  border-color: #4a9eff;
+  box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.2);
+}
+
+#guess-submit {
+  width: 90px;
+  height: 90px;
+  border-radius: 45px;
+  border: none;
+  background: #2a6eff;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 16px rgba(42, 110, 255, 0.3);
+}
+
+#guess-submit:hover {
+  background: #1a5eef;
+  transform: scale(1.05);
+}
+
+#guess-submit:disabled {
+  opacity: 0.4;
+  transform: scale(0.95);
+  pointer-events: none;
+  box-shadow: none;
+}
+
+#new-game-btn {
+  padding: 16px 32px;
+  background: #2a3a4a;
+  border: 1px solid #4a9eff;
+  border-radius: 50px;
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  margin-top: 8px;
+}
+
+#new-game-btn:hover {
+  background: #1a2a3a;
+  border-color: #ffaa2a;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 170, 42, 0.3);
+}
+
+#guess-feedback {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 90px;
+  font-weight: 700;
+  text-shadow: 0 4px 30px currentColor;
+  z-index: 1000;
+  pointer-events: none;
+  animation: feedbackFloat 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes feedbackFloat {
+  0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+  20% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.9; }
+  80% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.7; }
+  100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+}
+
+#guess-feedback.high { color: #ff6b6b; }
+#guess-feedback.low { color: #6b6bff; }
+#guess-feedback.correct { color: #6bff6b; }
+
+/* Satranç Oyunu */
+#chess-screen {
+  width: 100%;
+  height: 100%;
+  background: #0a0c12;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  overflow: auto;
+}
+
+#chess-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 12px 20px;
+  background: #0f1219;
+  border-radius: 20px;
+  border: 1px solid #1e2a3a;
+}
+
+#chess-header h2 {
+  color: #e4e6f0;
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+#chess-header button {
+  padding: 8px 20px;
+  background: #2a6eff;
+  border: none;
+  border-radius: 30px;
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#chess-header button:hover {
+  background: #1a5eef;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(42, 110, 255, 0.3);
+}
+
+#new-room-name {
+  padding: 8px 16px;
+  border-radius: 30px;
+  border: 1px solid #2a3a4a;
+  background: #1a212e;
+  color: white;
+  font-size: 14px;
+  margin-right: 10px;
+  width: 200px;
+}
+
+#new-room-name:focus {
+  outline: none;
+  border-color: #4a9eff;
+}
+
+#chess-main {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+  min-height: 0;
+}
+
+#chess-sidebar {
+  width: 280px;
+  background: #0f1219;
+  border: 1px solid #1e2a3a;
+  border-radius: 24px;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+#chess-sidebar h3 {
+  color: #aab6c8;
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+#rooms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.room-item {
+  padding: 16px;
+  background: #1a212e;
+  border: 1px solid #2a3a4a;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.room-item:hover {
+  background: #1e2a3a;
+  border-color: #4a9eff;
+  transform: translateX(4px);
+}
+
+.room-item .room-name {
+  color: #e4e6f0;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.room-item .room-players {
+  font-size: 13px;
+  color: #8892a6;
+}
+
+#chess-game-area {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #0f1219;
+  border: 1px solid #1e2a3a;
+  border-radius: 24px;
+  padding: 20px;
+}
+
+#chess-canvas {
+  width: min(65vh, 520px);
+  height: min(65vh, 520px);
+  border: 2px solid #2a3a4a;
+  border-radius: 16px;
+  background: #2a2a2a;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+#waiting-area {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.waiting-box {
+  background: #1a212e;
+  border: 1px solid #2a3a4a;
+  border-radius: 32px;
+  padding: 40px;
+  text-align: center;
+  min-width: 360px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.waiting-box h2 {
+  color: #e4e6f0;
+  margin-bottom: 30px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.player-slot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  margin: 12px 0;
+  background: #0f1a2a;
+  border: 1px solid #2a3a4a;
+  border-radius: 20px;
+}
+
+.player-slot .ready {
+  color: #4aff4a;
+  font-weight: 600;
+}
+
+.player-slot .not-ready {
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+#ready-btn {
+  margin-top: 30px;
+  padding: 16px 48px;
+  background: #2a6eff;
+  border: none;
+  border-radius: 40px;
+  color: white;
+  font-weight: 600;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 16px rgba(42, 110, 255, 0.3);
+}
+
+#ready-btn:hover {
+  background: #1a5eef;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(42, 110, 255, 0.4);
+}
+
+#turn-indicator {
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 30px;
+  border-radius: 40px;
+  font-weight: 600;
+  font-size: 16px;
+  z-index: 100;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+#turn-indicator.my-turn {
+  background: #1a4a2a;
+  color: #8aff8a;
+  border: 1px solid #4aff4a;
+}
+
+#turn-indicator.opponent-turn {
+  background: #4a2a2a;
+  color: #ff8a8a;
+  border: 1px solid #ff5a5a;
+}
+
+/* Mağaza Paneli */
+#shop-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 520px;
+  background: #0f1219;
+  border: 1px solid #2a3a4a;
+  border-radius: 36px;
+  padding: 32px;
+  z-index: 1000;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(20px);
+  display: none;
+}
+
+#shop-panel h2 {
+  color: #e4e6f0;
+  margin: 0 0 16px 0;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+#shop-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 24px 0;
+  max-height: 420px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.shop-item {
+  background: #1a212e;
+  border: 1px solid #2a3a4a;
+  border-radius: 28px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.shop-item:hover {
+  background: #1e2a3a;
+  border-color: #4a9eff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(74, 158, 255, 0.2);
+}
+
+.shop-item.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  filter: grayscale(0.8);
+}
+
+.shop-item-preview {
+  width: 70px;
+  height: 70px;
+  border-radius: 35px;
+  background: linear-gradient(135deg, #2a6eff, #4a9eff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  box-shadow: 0 4px 12px rgba(42, 110, 255, 0.3);
+}
+
+.shop-item-info {
+  flex: 1;
+}
+
+.shop-item-info h3 {
+  margin: 0 0 6px 0;
+  color: #e4e6f0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.shop-item-info p {
+  margin: 0;
+  color: #8892a6;
+  font-size: 14px;
+}
+
+.shop-item-price {
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffaa2a;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+#shop-close {
+  width: 100%;
+  padding: 16px;
+  background: #2a3a4a;
+  border: 1px solid #4a5a6a;
+  border-radius: 30px;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 16px;
+}
+
+#shop-close:hover {
+  background: #ff5a5a;
+  border-color: #ff8a8a;
+}
+
+/* Ban Paneli */
+#ban-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 440px;
+  background: #0f1219;
+  border: 1px solid #ff5a5a;
+  border-radius: 36px;
+  padding: 32px;
+  z-index: 1002;
+  display: none;
+  box-shadow: 0 25px 50px rgba(255, 90, 90, 0.2);
+  backdrop-filter: blur(20px);
+}
+
+#ban-panel h3 {
+  color: #ff8a8a;
+  margin: 0 0 20px 0;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+}
+
+#ban-user {
+  color: #4a9eff;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+#ban-duration {
+  width: 100%;
+  padding: 14px 18px;
+  margin: 16px 0;
+  background: #1a212e;
+  border: 1px solid #2a3a4a;
+  border-radius: 20px;
+  color: white;
+  font-size: 16px;
+}
+
+#ban-duration:focus {
+  outline: none;
+  border-color: #ff5a5a;
+}
+
+#ban-reason {
+  width: 100%;
+  padding: 14px 18px;
+  margin: 16px 0;
+  background: #1a212e;
+  border: 1px solid #2a3a4a;
+  border-radius: 20px;
+  color: white;
+  resize: none;
+  height: 100px;
+  font-family: inherit;
+  font-size: 15px;
+}
+
+#ban-reason:focus {
+  outline: none;
+  border-color: #ff5a5a;
+}
+
+.ban-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.ban-confirm {
+  flex: 1;
+  padding: 16px;
+  background: #ff5a5a;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ban-confirm:hover {
+  background: #ff3a3a;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 90, 90, 0.3);
+}
+
+.ban-cancel {
+  flex: 1;
+  padding: 16px;
+  background: #2a3a4a;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ban-cancel:hover {
+  background: #1a2a3a;
+}
+
+/* Geri Bildirim Paneli */
+#feedback-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 520px;
+  background: #0f1219;
+  border: 1px solid #2a3a4a;
+  border-radius: 36px;
+  padding: 32px;
+  z-index: 1001;
+  display: none;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(20px);
+}
+
+#feedback-panel h2 {
+  color: #e4e6f0;
+  margin: 0 0 8px 0;
+  text-align: center;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+#feedback-type {
+  display: flex;
+  gap: 10px;
+  margin: 24px 0;
+}
+
+.feedback-type-btn {
+  flex: 1;
+  padding: 12px;
+  background: #1a212e;
+  border: 1px solid #2a3a4a;
+  border-radius: 30px;
+  color: #b4c0d0;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.feedback-type-btn.active {
+  background: #2a6eff;
+  border-color: #4a9eff;
+  color: white;
+}
+
+.feedback-type-btn:hover {
+  background: #2a3a4a;
+  color: white;
+}
+
+#feedback-text {
+  width: 100%;
+  height: 140px;
+  background: #1a212e;
+  border: 1px solid #2a3a4a;
+  border-radius: 24px;
+  padding: 16px;
+  color: white;
+  font-size: 15px;
+  resize: none;
+  margin: 20px 0;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+#feedback-text:focus {
+  outline: none;
+  border-color: #4a9eff;
+  box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.2);
+}
+
+#feedback-submit {
+  width: 100%;
+  padding: 16px;
+  background: #2a6eff;
+  border: none;
+  border-radius: 30px;
+  color: white;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 12px;
+}
+
+#feedback-submit:hover {
+  background: #1a5eef;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(42, 110, 255, 0.3);
+}
+
+#feedback-close {
+  width: 100%;
+  padding: 14px;
+  background: #2a3a4a;
+  border: none;
+  border-radius: 30px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#feedback-close:hover {
+  background: #1a2a3a;
+}
+
+#feedback-list {
+  margin-top: 24px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 16px;
+  background: #1a212e;
+  border-radius: 24px;
+  display: none;
+  border: 1px solid #2a3a4a;
+}
+
+.feedback-item {
+  padding: 12px;
+  border-bottom: 1px solid #2a3a4a;
+  font-size: 14px;
+}
+
+.feedback-item:last-child {
+  border-bottom: none;
+}
+
+.feedback-header {
+  display: flex;
+  justify-content: space-between;
+  color: #4a9eff;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.feedback-type-badge {
+  background: #2a3a4a;
+  color: #e4e6f0;
+  padding: 4px 12px;
+  border-radius: 30px;
+  font-size: 12px;
+}
+
+/* AFK uyarı */
+#afk-warning {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #ffaa2a;
+  color: #0a0c12;
+  padding: 14px 24px;
+  border-radius: 40px;
+  font-weight: 600;
+  font-size: 14px;
+  z-index: 1000;
+  animation: slideInRight 0.3s ease;
+  display: none;
+  border: 1px solid #ffcc6a;
+  box-shadow: 0 8px 20px rgba(255, 170, 42, 0.4);
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.hidden {
+  display: none !important;
+}
+
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #1a212e;
+  color: #e4e6f0;
+  padding: 16px 28px;
+  border-radius: 40px;
+  font-size: 15px;
+  font-weight: 500;
+  z-index: 2000;
+  animation: slideInRight 0.3s ease;
+  border: 1px solid #2a3a4a;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+/* Scrollbar stilleri */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f1219;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a3a4a;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3a4a5a;
+}
+</style>
+
+<!-- Kütüphaneler -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+</head>
+
+<body>
+
+<audio id="notify" src="TT.m4a"></audio>
+
+<!-- Login Ekranı -->
+<div id="login">
+  <img id="pfp-preview" src="" alt="Profil fotoğrafı">
+  <input type="text" id="nameInput" placeholder="Kullanıcı adı" autocomplete="off">
+  <input type="password" id="codeInput" placeholder="Kod" autocomplete="off">
+  <input type="file" id="pfpInput" accept="image/*" onchange="previewPFP()">
+  <button onclick="enter()">Giriş Yap</button>
+  <div id="login-error"></div>
+</div>
+
+<!-- AFK Uyarı -->
+<div id="afk-warning">⚠️ 2 dakika hareketsizsin! Yakında çıkış yapılacak...</div>
+
+<!-- Menü butonu -->
+<button id="menu-btn" onclick="toggleMenu()">☰</button>
+
+<!-- Sidebar overlay -->
+<div id="sidebar-overlay" onclick="closeMenu()"></div>
+
+<!-- Sidebar -->
+<div id="sidebar">
+  <div id="sidebar-header">
+    <h3>MENÜ</h3>
+  </div>
+  <button class="sidebar-btn active" onclick="switchScreen('chat')" id="btn-chat">
+    <i>💬</i> Sohbet
+  </button>
+  <button class="sidebar-btn" onclick="switchScreen('altun')" id="btn-altun">
+    <i>🤖</i> Altun.ai
+  </button>
+  <button class="sidebar-btn" onclick="switchScreen('chess')" id="btn-chess">
+    <i>♟️</i> Satranç
+  </button>
+  <button class="sidebar-btn" onclick="switchScreen('guess')" id="btn-guess">
+    <i>🔢</i> Sayı Tahmin
+  </button>
+  <button class="sidebar-btn" onclick="openShop()" id="btn-shop">
+    <i>🛒</i> Mağaza
+  </button>
+  <button class="sidebar-btn" onclick="openFeedback()" id="btn-feedback">
+    <i>📝</i> Geri Bildirim
+  </button>
+</div>
+
+<!-- Ana İçerik -->
+<div id="main-content">
+  
+  <!-- Sohbet Ekranı -->
+  <div id="chat-screen">
+    <div id="topbar">
+      <div id="admin-badge">👑 ADMIN</div>
+      <div id="points-display">💰 <span id="user-points">0</span></div>
+      <div style="font-weight: 500;">7/D Sohbet</div>
+      <button id="shop-btn" onclick="openShop()">🛒 Mağaza</button>
+      <button id="onlineBtn" onclick="toggleOnline()">👥 <span id="online-count">0</span></button>
+    </div>
+
+    <div id="onlinePanel"></div>
+    
+    <!-- Yazıyor göstergesi -->
+    <div id="typing-indicator">
+      <span id="typing-user"></span> yazıyor
+      <span class="typing-dots"><span></span><span></span><span></span></span>
+    </div>
+
+    <div id="chat"></div>
+
+    <div id="inputBar">
+      <input type="text" id="text" placeholder="Mesaj yaz..." oninput="onTyping()">
+      <label for="imgInput" class="media-btn">📷</label>
+      <input type="file" id="imgInput" accept="image/*">
+      <label for="videoInput" class="media-btn">🎥</label>
+      <input type="file" id="videoInput" accept="video/*">
+      <button class="send-btn" onclick="send()">Gönder</button>
+    </div>
+  </div>
+
+  <!-- Altun.ai Ekranı -->
+  <div id="altun-screen" class="hidden">
+    <div id="altun-header">Altun.ai Asistan</div>
+    <div id="altun-messages"></div>
+    <div id="altun-input-area">
+      <input type="text" id="altun-input" placeholder="Bir şey sor..." />
+      <button class="altun-btn" onclick="sendToAltun()">Gönder</button>
+    </div>
+  </div>
+
+  <!-- Satranç Ekranı -->
+  <div id="chess-screen" class="hidden">
+    <div id="chess-header">
+      <h2>♟️ Satranç</h2>
+      <div>
+        <input type="text" id="new-room-name" placeholder="Oda adı">
+        <button onclick="createChessRoom()">Oda Oluştur</button>
+      </div>
+    </div>
+    
+    <div id="chess-main">
+      <div id="chess-sidebar">
+        <h3>📋 Aktif Odalar</h3>
+        <div id="rooms-list"></div>
+      </div>
+      
+      <div id="chess-game-area">
+        <div id="waiting-area">
+          <div class="waiting-box">
+            <h2 id="waiting-room-title">Bekleme Odası</h2>
+            <div class="player-slot">
+              <span>⚪ Beyaz: <span id="white-player">Boş</span></span>
+              <span id="white-ready" class="not-ready">Hazır Değil</span>
+            </div>
+            <div class="player-slot">
+              <span>⚫ Siyah: <span id="black-player">Boş</span></span>
+              <span id="black-ready" class="not-ready">Hazır Değil</span>
+            </div>
+            <button id="ready-btn" onclick="toggleReady()">HAZIR OL</button>
+          </div>
+        </div>
+        
+        <canvas id="chess-canvas" width="520" height="520" style="display: none;"></canvas>
+      </div>
+    </div>
+    
+    <div id="turn-indicator" class="hidden"></div>
+  </div>
+
+  <!-- Sayı Tahmin Oyunu -->
+  <div id="guess-screen" class="hidden">
+    <div id="guess-container">
+      <div id="guess-scoreboard">
+        <h2>🏆 SKOR TABLOSU</h2>
+        <div id="score-list"></div>
+      </div>
+      
+      <div id="guess-game-panel">
+        <div id="guess-header">
+          <h1>🔢 SAYI TAHMİN</h1>
+          <div id="target-number">?</div>
+          <div id="range-info">
+            <span id="min-range">1</span> - <span id="max-range">100</span>
+          </div>
+        </div>
+        
+        <div id="guess-history">
+          <h3>📜 TAHMİN GEÇMİŞİ</h3>
+          <div class="history-list" id="history-list"></div>
+        </div>
+        
+        <div id="guess-input-area">
+          <input type="number" id="guess-input" placeholder="Sayı gir" min="1" max="100">
+          <button id="guess-submit" onclick="makeGuess()">TAHMİN</button>
+        </div>
+        
+        <button id="new-game-btn" onclick="startNewGuessGame()">🔄 YENİ OYUN</button>
+      </div>
+    </div>
+    
+    <div id="guess-feedback"></div>
+  </div>
+</div>
+
+<!-- Mağaza Paneli -->
+<div id="shop-panel">
+  <h2>🛒 MAĞAZA</h2>
+  <div id="shop-items"></div>
+  <button id="shop-close" onclick="closeShop()">Kapat</button>
+</div>
+
+<!-- Ban Paneli -->
+<div id="ban-panel">
+  <h3>🚫 KULLANICIYI BANLA</h3>
+  <p>Kullanıcı: <span id="ban-user"></span></p>
+  
+  <select id="ban-duration">
+    <option value="5">5 dakika</option>
+    <option value="30">30 dakika</option>
+    <option value="60">1 saat</option>
+    <option value="360">6 saat</option>
+    <option value="1440">24 saat</option>
+    <option value="10080">1 hafta</option>
+    <option value="43200">1 ay</option>
+    <option value="0">Süresiz</option>
+  </select>
+  
+  <textarea id="ban-reason" placeholder="Ban sebebi..."></textarea>
+  
+  <div class="ban-buttons">
+    <button class="ban-confirm" onclick="confirmBan()">BANLA</button>
+    <button class="ban-cancel" onclick="closeBanPanel()">İptal</button>
+  </div>
+</div>
+
+<!-- Geri Bildirim Paneli -->
+<div id="feedback-panel">
+  <h2>📝 GERİ BİLDİRİM</h2>
+  
+  <div id="feedback-type">
+    <button class="feedback-type-btn active" onclick="setFeedbackType('feedback')">💬 Geri Bildirim</button>
+    <button class="feedback-type-btn" onclick="setFeedbackType('bug')">🐛 Hata</button>
+    <button class="feedback-type-btn" onclick="setFeedbackType('suggestion')">💡 Öneri</button>
+  </div>
+  
+  <textarea id="feedback-text" placeholder="Düşüncelerinizi yazın..."></textarea>
+  
+  <button id="feedback-submit" onclick="submitFeedback()">Gönder</button>
+  <button id="feedback-close" onclick="closeFeedback()">Kapat</button>
+  
+  <div id="feedback-list"></div>
+</div>
+
+<script>
+// Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyBVMvgD3u-UT5dAk72pXqLub05qNPjqPW8",
+  authDomain: "dsohbet.firebaseapp.com",
+  databaseURL: "https://dsohbet-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "dsohbet"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// Altun.ai API
+const API_KEY = "6f49a41b-ee0f-47f3-a4ea-05d3f4f373a7";
+
+// Global Değişkenler
+let username = "", role = "user", pfp = "";
+let onlineRef;
+let currentScreen = 'chat';
+let userPoints = 0;
+let purchasedStyles = ['default'];
+let currentStyle = 'default';
+let typingTimeout = null;
+let mutedUsers = {};
+let bannedUsers = {};
+
+// Satranç Değişkenleri
+let chessCurrentRoom = null;
+let chessPlayerColor = null;
+let chess = null;
+let selectedSquare = null;
+let possibleMoves = [];
+let isPlayerReady = false;
+let roomListener = null;
+let chessCanvas, chessCtx;
+
+// Sayı Tahmin Değişkenleri
+let guessTarget = Math.floor(Math.random() * 100) + 1;
+let guessMin = 1, guessMax = 100;
+let guessAttempts = 0;
+let guessScore = 0;
+let guessGameActive = true;
+let guessPlayers = {};
+
+// Geri Bildirim
+let currentFeedbackType = 'feedback';
+
+// AFK
+let lastActivityTime = Date.now();
+let afkKickTimer = null;
+const AFK_WARNING = 90000;
+const AFK_LIMIT = 120000;
+
+// Ban için geçici değişken
+let targetBanUser = '';
+
+// Sayfa kaymasını engelle
+document.body.addEventListener('touchmove', function(e) {
+  if (!e.target.closest('#chat') && !e.target.closest('#altun-messages') && !e.target.closest('#guess-container') && !e.target.closest('#chess-game-area')) {
+    e.preventDefault();
+  }
+}, { passive: false });
+
+// Menü
+window.toggleMenu = () => {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebar-overlay').classList.toggle('show');
+}
+
+window.closeMenu = () => {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+}
+
+// Ekran değiştirme
+window.switchScreen = (screen) => {
+  updateActivity();
+  currentScreen = screen;
+  
+  document.querySelectorAll('.sidebar-btn').forEach(btn => btn.classList.remove('active'));
+  document.getElementById('btn-' + screen).classList.add('active');
+  
+  document.getElementById('chat-screen').classList.add('hidden');
+  document.getElementById('altun-screen').classList.add('hidden');
+  document.getElementById('chess-screen').classList.add('hidden');
+  document.getElementById('guess-screen').classList.add('hidden');
+  
+  document.getElementById(screen + '-screen').classList.remove('hidden');
+  
+  if (screen === 'altun') loadAltunHistory();
+  else if (screen === 'chess') initChess();
+  else if (screen === 'guess') initGuessGame();
+  
+  closeMenu();
+}
+
+// Profil fotoğrafı preview
+window.previewPFP = () => {
+  const file = document.getElementById('pfpInput').files[0];
+  const preview = document.getElementById('pfp-preview');
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = e => { 
+      preview.src = e.target.result; 
+      preview.style.display = 'block'; 
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+// AFK
+function startAfkMonitoring() {
+  if (afkKickTimer) clearInterval(afkKickTimer);
+  afkKickTimer = setInterval(() => {
+    const afkTime = Date.now() - lastActivityTime;
+    if (afkTime > AFK_WARNING && afkTime < AFK_LIMIT) {
+      document.getElementById('afk-warning').style.display = 'block';
+    } else if (afkTime >= AFK_LIMIT) {
+      document.getElementById('afk-warning').style.display = 'none';
+      if (onlineRef) onlineRef.remove();
+      if (chessCurrentRoom) leaveChessRoom();
+      alert('2 dakika hareketsiz kaldığınız için çıkış yapıldı!');
+      location.reload();
+    }
+  }, 1000);
+}
+
+function updateActivity() {
+  lastActivityTime = Date.now();
+  document.getElementById('afk-warning').style.display = 'none';
+}
+
+['mousedown', 'mousemove', 'keydown', 'touchstart'].forEach(ev => {
+  document.addEventListener(ev, updateActivity);
+});
+
+// Giriş - SADECE 3 KOD: kmja, deop, Alex (şifre alanı gizli)
+window.enter = () => {
+  username = document.getElementById('nameInput').value.trim();
+  const code = document.getElementById('codeInput').value.trim();
+  const errorDiv = document.getElementById('login-error');
+  
+  if (!username) { 
+    errorDiv.textContent = "İsim girmelisin!"; 
+    return; 
+  }
+  
+  if (!code) {
+    errorDiv.textContent = "Kod girmelisin!";
+    return;
+  }
+  
+  // Sadece 3 geçerli kod
+  if (code === "deop" || code === "kmja" || code === "Alex") {
+    if (code === "deop") { 
+      role = "admin"; 
+      document.getElementById('admin-badge').style.display = 'block';
+    } else { 
+      role = "user"; 
+    }
+  } else {
+    errorDiv.textContent = "Geçersiz kod!";
+    return;
+  }
+
+  const file = document.getElementById('pfpInput').files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = e => { 
+      pfp = e.target.result; 
+      setupPresence(); 
+    };
+    reader.readAsDataURL(file);
+  } else {
+    pfp = "https://ui-avatars.com/api/?name=" + encodeURIComponent(username) + "&background=2a6eff&color=fff&size=128";
+    setupPresence();
+  }
+
+  document.getElementById('login').style.display = "none";
+  
+  loadUserPoints();
+  updateActivity();
+  startAfkMonitoring();
+
+  listenMessages();
+  listenOnline();
+  listenTyping();
+}
+
+// Presence
+function setupPresence() {
+  onlineRef = db.ref("online/" + username);
+  onlineRef.set({ name: username, role: role, pfp: pfp, lastActive: Date.now() });
+  setInterval(() => { if (onlineRef) onlineRef.update({ lastActive: Date.now() }); }, 30000);
+  onlineRef.onDisconnect().remove();
+}
+
+// Online listesi
+function listenOnline() {
+  db.ref("online").on('value', (snap) => {
+    const onlinePanel = document.getElementById('onlinePanel');
+    onlinePanel.innerHTML = "";
+    let count = 0;
+    
+    snap.forEach(child => {
+      const u = child.val();
+      count++;
+      
+      const div = document.createElement("div");
+      div.className = "userItem";
+      
+      const pfpImg = document.createElement("img");
+      pfpImg.className = "user-pfp";
+      pfpImg.src = u.pfp;
+      
+      const infoDiv = document.createElement("div");
+      infoDiv.className = "user-info";
+      infoDiv.textContent = u.name + (u.role === "admin" ? " 👑" : "");
+      
+      div.appendChild(pfpImg);
+      div.appendChild(infoDiv);
+      
+      // Admin için aksiyon butonları
+      if (role === 'admin' && u.name !== username) {
+        const actions = document.createElement('div');
+        actions.className = 'admin-actions';
+        actions.innerHTML = `
+          <button onclick="showBanPanel('${u.name}')">🚫 Ban</button>
+          <button onclick="muteUser('${u.name}')">🔇 Mute</button>
+          <button onclick="deleteUserMessages('${u.name}')">🗑️ Sil</button>
+        `;
+        div.appendChild(actions);
+      }
+      
+      onlinePanel.appendChild(div);
+    });
+    
+    document.getElementById('online-count').textContent = count;
+  });
+}
+
+// Yazıyor
+function listenTyping() {
+  db.ref('typing').on('value', (snap) => {
+    const data = snap.val() || {};
+    const now = Date.now();
+    const typingUsers = Object.keys(data).filter(id => id !== username && data[id] > now - 3000);
+    
+    const indicator = document.getElementById('typing-indicator');
+    const userSpan = document.getElementById('typing-user');
+    
+    if (typingUsers.length > 0) {
+      if (typingUsers.length === 1) userSpan.textContent = typingUsers[0];
+      else if (typingUsers.length === 2) userSpan.textContent = typingUsers.join(' ve ');
+      else userSpan.textContent = 'Birkaç kişi';
+      indicator.style.display = 'flex';
+    } else {
+      indicator.style.display = 'none';
+    }
+  });
+}
+
+window.onTyping = () => {
+  if (!username) return;
+  if (typingTimeout) clearTimeout(typingTimeout);
+  db.ref(`typing/${username}`).set(Date.now());
+  typingTimeout = setTimeout(() => db.ref(`typing/${username}`).remove(), 3000);
+}
+
+// Mesajları dinle
+function listenMessages() {
+  db.ref("messages").on('child_added', (snap) => {
+    renderMessage(snap.val(), snap.key);
+    document.getElementById('notify').play();
+  });
+}
+
+// Mesaj gönder
+window.send = () => {
+  updateActivity();
+  
+  if (bannedUsers[username] && bannedUsers[username].until > Date.now()) {
+    showNotification(`🚫 Banlandınız! Sebep: ${bannedUsers[username].reason}`);
+    return;
+  }
+  
+  if (mutedUsers[username] && mutedUsers[username] > Date.now()) {
+    const remaining = Math.ceil((mutedUsers[username] - Date.now())/60000);
+    showNotification(`🔇 Susturuldunuz! Kalan: ${remaining} dk`);
+    return;
+  }
+  
+  const text = document.getElementById('text').value.trim();
+  const imgFile = document.getElementById('imgInput').files[0];
+  const videoFile = document.getElementById('videoInput').files[0];
+
+  if (!text && !imgFile && !videoFile) return;
+
+  db.ref(`typing/${username}`).remove();
+  
+  const now = new Date();
+  const timeStr = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+  
+  const messageData = {
+    name: username, role: role, pfp: pfp, text: text, time: Date.now(), timeStr: timeStr, style: currentStyle
+  };
+
+  if (imgFile) {
+    const reader = new FileReader();
+    reader.onload = e => { messageData.img = e.target.result; db.ref("messages").push(messageData); };
+    reader.readAsDataURL(imgFile);
+  } else if (videoFile) {
+    const reader = new FileReader();
+    reader.onload = e => { messageData.video = e.target.result; db.ref("messages").push(messageData); };
+    reader.readAsDataURL(videoFile);
+  } else {
+    db.ref("messages").push(messageData);
+  }
+
+  document.getElementById('text').value = "";
+  document.getElementById('imgInput').value = "";
+  document.getElementById('videoInput').value = "";
+}
+
+// Mesaj render
+function renderMessage(m, key) {
+  const chat = document.getElementById('chat');
+  const div = document.createElement("div");
+
+  let cls = "msg user";
+  if (m.name === username) cls = "msg me";
+  if (m.role === "admin") cls = "msg admin";
+  if (m.style && m.style !== 'default') cls += ` style-${m.style}`;
+
+  div.className = cls;
+  
+  const adminCrown = m.role === 'admin' ? '<span class="admin-crown">👑</span>' : '';
+  
+  div.innerHTML = `
+    <div class="msg-header">
+      <img src="${m.pfp}" class="msg-pfp" onerror="this.src='https://ui-avatars.com/api/?name=${m.name}&background=2a6eff&color=fff'">
+      <span class="msg-username">${m.name} ${adminCrown}</span>
+      <span class="msg-time">${m.timeStr}</span>
+    </div>
+    <div>${m.text || ''}</div>
+    ${m.img ? `<img src="${m.img}">` : ''}
+    ${m.video ? `<div class="video-container"><video src="${m.video}" controls></video></div>` : ''}
+    ${role === 'admin' && m.name !== username ? `<button class="delete-btn" onclick="deleteMessage('${key}')">✕</button>` : ''}
+  `;
+
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+// Admin mesaj silme
+window.deleteMessage = (key) => {
+  if (role === 'admin') {
+    db.ref(`messages/${key}`).remove();
+    showNotification('✅ Mesaj silindi');
+  }
+}
+
+window.deleteUserMessages = (targetUser) => {
+  if (role === 'admin') {
+    db.ref('messages').once('value', (snap) => {
+      snap.forEach(child => {
+        if (child.val().name === targetUser) {
+          child.ref.remove();
+        }
+      });
+    });
+    showNotification(`✅ ${targetUser}'ın tüm mesajları silindi`);
+  }
+}
+
+// Ban Paneli
+window.showBanPanel = (targetUser) => {
+  targetBanUser = targetUser;
+  document.getElementById('ban-user').textContent = targetUser;
+  document.getElementById('ban-panel').style.display = 'block';
+}
+
+window.closeBanPanel = () => {
+  document.getElementById('ban-panel').style.display = 'none';
+  document.getElementById('ban-reason').value = '';
+}
+
+window.confirmBan = () => {
+  const duration = parseInt(document.getElementById('ban-duration').value);
+  const reason = document.getElementById('ban-reason').value.trim() || 'Sebep belirtilmemiş';
+  
+  const banTime = duration === 0 ? Infinity : Date.now() + duration * 60000;
+  
+  bannedUsers[targetBanUser] = { until: banTime, reason: reason };
+  
+  db.ref(`bans/${targetBanUser}`).set({ until: banTime, reason: reason, bannedBy: username, time: Date.now() });
+  
+  db.ref(`notifications/${targetBanUser}`).push({
+    type: 'ban',
+    text: `${duration === 0 ? 'Süresiz' : duration + ' dakika'} banlandınız. Sebep: ${reason}`,
+    time: Date.now()
+  });
+  
+  showNotification(`🚫 ${targetBanUser} banlandı!`);
+  closeBanPanel();
+}
+
+window.muteUser = (targetUser) => {
+  const muteTime = Date.now() + 600000; // 10 dakika
+  mutedUsers[targetUser] = muteTime;
+  
+  db.ref(`mutes/${targetUser}`).set({ until: muteTime, mutedBy: username, time: Date.now() });
+  
+  db.ref(`notifications/${targetUser}`).push({
+    type: 'mute',
+    text: '10 dakika süreyle susturuldunuz!',
+    time: Date.now()
+  });
+  
+  showNotification(`🔇 ${targetUser} 10 dakika susturuldu`);
+}
+
+// Online panel toggle
+window.toggleOnline = () => {
+  const panel = document.getElementById('onlinePanel');
+  panel.style.display = panel.style.display === "block" ? "none" : "block";
+}
+
+// Altun.ai
+function loadAltunHistory() {
+  const saved = localStorage.getItem("altun_chat_history");
+  const messagesDiv = document.getElementById("altun-messages");
+  if (saved) {
+    messagesDiv.innerHTML = saved;
+  } else {
+    addAltunMessage("Merhaba! Ben Altun.ai. Size nasıl yardımcı olabilirim?", "altun-bot");
+  }
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+function saveAltunChat() {
+  localStorage.setItem("altun_chat_history", document.getElementById("altun-messages").innerHTML);
+}
+
+function addAltunMessage(text, cls) {
+  const div = document.createElement("div");
+  div.className = "altun-message " + cls;
+  div.textContent = text;
+  document.getElementById("altun-messages").appendChild(div);
+  document.getElementById("altun-messages").scrollTop = document.getElementById("altun-messages").scrollHeight;
+  saveAltunChat();
+}
+
+window.sendToAltun = async () => {
+  updateActivity();
+  const input = document.getElementById("altun-input");
+  const text = input.value.trim();
+  if (!text) return;
+
+  addAltunMessage("Sen: " + text, "altun-user");
+  input.value = "";
+
+  const typingDiv = document.createElement("div");
+  typingDiv.className = "altun-message altun-bot";
+  typingDiv.innerHTML = `Bot yazıyor <span class="typing"><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></span>`;
+  typingDiv.id = "altun-typing";
+  document.getElementById("altun-messages").appendChild(typingDiv);
+
+  try {
+    const response = await fetch("https://api.sambanova.ai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "Meta-Llama-3.1-8B-Instruct",
+        messages: [{ role: "user", content: text }]
+      })
+    });
+
+    const data = await response.json();
+    document.getElementById("altun-typing")?.remove();
+    const reply = data.choices?.[0]?.message?.content || "Üzgünüm, bir hata oluştu.";
+    addAltunMessage("Bot: " + reply, "altun-bot");
+  } catch (err) {
+    document.getElementById("altun-typing")?.remove();
+    addAltunMessage("Bot: Bağlantı hatası oluştu", "altun-bot");
+  }
+}
+
+// Satranç
+function initChess() {
+  chessCanvas = document.getElementById('chess-canvas');
+  chessCtx = chessCanvas.getContext('2d');
+  listenChessRooms();
+  chessCanvas.addEventListener('click', handleChessClick);
+}
+
+function listenChessRooms() {
+  db.ref('chessRooms').on('value', (snap) => {
+    const rooms = snap.val() || {};
+    displayRooms(rooms);
+  });
+}
+
+function displayRooms(rooms) {
+  const container = document.getElementById('rooms-list');
+  container.innerHTML = '';
+  
+  Object.entries(rooms).forEach(([roomId, room]) => {
+    const roomDiv = document.createElement('div');
+    roomDiv.className = 'room-item';
+    roomDiv.onclick = () => joinChessRoom(roomId, room);
+    roomDiv.innerHTML = `
+      <div class="room-name">${room.name || roomId}</div>
+      <div class="room-players">⚪ ${room.white?.name || 'Boş'} | ⚫ ${room.black?.name || 'Boş'}</div>
+    `;
+    container.appendChild(roomDiv);
+  });
+}
+
+window.createChessRoom = () => {
+  const roomName = document.getElementById('new-room-name').value.trim();
+  if (!roomName) { showNotification('Oda adı girin!'); return; }
+  
+  const roomId = 'chess_' + Date.now();
+  db.ref(`chessRooms/${roomId}`).set({
+    name: roomName, white: null, black: null, gameStarted: false,
+    fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+    turn: 'w', createdBy: username, lastActivity: Date.now()
+  });
+  document.getElementById('new-room-name').value = '';
+}
+
+window.joinChessRoom = (roomId, room) => {
+  if (room.white && room.black) {
+    showNotification('Oda dolu!'); return;
+  }
+  
+  chessCurrentRoom = roomId;
+  chessPlayerColor = !room.white ? 'white' : 'black';
+  
+  const playerData = { name: username, ready: false, lastActive: Date.now() };
+  const update = chessPlayerColor === 'white' ? { white: playerData } : { black: playerData };
+  db.ref(`chessRooms/${roomId}`).update(update);
+  
+  if (roomListener) db.ref(`chessRooms/${roomId}`).off('value', roomListener);
+  
+  roomListener = db.ref(`chessRooms/${roomId}`).on('value', (snap) => {
+    const data = snap.val();
+    if (!data) return;
+    
+    document.getElementById('white-player').textContent = data.white?.name || 'Boş';
+    document.getElementById('black-player').textContent = data.black?.name || 'Boş';
+    document.getElementById('white-ready').className = data.white?.ready ? 'ready' : 'not-ready';
+    document.getElementById('black-ready').className = data.black?.ready ? 'ready' : 'not-ready';
+    document.getElementById('waiting-room-title').textContent = data.name;
+    
+    if (data.white?.ready && data.black?.ready && !data.gameStarted) {
+      startChessGame(roomId);
+    }
+    
+    if (data.gameStarted) {
+      document.getElementById('waiting-area').style.display = 'none';
+      document.getElementById('chess-canvas').style.display = 'block';
+      document.getElementById('turn-indicator').classList.remove('hidden');
+      
+      chess = new Chess(data.fen);
+      drawChessBoard();
+      updateTurnIndicator();
+    }
+  });
+}
+
+window.toggleReady = () => {
+  if (!chessCurrentRoom || !chessPlayerColor) return;
+  isPlayerReady = !isPlayerReady;
+  db.ref(`chessRooms/${chessCurrentRoom}/${chessPlayerColor}/ready`).set(isPlayerReady);
+}
+
+function startChessGame(roomId) {
+  chess = new Chess();
+  db.ref(`chessRooms/${roomId}`).update({ gameStarted: true, fen: chess.fen(), turn: 'w' });
+}
+
+function leaveChessRoom() {
+  if (!chessCurrentRoom) return;
+  db.ref(`chessRooms/${chessCurrentRoom}/${chessPlayerColor}`).remove();
+  if (roomListener) db.ref(`chessRooms/${chessCurrentRoom}`).off('value', roomListener);
+  chessCurrentRoom = null; chessPlayerColor = null; chess = null; isPlayerReady = false;
+}
+
+function updateTurnIndicator() {
+  if (!chess || !chessPlayerColor) return;
+  const isMyTurn = (chess.turn() === 'w' && chessPlayerColor === 'white') || 
+                   (chess.turn() === 'b' && chessPlayerColor === 'black');
+  const indicator = document.getElementById('turn-indicator');
+  indicator.textContent = isMyTurn ? 'SIRA SENDE' : 'SIRA RAKİBİNDE';
+  indicator.className = isMyTurn ? 'my-turn' : 'opponent-turn';
+}
+
+function getSquareName(row, col) {
+  return 'abcdefgh'[col] + (8 - row);
+}
+
+function drawChessBoard() {
+  if (!chess) return;
+  const squareSize = 65;
+  const board = chess.board();
+  
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      const x = col * squareSize;
+      const y = row * squareSize;
+      
+      chessCtx.fillStyle = (row + col) % 2 === 0 ? '#f0d9b5' : '#b58863';
+      chessCtx.fillRect(x, y, squareSize, squareSize);
+      
+      if (selectedSquare && selectedSquare.row === row && selectedSquare.col === col) {
+        chessCtx.fillStyle = 'rgba(74, 158, 255, 0.4)';
+        chessCtx.fillRect(x, y, squareSize, squareSize);
+      }
+      
+      if (possibleMoves.some(m => m.to === getSquareName(row, col))) {
+        chessCtx.beginPath();
+        chessCtx.arc(x + squareSize/2, y + squareSize/2, 10, 0, 2 * Math.PI);
+        chessCtx.fillStyle = 'rgba(74, 255, 74, 0.4)';
+        chessCtx.fill();
+      }
+      
+      const piece = board[row][col];
+      if (piece) {
+        const symbols = { 
+          p: '♟', n: '♞', b: '♝', r: '♜', q: '♛', k: '♚',
+          P: '♙', N: '♘', B: '♗', R: '♖', Q: '♕', K: '♔' 
+        };
+        chessCtx.font = 'bold 45px Arial';
+        chessCtx.fillStyle = piece.color === 'w' ? 'white' : 'black';
+        chessCtx.fillText(
+          symbols[piece.type === 'p' ? (piece.color === 'w' ? 'P' : 'p') : 
+                  (piece.color === 'w' ? piece.type.toUpperCase() : piece.type)], 
+          x + 12, y + 52
+        );
+      }
+    }
+  }
+}
+
+function handleChessClick(e) {
+  updateActivity();
+  if (!chess || !chessCurrentRoom) return;
+  
+  const isMyTurn = (chess.turn() === 'w' && chessPlayerColor === 'white') || 
+                   (chess.turn() === 'b' && chessPlayerColor === 'black');
+  if (!isMyTurn) { showNotification('Sıra sende değil!'); return; }
+  
+  const rect = chessCanvas.getBoundingClientRect();
+  const scaleX = chessCanvas.width / rect.width;
+  const scaleY = chessCanvas.height / rect.height;
+  const col = Math.floor((e.clientX - rect.left) * scaleX / 65);
+  const row = Math.floor((e.clientY - rect.top) * scaleY / 65);
+  
+  if (row < 0 || row >= 8 || col < 0 || col >= 8) return;
+  
+  const squareName = getSquareName(row, col);
+  
+  if (selectedSquare) {
+    const move = { 
+      from: getSquareName(selectedSquare.row, selectedSquare.col), 
+      to: squareName, 
+      promotion: 'q' 
+    };
+    
+    if (chess.move(move)) {
+      db.ref(`chessRooms/${chessCurrentRoom}`).update({ fen: chess.fen(), turn: chess.turn() });
+      selectedSquare = null; 
+      possibleMoves = [];
+    } else {
+      const piece = chess.board()[row][col];
+      if (piece && ((piece.color === 'w' && chessPlayerColor === 'white') || 
+                   (piece.color === 'b' && chessPlayerColor === 'black'))) {
+        selectedSquare = { row, col };
+        possibleMoves = chess.moves({ square: squareName, verbose: true });
+      } else {
+        selectedSquare = null; 
+        possibleMoves = [];
+      }
+    }
+  } else {
+    const piece = chess.board()[row][col];
+    if (piece && ((piece.color === 'w' && chessPlayerColor === 'white') || 
+                 (piece.color === 'b' && chessPlayerColor === 'black'))) {
+      selectedSquare = { row, col };
+      possibleMoves = chess.moves({ square: squareName, verbose: true });
+    }
+  }
+  
+  drawChessBoard();
+  updateTurnIndicator();
+}
+
+// Sayı Tahmin
+function initGuessGame() {
+  updateScoreboard();
+  db.ref('guessScores').on('value', (snap) => {
+    guessPlayers = snap.val() || {};
+    updateScoreboard();
+  });
+  if (username) {
+    db.ref(`guessScores/${username}`).set({ 
+      name: username, 
+      role: role, 
+      score: guessScore, 
+      lastActive: Date.now() 
+    });
+  }
+}
+
+function updateScoreboard() {
+  const scoreList = document.getElementById('score-list');
+  scoreList.innerHTML = '';
+  
+  const sorted = Object.entries(guessPlayers)
+    .filter(([_, d]) => d.score > 0)
+    .sort((a, b) => b[1].score - a[1].score)
+    .slice(0, 10);
+  
+  sorted.forEach(([id, data], index) => {
+    const div = document.createElement('div');
+    div.className = `score-item ${id === username ? 'me' : ''}`;
+    div.innerHTML = `
+      <span class="rank">#${index+1}</span>
+      <span class="name">${data.name || id} ${data.role === 'admin' ? '👑' : ''}</span>
+      <span class="score">${data.score}</span>
+    `;
+    scoreList.appendChild(div);
+  });
+}
+
+window.makeGuess = () => {
+  if (!guessGameActive) { 
+    showNotification('Önce yeni oyun başlat!'); 
+    return; 
+  }
+  
+  const input = document.getElementById('guess-input');
+  const guess = parseInt(input.value);
+  if (isNaN(guess) || guess < 1 || guess > 100) { 
+    showNotification('1-100 arası sayı gir!'); 
+    return; 
+  }
+  
+  guessAttempts++;
+  const historyList = document.getElementById('history-list');
+  const item = document.createElement('div');
+  
+  if (guess === guessTarget) {
+    guessGameActive = false;
+    document.getElementById('target-number').textContent = guessTarget;
+    document.getElementById('guess-submit').disabled = true;
+    item.className = 'history-item correct'; 
+    item.textContent = guess + ' ✓';
+    
+    const points = Math.max(10, 100 - (guessAttempts * 10));
+    guessScore += points; 
+    userPoints += points;
+    
+    db.ref(`guessScores/${username}`).update({ score: guessScore });
+    db.ref(`users/${username}/points`).set(userPoints);
+    document.getElementById('user-points').textContent = userPoints;
+    
+    showNotification(`🎉 Kazandın! +${points} puan`);
+    
+    const feedback = document.getElementById('guess-feedback');
+    feedback.textContent = '🎉';
+    feedback.className = 'correct';
+    setTimeout(() => { feedback.textContent = ''; }, 800);
+    
+  } else if (guess < guessTarget) {
+    if (guess > guessMin) guessMin = guess + 1;
+    item.className = 'history-item low'; 
+    item.textContent = guess + ' ↑';
+    
+    const feedback = document.getElementById('guess-feedback');
+    feedback.textContent = '📈';
+    feedback.className = 'low';
+    setTimeout(() => { feedback.textContent = ''; }, 800);
+    
+  } else {
+    if (guess < guessMax) guessMax = guess - 1;
+    item.className = 'history-item high'; 
+    item.textContent = guess + ' ↓';
+    
+    const feedback = document.getElementById('guess-feedback');
+    feedback.textContent = '📉';
+    feedback.className = 'high';
+    setTimeout(() => { feedback.textContent = ''; }, 800);
+  }
+  
+  historyList.appendChild(item);
+  historyList.scrollTop = historyList.scrollHeight;
+  
+  document.getElementById('min-range').textContent = guessMin;
+  document.getElementById('max-range').textContent = guessMax;
+  input.value = '';
+  input.focus();
+}
+
+window.startNewGuessGame = () => {
+  guessTarget = Math.floor(Math.random() * 100) + 1;
+  guessMin = 1; guessMax = 100; guessAttempts = 0; guessGameActive = true;
+  document.getElementById('target-number').textContent = '?';
+  document.getElementById('min-range').textContent = '1';
+  document.getElementById('max-range').textContent = '100';
+  document.getElementById('history-list').innerHTML = '';
+  document.getElementById('guess-submit').disabled = false;
+  document.getElementById('guess-input').focus();
+  showNotification('🔄 Yeni sayı belirlendi!');
+}
+
+// Puan ve Mağaza
+function loadUserPoints() {
+  db.ref(`users/${username}/points`).on('value', (snap) => {
+    userPoints = snap.val() || 0;
+    document.getElementById('user-points').textContent = userPoints;
+  });
+  
+  db.ref(`users/${username}/styles`).on('value', (snap) => {
+    purchasedStyles = snap.val() || ['default'];
+  });
+  
+  db.ref(`users/${username}/activeStyle`).on('value', (snap) => {
+    currentStyle = snap.val() || 'default';
+  });
+}
+
+window.openShop = () => {
+  const shopItems = document.getElementById('shop-items');
+  const styles = [
+    { id: 1, name: 'Yeşil Enerji', desc: 'Doğal yeşil tonlar', price: 200, style: 'green', emoji: '💚' },
+    { id: 2, name: 'RGB Akış', desc: 'Yumuşak renk geçişleri', price: 300, style: 'rgb', emoji: '🌈' }
+  ];
+  
+  shopItems.innerHTML = '';
+  
+  styles.forEach(s => {
+    const owned = purchasedStyles.includes(s.style);
+    const div = document.createElement('div');
+    div.className = `shop-item ${owned ? 'disabled' : ''}`;
+    div.innerHTML = `
+      <div class="shop-item-preview" style="background: ${s.style === 'green' ? 'linear-gradient(135deg, #2a9a4a, #1a6a3a)' : 'linear-gradient(135deg, #4a6eff, #9a4aff, #ff6a4a)'}">
+        ${s.emoji}
+      </div>
+      <div class="shop-item-info">
+        <h3>${s.name}</h3>
+        <p>${s.desc}</p>
+      </div>
+      <div class="shop-item-price">
+        ${owned ? '✓ SAHİP' : `${s.price}💰`}
+      </div>
+    `;
+    if (!owned) div.onclick = () => buyStyle(s.style, s.price);
+    shopItems.appendChild(div);
+  });
+  
+  document.getElementById('shop-panel').style.display = 'block';
+  closeMenu();
+}
+
+window.buyStyle = (style, price) => {
+  if (userPoints < price) { showNotification('Yetersiz puan!'); return; }
+  userPoints -= price; 
+  purchasedStyles.push(style);
+  currentStyle = style;
+  
+  db.ref(`users/${username}/points`).set(userPoints);
+  db.ref(`users/${username}/styles`).set(purchasedStyles);
+  db.ref(`users/${username}/activeStyle`).set(style);
+  
+  showNotification('✨ Stil satın alındı!');
+  closeShop();
+}
+
+window.closeShop = () => {
+  document.getElementById('shop-panel').style.display = 'none';
+}
+
+// Geri Bildirim
+window.openFeedback = () => {
+  document.getElementById('feedback-panel').style.display = 'block';
+  if (role === 'admin') loadFeedbackHistory();
+  closeMenu();
+}
+
+window.closeFeedback = () => {
+  document.getElementById('feedback-panel').style.display = 'none';
+  document.getElementById('feedback-text').value = '';
+}
+
+window.setFeedbackType = (type) => {
+  currentFeedbackType = type;
+  document.querySelectorAll('.feedback-type-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+window.submitFeedback = () => {
+  const text = document.getElementById('feedback-text').value.trim();
+  if (!text) { showNotification('Mesaj yaz!'); return; }
+  
+  db.ref('feedback').push({
+    user: username, 
+    type: currentFeedbackType, 
+    text: text,
+    time: Date.now(), 
+    timeStr: new Date().toLocaleString('tr-TR')
+  });
+  
+  document.getElementById('feedback-text').value = '';
+  showNotification('Teşekkürler! Geri bildirimin alındı.');
+  if (role === 'admin') loadFeedbackHistory();
+}
+
+function loadFeedbackHistory() {
+  const listDiv = document.getElementById('feedback-list');
+  listDiv.style.display = 'block';
+  
+  db.ref('feedback').orderByChild('time').limitToLast(10).on('value', (snap) => {
+    listDiv.innerHTML = '';
+    const feedbacks = snap.val() || {};
+    Object.values(feedbacks).reverse().forEach(f => {
+      const div = document.createElement('div');
+      div.className = 'feedback-item';
+      div.innerHTML = `
+        <div class="feedback-header">
+          <span>${f.user}</span>
+          <span class="feedback-type-badge">${f.type}</span>
+        </div>
+        <div>${f.text}</div>
+        <div style="font-size: 10px; color: #8892a6; margin-top: 5px;">${f.timeStr}</div>
+      `;
+      listDiv.appendChild(div);
+    });
+  });
+}
+
+// Bildirim
+function showNotification(text) {
+  const notif = document.createElement('div');
+  notif.className = 'notification';
+  notif.textContent = text;
+  document.body.appendChild(notif);
+  setTimeout(() => notif.remove(), 3000);
+}
+
+// Sayfa yüklendiğinde
+window.onload = () => {
+  switchScreen('chat');
+  
+  document.getElementById('guess-input').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') makeGuess();
+  });
+  
+  document.getElementById('altun-input').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendToAltun();
+  });
+  
+  window.addEventListener('beforeunload', () => {
+    if (username) {
+      db.ref(`typing/${username}`).remove();
+      if (onlineRef) onlineRef.remove();
+    }
+  });
+  
+  // Smooth scroll için
+  document.querySelectorAll('.scrollable, #chat, #altun-messages, #guess-container, #score-list, #history-list, #shop-items').forEach(el => {
+    if (el) el.style.overscrollBehavior = 'contain';
+  });
+}
+</script>
+
+</body>
+  </html>
