@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-<title>7/D Sohbet + Altun.ai + Premium</title>
+<title>7/D Sohbet + Altun.ai + Premium + Oyunlar</title>
 
 <style>
 * {
@@ -41,14 +41,21 @@ body {
   height: 100%;
 }
 
-/* Smooth gradient background */
+/* Animated gradient background */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at 30% 40%, #1a2f4f 0%, #0a0f1f 80%);
-  opacity: 0.8;
+  background: linear-gradient(45deg, #1a2f4f, #0a0f1f, #2f1f4f, #1a0f2f);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
   z-index: -2;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 body::after {
@@ -116,7 +123,7 @@ body::after {
   width: 260px;
   border-radius: 12px;
   border: none;
-  background: #2a6eff;
+  background: linear-gradient(135deg, #2a6eff, #4a9eff);
   color: white;
   font-weight: 600;
   font-size: 16px;
@@ -126,9 +133,8 @@ body::after {
 }
 
 #login button:hover {
-  background: #1a5eef;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(42, 110, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(42, 110, 255, 0.4);
 }
 
 #login button:active {
@@ -381,6 +387,30 @@ body::after {
   transform: translateY(-1px);
 }
 
+#inventory-btn {
+  position: absolute;
+  right: 240px;
+  background: #1a2a3a;
+  border: 1px solid #ffaa2a;
+  border-radius: 30px;
+  padding: 8px 18px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 10px rgba(255, 170, 42, 0.2);
+}
+
+#inventory-btn:hover {
+  background: #ffaa2a;
+  color: #0a0c12;
+  transform: translateY(-1px);
+}
+
 /* Yazıyor göstergesi */
 #typing-indicator {
   position: absolute;
@@ -547,20 +577,101 @@ body::after {
   border: 1px solid #ff5a5a;
 }
 
-/* Mesaj balonu stilleri */
+/* Mesaj balonu stilleri - Geçişli ve Animasyonlu */
 .msg.style-green {
-  background: linear-gradient(135deg, #1a4a2a, #0a3a1a);
+  background: linear-gradient(135deg, #1a4a2a, #0a3a1a, #1a6a3a);
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
   border-color: #2a9a4a;
+  box-shadow: 0 4px 15px rgba(42, 154, 74, 0.3);
 }
 
 .msg.style-rgb {
-  background: linear-gradient(135deg, #4a2a6a, #2a4a6a, #4a6a2a);
-  background-size: 200% 200%;
-  animation: smoothGradient 8s ease infinite;
-  border: 1px solid #aab6c8;
+  background: linear-gradient(135deg, #ff0066, #6600ff, #0066ff, #00ff66);
+  background-size: 300% 300%;
+  animation: gradientShift 4s ease infinite;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  box-shadow: 0 4px 20px rgba(255, 0, 102, 0.4);
 }
 
-@keyframes smoothGradient {
+.msg.style-gold {
+  background: linear-gradient(135deg, #4a3a1a, #8a6a2a, #c4a442, #8a6a2a);
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+  border-color: #ffcc00;
+  box-shadow: 0 4px 20px rgba(255, 204, 0, 0.4);
+}
+
+.msg.style-ocean {
+  background: linear-gradient(135deg, #0a3a5a, #1a6a9a, #0a4a7a, #1a8aaa);
+  background-size: 200% 200%;
+  animation: gradientShift 4s ease infinite;
+  border-color: #4a9eff;
+  box-shadow: 0 4px 15px rgba(74, 158, 255, 0.4);
+}
+
+.msg.style-fire {
+  background: linear-gradient(135deg, #4a1a0a, #8a2a1a, #ff4a1a, #ff8a2a);
+  background-size: 200% 200%;
+  animation: gradientShift 2s ease infinite;
+  border-color: #ff6a2a;
+  box-shadow: 0 4px 20px rgba(255, 106, 42, 0.5);
+}
+
+.msg.style-ice {
+  background: linear-gradient(135deg, #0a2a4a, #1a4a6a, #4a9aaa, #8accdd);
+  background-size: 200% 200%;
+  animation: gradientShift 5s ease infinite;
+  border-color: #8accdd;
+  box-shadow: 0 4px 15px rgba(138, 204, 221, 0.4);
+}
+
+.msg.style-purple {
+  background: linear-gradient(135deg, #2a0a4a, #4a1a6a, #8a2aaa, #aa4aff);
+  background-size: 200% 200%;
+  animation: gradientShift 4s ease infinite;
+  border-color: #aa4aff;
+  box-shadow: 0 4px 20px rgba(170, 74, 255, 0.4);
+}
+
+.msg.style-neon {
+  background: linear-gradient(135deg, #0a0a0a, #1a1a2a, #2a2a4a, #3a3a6a);
+  background-size: 300% 300%;
+  animation: gradientShift 2s ease infinite;
+  border: 2px solid #00ff00;
+  box-shadow: 0 0 20px #00ff00, 0 0 40px #00ff00;
+  color: #00ff00;
+}
+
+.msg.style-sunset {
+  background: linear-gradient(135deg, #ff5a4a, #ff8a4a, #ffaa4a, #ff6a8a);
+  background-size: 200% 200%;
+  animation: gradientShift 4s ease infinite;
+  border-color: #ff8a4a;
+  box-shadow: 0 4px 20px rgba(255, 138, 74, 0.4);
+}
+
+.msg.style-matrix {
+  background: #000;
+  border: 1px solid #00ff00;
+  color: #00ff00;
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 0 10px #00ff00;
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+}
+
+.msg.style-blackwhite {
+  background: linear-gradient(135deg, #1a1a1a, #ffffff, #1a1a1a, #ffffff);
+  background-size: 400% 400%;
+  animation: gradientShift 3s ease infinite;
+  border: 2px solid #fff;
+  color: #000;
+  font-weight: bold;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+}
+
+@keyframes gradientShift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
@@ -1142,7 +1253,7 @@ body::after {
 #guess-feedback.low { color: #6b6bff; }
 #guess-feedback.correct { color: #6bff6b; }
 
-/* Satranç Oyunu */
+/* Satranç Oyunu - Geliştirilmiş */
 #chess-screen {
   width: 100%;
   height: 100%;
@@ -1187,6 +1298,36 @@ body::after {
   background: #1a5eef;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(42, 110, 255, 0.3);
+}
+
+#server-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.server-btn {
+  flex: 1;
+  padding: 12px;
+  background: #1a212e;
+  border: 2px solid #2a3a4a;
+  border-radius: 12px;
+  color: #b4c0d0;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.server-btn.active {
+  background: #2a6eff;
+  border-color: #4a9eff;
+  color: white;
+}
+
+.server-btn:hover:not(.active) {
+  background: #2a3a4a;
+  color: #fff;
 }
 
 #new-room-name {
@@ -1373,6 +1514,232 @@ body::after {
   border: 1px solid #ff5a5a;
 }
 
+/* Ateş ve Su Oyunu */
+#firewater-screen {
+  width: 100%;
+  height: 100%;
+  background: #0a0c12;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  overflow: hidden;
+}
+
+#firewater-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 12px 20px;
+  background: #0f1219;
+  border-radius: 20px;
+  border: 1px solid #1e2a3a;
+}
+
+#firewater-header h2 {
+  color: #e4e6f0;
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+#firewater-server-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+#firewater-game-container {
+  flex: 1;
+  display: flex;
+  gap: 20px;
+  min-height: 0;
+}
+
+#firewater-sidebar {
+  width: 280px;
+  background: #0f1219;
+  border: 1px solid #1e2a3a;
+  border-radius: 24px;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+#firewater-rooms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#firewater-game-area {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #0f1219;
+  border: 1px solid #1e2a3a;
+  border-radius: 24px;
+  padding: 20px;
+  position: relative;
+}
+
+#firewater-canvas {
+  width: min(70vh, 600px);
+  height: min(70vh, 600px);
+  border: 3px solid #2a3a4a;
+  border-radius: 16px;
+  background: #1a1a2a;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+
+#firewater-waiting {
+  position: absolute;
+  background: #1a212e;
+  border: 1px solid #2a3a4a;
+  border-radius: 32px;
+  padding: 40px;
+  text-align: center;
+  min-width: 360px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+#firewater-controls {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 15px;
+  border-radius: 20px;
+  border: 1px solid #2a3a4a;
+}
+
+.control-key {
+  width: 50px;
+  height: 50px;
+  background: #2a3a4a;
+  border: 2px solid #4a9eff;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Tic Tac Toe Oyunu */
+#tictactoe-screen {
+  width: 100%;
+  height: 100%;
+  background: #0a0c12;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  overflow: hidden;
+}
+
+#tictactoe-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 12px 20px;
+  background: #0f1219;
+  border-radius: 20px;
+  border: 1px solid #1e2a3a;
+}
+
+#tictactoe-server-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+#tictactoe-game-container {
+  flex: 1;
+  display: flex;
+  gap: 20px;
+  min-height: 0;
+}
+
+#tictactoe-sidebar {
+  width: 280px;
+  background: #0f1219;
+  border: 1px solid #1e2a3a;
+  border-radius: 24px;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+#tictactoe-rooms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#tictactoe-game-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #0f1219;
+  border: 1px solid #1e2a3a;
+  border-radius: 24px;
+  padding: 20px;
+}
+
+#tictactoe-board {
+  display: grid;
+  grid-template-columns: repeat(3, 120px);
+  grid-template-rows: repeat(3, 120px);
+  gap: 10px;
+  background: #2a3a4a;
+  padding: 10px;
+  border-radius: 20px;
+}
+
+.tictactoe-cell {
+  background: #1a212e;
+  border: 2px solid #2a3a4a;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tictactoe-cell:hover:not(.taken) {
+  background: #2a3a4a;
+  transform: scale(1.05);
+}
+
+.tictactoe-cell.taken {
+  cursor: not-allowed;
+}
+
+.tictactoe-cell.x {
+  color: #ff5a5a;
+  text-shadow: 0 0 20px rgba(255, 90, 90, 0.5);
+}
+
+.tictactoe-cell.o {
+  color: #4a9eff;
+  text-shadow: 0 0 20px rgba(74, 158, 255, 0.5);
+}
+
+#tictactoe-status {
+  margin-top: 20px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #e4e6f0;
+}
+
 /* Mağaza Paneli */
 #shop-panel {
   position: fixed;
@@ -1381,6 +1748,7 @@ body::after {
   transform: translate(-50%, -50%);
   width: 90%;
   max-width: 520px;
+  max-height: 80vh;
   background: #0f1219;
   border: 1px solid #2a3a4a;
   border-radius: 36px;
@@ -1389,6 +1757,7 @@ body::after {
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(20px);
   display: none;
+  overflow-y: auto;
 }
 
 #shop-panel h2 {
@@ -1404,9 +1773,6 @@ body::after {
   flex-direction: column;
   gap: 16px;
   margin: 24px 0;
-  max-height: 420px;
-  overflow-y: auto;
-  padding: 4px;
 }
 
 .shop-item {
@@ -1438,12 +1804,11 @@ body::after {
   width: 70px;
   height: 70px;
   border-radius: 35px;
-  background: linear-gradient(135deg, #2a6eff, #4a9eff);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 32px;
-  box-shadow: 0 4px 12px rgba(42, 110, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .shop-item-info {
@@ -1487,6 +1852,117 @@ body::after {
 }
 
 #shop-close:hover {
+  background: #ff5a5a;
+  border-color: #ff8a8a;
+}
+
+/* Envanter Paneli */
+#inventory-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  background: #0f1219;
+  border: 1px solid #2a3a4a;
+  border-radius: 36px;
+  padding: 32px;
+  z-index: 1000;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(20px);
+  display: none;
+  overflow-y: auto;
+}
+
+#inventory-panel h2 {
+  color: #e4e6f0;
+  margin: 0 0 16px 0;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+#inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.inventory-item {
+  background: #1a212e;
+  border: 2px solid #2a3a4a;
+  border-radius: 20px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.inventory-item:hover {
+  background: #1e2a3a;
+  border-color: #4a9eff;
+  transform: translateY(-2px);
+}
+
+.inventory-item.active {
+  border-color: #4aff4a;
+  box-shadow: 0 0 20px rgba(74, 255, 74, 0.3);
+}
+
+.inventory-item-preview {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  margin: 0 auto 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.inventory-item-name {
+  font-size: 12px;
+  color: #e4e6f0;
+  font-weight: 600;
+}
+
+.inventory-item-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #4aff4a;
+  color: #0a0c12;
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+#inventory-close {
+  width: 100%;
+  padding: 16px;
+  background: #2a3a4a;
+  border: 1px solid #4a5a6a;
+  border-radius: 30px;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 16px;
+}
+
+#inventory-close:hover {
   background: #ff5a5a;
   border-color: #ff8a8a;
 }
@@ -1816,6 +2292,27 @@ body::after {
 ::-webkit-scrollbar-thumb:hover {
   background: #3a4a5a;
 }
+
+/* Mobil uyumluluk */
+@media (max-width: 768px) {
+  #chess-main, #firewater-game-container, #tictactoe-game-container {
+    flex-direction: column;
+  }
+  
+  #chess-sidebar, #firewater-sidebar, #tictactoe-sidebar {
+    width: 100%;
+    max-height: 200px;
+  }
+  
+  #tictactoe-board {
+    grid-template-columns: repeat(3, 80px);
+    grid-template-rows: repeat(3, 80px);
+  }
+  
+  .tictactoe-cell {
+    font-size: 40px;
+  }
+}
 </style>
 
 <!-- Kütüphaneler -->
@@ -1861,11 +2358,20 @@ body::after {
   <button class="sidebar-btn" onclick="switchScreen('chess')" id="btn-chess">
     <i>♟️</i> Satranç
   </button>
+  <button class="sidebar-btn" onclick="switchScreen('firewater')" id="btn-firewater">
+    <i>🔥💧</i> Ateş ve Su
+  </button>
+  <button class="sidebar-btn" onclick="switchScreen('tictactoe')" id="btn-tictactoe">
+    <i>⭕❌</i> XOX Oyunu
+  </button>
   <button class="sidebar-btn" onclick="switchScreen('guess')" id="btn-guess">
     <i>🔢</i> Sayı Tahmin
   </button>
   <button class="sidebar-btn" onclick="openShop()" id="btn-shop">
     <i>🛒</i> Mağaza
+  </button>
+  <button class="sidebar-btn" onclick="openInventory()" id="btn-inventory">
+    <i>🎒</i> Envanter
   </button>
   <button class="sidebar-btn" onclick="openFeedback()" id="btn-feedback">
     <i>📝</i> Geri Bildirim
@@ -1881,6 +2387,7 @@ body::after {
       <div id="admin-badge">👑 ADMIN</div>
       <div id="points-display">💰 <span id="user-points">0</span></div>
       <div style="font-weight: 500;">7/D Sohbet</div>
+      <button id="inventory-btn" onclick="openInventory()">🎒 Envanter</button>
       <button id="shop-btn" onclick="openShop()">🛒 Mağaza</button>
       <button id="onlineBtn" onclick="toggleOnline()">👥 <span id="online-count">0</span></button>
     </div>
@@ -1925,6 +2432,11 @@ body::after {
       </div>
     </div>
     
+    <div id="server-selector">
+      <button class="server-btn active" onclick="switchServer('chess', 1)">🖥️ Server 1</button>
+      <button class="server-btn" onclick="switchServer('chess', 2)">🖥️ Server 2</button>
+    </div>
+    
     <div id="chess-main">
       <div id="chess-sidebar">
         <h3>📋 Aktif Odalar</h3>
@@ -1944,6 +2456,7 @@ body::after {
               <span id="black-ready" class="not-ready">Hazır Değil</span>
             </div>
             <button id="ready-btn" onclick="toggleReady()">HAZIR OL</button>
+            <button id="leave-btn" onclick="leaveChessRoom()" style="margin-top: 10px; background: #ff5a5a;">ODADAN ÇIK</button>
           </div>
         </div>
         
@@ -1952,6 +2465,109 @@ body::after {
     </div>
     
     <div id="turn-indicator" class="hidden"></div>
+  </div>
+
+  <!-- Ateş ve Su Oyunu -->
+  <div id="firewater-screen" class="hidden">
+    <div id="firewater-header">
+      <h2>🔥💧 Ateş ve Su</h2>
+      <div>
+        <input type="text" id="new-firewater-room" placeholder="Oda adı" style="padding: 8px 16px; border-radius: 30px; border: 1px solid #2a3a4a; background: #1a212e; color: white; margin-right: 10px;">
+        <button onclick="createFirewaterRoom()" style="padding: 8px 20px; background: #2a6eff; border: none; border-radius: 30px; color: white; font-weight: 500; cursor: pointer;">Oda Oluştur</button>
+      </div>
+    </div>
+    
+    <div id="firewater-server-selector">
+      <button class="server-btn active" onclick="switchServer('firewater', 1)">🖥️ Server 1</button>
+      <button class="server-btn" onclick="switchServer('firewater', 2)">🖥️ Server 2</button>
+    </div>
+    
+    <div id="firewater-game-container">
+      <div id="firewater-sidebar">
+        <h3>📋 Aktif Odalar</h3>
+        <div id="firewater-rooms-list"></div>
+      </div>
+      
+      <div id="firewater-game-area">
+        <div id="firewater-waiting">
+          <h2 id="firewater-waiting-title">Bekleme Odası</h2>
+          <div class="player-slot">
+            <span>🔥 Ateş: <span id="fire-player">Boş</span></span>
+            <span id="fire-ready" class="not-ready">Hazır Değil</span>
+          </div>
+          <div class="player-slot">
+            <span>💧 Su: <span id="water-player">Boş</span></span>
+            <span id="water-ready" class="not-ready">Hazır Değil</span>
+          </div>
+          <button onclick="toggleFirewaterReady()" style="margin-top: 20px; padding: 16px 48px; background: #2a6eff; border: none; border-radius: 40px; color: white; font-weight: 600; font-size: 18px; cursor: pointer;">HAZIR OL</button>
+          <button onclick="leaveFirewaterRoom()" style="margin-top: 10px; padding: 12px 32px; background: #ff5a5a; border: none; border-radius: 30px; color: white; font-weight: 600; cursor: pointer;">ODADAN ÇIK</button>
+        </div>
+        
+        <canvas id="firewater-canvas" width="600" height="600" style="display: none;"></canvas>
+        
+        <div id="firewater-controls" style="display: none;">
+          <div class="control-key">W</div>
+          <div class="control-key">A</div>
+          <div class="control-key">S</div>
+          <div class="control-key">D</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- XOX Oyunu -->
+  <div id="tictactoe-screen" class="hidden">
+    <div id="tictactoe-header">
+      <h2>⭕❌ XOX Oyunu</h2>
+      <div>
+        <input type="text" id="new-tictactoe-room" placeholder="Oda adı" style="padding: 8px 16px; border-radius: 30px; border: 1px solid #2a3a4a; background: #1a212e; color: white; margin-right: 10px;">
+        <button onclick="createTictactoeRoom()" style="padding: 8px 20px; background: #2a6eff; border: none; border-radius: 30px; color: white; font-weight: 500; cursor: pointer;">Oda Oluştur</button>
+      </div>
+    </div>
+    
+    <div id="tictactoe-server-selector">
+      <button class="server-btn active" onclick="switchServer('tictactoe', 1)">🖥️ Server 1</button>
+      <button class="server-btn" onclick="switchServer('tictactoe', 2)">🖥️ Server 2</button>
+    </div>
+    
+    <div id="tictactoe-game-container">
+      <div id="tictactoe-sidebar">
+        <h3>📋 Aktif Odalar</h3>
+        <div id="tictactoe-rooms-list"></div>
+      </div>
+      
+      <div id="tictactoe-game-area">
+        <div id="tictactoe-waiting" style="background: #1a212e; border: 1px solid #2a3a4a; border-radius: 32px; padding: 40px; text-align: center; min-width: 360px; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);">
+          <h2 id="tictactoe-waiting-title">Bekleme Odası</h2>
+          <div class="player-slot">
+            <span>⭕ X Oyuncu: <span id="x-player">Boş</span></span>
+            <span id="x-ready" class="not-ready">Hazır Değil</span>
+          </div>
+          <div class="player-slot">
+            <span>❌ O Oyuncu: <span id="o-player">Boş</span></span>
+            <span id="o-ready" class="not-ready">Hazır Değil</span>
+          </div>
+          <button onclick="toggleTictactoeReady()" style="margin-top: 20px; padding: 16px 48px; background: #2a6eff; border: none; border-radius: 40px; color: white; font-weight: 600; font-size: 18px; cursor: pointer;">HAZIR OL</button>
+          <button onclick="leaveTictactoeRoom()" style="margin-top: 10px; padding: 12px 32px; background: #ff5a5a; border: none; border-radius: 30px; color: white; font-weight: 600; cursor: pointer;">ODADAN ÇIK</button>
+        </div>
+        
+        <div id="tictactoe-board-container" style="display: none;">
+          <div id="tictactoe-board">
+            <div class="tictactoe-cell" data-index="0" onclick="makeTictactoeMove(0)"></div>
+            <div class="tictactoe-cell" data-index="1" onclick="makeTictactoeMove(1)"></div>
+            <div class="tictactoe-cell" data-index="2" onclick="makeTictactoeMove(2)"></div>
+            <div class="tictactoe-cell" data-index="3" onclick="makeTictactoeMove(3)"></div>
+            <div class="tictactoe-cell" data-index="4" onclick="makeTictactoeMove(4)"></div>
+            <div class="tictactoe-cell" data-index="5" onclick="makeTictactoeMove(5)"></div>
+            <div class="tictactoe-cell" data-index="6" onclick="makeTictactoeMove(6)"></div>
+            <div class="tictactoe-cell" data-index="7" onclick="makeTictactoeMove(7)"></div>
+            <div class="tictactoe-cell" data-index="8" onclick="makeTictactoeMove(8)"></div>
+          </div>
+          <div id="tictactoe-status">Sıra: X</div>
+          <button onclick="resetTictactoe()" style="margin-top: 20px; padding: 12px 32px; background: #2a6eff; border: none; border-radius: 30px; color: white; font-weight: 600; cursor: pointer;">Yeniden Başla</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Sayı Tahmin Oyunu -->
@@ -1994,6 +2610,13 @@ body::after {
   <h2>🛒 MAĞAZA</h2>
   <div id="shop-items"></div>
   <button id="shop-close" onclick="closeShop()">Kapat</button>
+</div>
+
+<!-- Envanter Paneli -->
+<div id="inventory-panel">
+  <h2>🎒 ENVANTERİM</h2>
+  <div id="inventory-grid"></div>
+  <button id="inventory-close" onclick="closeInventory()">Kapat</button>
 </div>
 
 <!-- Ban Paneli -->
@@ -2064,6 +2687,13 @@ let typingTimeout = null;
 let mutedUsers = {};
 let bannedUsers = {};
 
+// Server sistemi
+let currentServers = {
+  chess: 1,
+  firewater: 1,
+  tictactoe: 1
+};
+
 // Satranç Değişkenleri
 let chessCurrentRoom = null;
 let chessPlayerColor = null;
@@ -2073,6 +2703,20 @@ let possibleMoves = [];
 let isPlayerReady = false;
 let roomListener = null;
 let chessCanvas, chessCtx;
+
+// Ateş ve Su Değişkenleri
+let firewaterCurrentRoom = null;
+let firewaterPlayerRole = null;
+let firewaterCanvas, firewaterCtx;
+let firewaterGameState = null;
+let firewaterListener = null;
+let firewaterIsReady = false;
+
+// XOX Değişkenleri
+let tictactoeCurrentRoom = null;
+let tictactoePlayerRole = null;
+let tictactoeListener = null;
+let tictactoeIsReady = false;
 
 // Sayı Tahmin Değişkenleri
 let guessTarget = Math.floor(Math.random() * 100) + 1;
@@ -2094,6 +2738,22 @@ const AFK_LIMIT = 120000;
 // Ban için geçici değişken
 let targetBanUser = '';
 
+// Stil tanımlamaları
+const STYLE_DEFINITIONS = {
+  'default': { name: 'Varsayılan', emoji: '💬', price: 0, color: '#1a212e' },
+  'green': { name: 'Yeşil Enerji', emoji: '💚', price: 200, color: 'linear-gradient(135deg, #1a4a2a, #0a3a1a)' },
+  'rgb': { name: 'RGB Akış', emoji: '🌈', price: 300, color: 'linear-gradient(135deg, #ff0066, #6600ff)' },
+  'gold': { name: 'Altın', emoji: '👑', price: 500, color: 'linear-gradient(135deg, #4a3a1a, #8a6a2a)' },
+  'ocean': { name: 'Okyanus', emoji: '🌊', price: 350, color: 'linear-gradient(135deg, #0a3a5a, #1a6a9a)' },
+  'fire': { name: 'Ateş', emoji: '🔥', price: 400, color: 'linear-gradient(135deg, #4a1a0a, #8a2a1a)' },
+  'ice': { name: 'Buz', emoji: '❄️', price: 400, color: 'linear-gradient(135deg, #0a2a4a, #1a4a6a)' },
+  'purple': { name: 'Mor', emoji: '💜', price: 350, color: 'linear-gradient(135deg, #2a0a4a, #4a1a6a)' },
+  'neon': { name: 'Neon', emoji: '⚡', price: 600, color: '#0a0a0a' },
+  'sunset': { name: 'Gün Batımı', emoji: '🌅', price: 450, color: 'linear-gradient(135deg, #ff5a4a, #ff8a4a)' },
+  'matrix': { name: 'Matrix', emoji: '🖥️', price: 550, color: '#000' },
+  'blackwhite': { name: 'Siyah Beyaz', emoji: '⚫⚪', price: 1000, color: 'linear-gradient(135deg, #1a1a1a, #ffffff)' }
+};
+
 // Sayfa kaymasını engelle
 document.body.addEventListener('touchmove', function(e) {
   if (!e.target.closest('#chat') && !e.target.closest('#altun-messages') && !e.target.closest('#guess-container') && !e.target.closest('#chess-game-area')) {
@@ -2112,6 +2772,35 @@ window.closeMenu = () => {
   document.getElementById('sidebar-overlay').classList.remove('show');
 }
 
+// Server değiştirme
+window.switchServer = (game, serverNum) => {
+  currentServers[game] = serverNum;
+  
+  // Butonları güncelle
+  const selector = document.getElementById(game + '-server-selector') || document.getElementById('server-selector');
+  if (selector) {
+    selector.querySelectorAll('.server-btn').forEach((btn, idx) => {
+      btn.classList.toggle('active', idx === serverNum - 1);
+    });
+  }
+  
+  // Odayı terk et ve listeyi yenile
+  if (game === 'chess' && chessCurrentRoom) {
+    leaveChessRoom();
+  } else if (game === 'firewater' && firewaterCurrentRoom) {
+    leaveFirewaterRoom();
+  } else if (game === 'tictactoe' && tictactoeCurrentRoom) {
+    leaveTictactoeRoom();
+  }
+  
+  // Listeyi yenile
+  if (game === 'chess') listenChessRooms();
+  else if (game === 'firewater') listenFirewaterRooms();
+  else if (game === 'tictactoe') listenTictactoeRooms();
+  
+  showNotification(`🖥️ Server ${serverNum}'e geçildi!`);
+}
+
 // Ekran değiştirme
 window.switchScreen = (screen) => {
   updateActivity();
@@ -2123,12 +2812,16 @@ window.switchScreen = (screen) => {
   document.getElementById('chat-screen').classList.add('hidden');
   document.getElementById('altun-screen').classList.add('hidden');
   document.getElementById('chess-screen').classList.add('hidden');
+  document.getElementById('firewater-screen').classList.add('hidden');
+  document.getElementById('tictactoe-screen').classList.add('hidden');
   document.getElementById('guess-screen').classList.add('hidden');
   
   document.getElementById(screen + '-screen').classList.remove('hidden');
   
   if (screen === 'altun') loadAltunHistory();
   else if (screen === 'chess') initChess();
+  else if (screen === 'firewater') initFirewater();
+  else if (screen === 'tictactoe') initTictactoe();
   else if (screen === 'guess') initGuessGame();
   
   closeMenu();
@@ -2159,6 +2852,8 @@ function startAfkMonitoring() {
       document.getElementById('afk-warning').style.display = 'none';
       if (onlineRef) onlineRef.remove();
       if (chessCurrentRoom) leaveChessRoom();
+      if (firewaterCurrentRoom) leaveFirewaterRoom();
+      if (tictactoeCurrentRoom) leaveTictactoeRoom();
       alert('2 dakika hareketsiz kaldığınız için çıkış yapıldı!');
       location.reload();
     }
@@ -2529,7 +3224,7 @@ window.sendToAltun = async () => {
   }
 }
 
-// Satranç
+// Satranç - Geliştirilmiş
 function initChess() {
   chessCanvas = document.getElementById('chess-canvas');
   chessCtx = chessCanvas.getContext('2d');
@@ -2538,13 +3233,14 @@ function initChess() {
 }
 
 function listenChessRooms() {
-  db.ref('chessRooms').on('value', (snap) => {
+  const serverPath = `chessRooms_server${currentServers.chess}`;
+  db.ref(serverPath).on('value', (snap) => {
     const rooms = snap.val() || {};
-    displayRooms(rooms);
+    displayChessRooms(rooms);
   });
 }
 
-function displayRooms(rooms) {
+function displayChessRooms(rooms) {
   const container = document.getElementById('rooms-list');
   container.innerHTML = '';
   
@@ -2564,13 +3260,15 @@ window.createChessRoom = () => {
   const roomName = document.getElementById('new-room-name').value.trim();
   if (!roomName) { showNotification('Oda adı girin!'); return; }
   
+  const serverPath = `chessRooms_server${currentServers.chess}`;
   const roomId = 'chess_' + Date.now();
-  db.ref(`chessRooms/${roomId}`).set({
+  db.ref(`${serverPath}/${roomId}`).set({
     name: roomName, white: null, black: null, gameStarted: false,
     fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
     turn: 'w', createdBy: username, lastActivity: Date.now()
   });
   document.getElementById('new-room-name').value = '';
+  showNotification('♟️ Oda oluşturuldu!');
 }
 
 window.joinChessRoom = (roomId, room) => {
@@ -2582,12 +3280,13 @@ window.joinChessRoom = (roomId, room) => {
   chessPlayerColor = !room.white ? 'white' : 'black';
   
   const playerData = { name: username, ready: false, lastActive: Date.now() };
+  const serverPath = `chessRooms_server${currentServers.chess}`;
   const update = chessPlayerColor === 'white' ? { white: playerData } : { black: playerData };
-  db.ref(`chessRooms/${roomId}`).update(update);
+  db.ref(`${serverPath}/${roomId}`).update(update);
   
-  if (roomListener) db.ref(`chessRooms/${roomId}`).off('value', roomListener);
+  if (roomListener) db.ref(`${serverPath}/${roomId}`).off('value', roomListener);
   
-  roomListener = db.ref(`chessRooms/${roomId}`).on('value', (snap) => {
+  roomListener = db.ref(`${serverPath}/${roomId}`).on('value', (snap) => {
     const data = snap.val();
     if (!data) return;
     
@@ -2616,19 +3315,25 @@ window.joinChessRoom = (roomId, room) => {
 window.toggleReady = () => {
   if (!chessCurrentRoom || !chessPlayerColor) return;
   isPlayerReady = !isPlayerReady;
-  db.ref(`chessRooms/${chessCurrentRoom}/${chessPlayerColor}/ready`).set(isPlayerReady);
+  const serverPath = `chessRooms_server${currentServers.chess}`;
+  db.ref(`${serverPath}/${chessCurrentRoom}/${chessPlayerColor}/ready`).set(isPlayerReady);
 }
 
 function startChessGame(roomId) {
   chess = new Chess();
-  db.ref(`chessRooms/${roomId}`).update({ gameStarted: true, fen: chess.fen(), turn: 'w' });
+  const serverPath = `chessRooms_server${currentServers.chess}`;
+  db.ref(`${serverPath}/${roomId}`).update({ gameStarted: true, fen: chess.fen(), turn: 'w' });
 }
 
-function leaveChessRoom() {
+window.leaveChessRoom = () => {
   if (!chessCurrentRoom) return;
-  db.ref(`chessRooms/${chessCurrentRoom}/${chessPlayerColor}`).remove();
-  if (roomListener) db.ref(`chessRooms/${chessCurrentRoom}`).off('value', roomListener);
+  const serverPath = `chessRooms_server${currentServers.chess}`;
+  db.ref(`${serverPath}/${chessCurrentRoom}/${chessPlayerColor}`).remove();
+  if (roomListener) db.ref(`${serverPath}/${chessCurrentRoom}`).off('value', roomListener);
   chessCurrentRoom = null; chessPlayerColor = null; chess = null; isPlayerReady = false;
+  document.getElementById('waiting-area').style.display = 'flex';
+  document.getElementById('chess-canvas').style.display = 'none';
+  document.getElementById('turn-indicator').classList.add('hidden');
 }
 
 function updateTurnIndicator() {
@@ -2713,7 +3418,8 @@ function handleChessClick(e) {
     };
     
     if (chess.move(move)) {
-      db.ref(`chessRooms/${chessCurrentRoom}`).update({ fen: chess.fen(), turn: chess.turn() });
+      const serverPath = `chessRooms_server${currentServers.chess}`;
+      db.ref(`${serverPath}/${chessCurrentRoom}`).update({ fen: chess.fen(), turn: chess.turn() });
       selectedSquare = null; 
       possibleMoves = [];
     } else {
@@ -2738,6 +3444,388 @@ function handleChessClick(e) {
   
   drawChessBoard();
   updateTurnIndicator();
+}
+
+// Ateş ve Su Oyunu
+function initFirewater() {
+  firewaterCanvas = document.getElementById('firewater-canvas');
+  firewaterCtx = firewaterCanvas.getContext('2d');
+  listenFirewaterRooms();
+  
+  // Klavye kontrolleri
+  document.addEventListener('keydown', handleFirewaterKeydown);
+}
+
+function listenFirewaterRooms() {
+  const serverPath = `firewaterRooms_server${currentServers.firewater}`;
+  db.ref(serverPath).on('value', (snap) => {
+    const rooms = snap.val() || {};
+    displayFirewaterRooms(rooms);
+  });
+}
+
+function displayFirewaterRooms(rooms) {
+  const container = document.getElementById('firewater-rooms-list');
+  container.innerHTML = '';
+  
+  Object.entries(rooms).forEach(([roomId, room]) => {
+    const roomDiv = document.createElement('div');
+    roomDiv.className = 'room-item';
+    roomDiv.onclick = () => joinFirewaterRoom(roomId, room);
+    roomDiv.innerHTML = `
+      <div class="room-name">${room.name || roomId}</div>
+      <div class="room-players">🔥 ${room.fire?.name || 'Boş'} | 💧 ${room.water?.name || 'Boş'}</div>
+    `;
+    container.appendChild(roomDiv);
+  });
+}
+
+window.createFirewaterRoom = () => {
+  const roomName = document.getElementById('new-firewater-room').value.trim();
+  if (!roomName) { showNotification('Oda adı girin!'); return; }
+  
+  const serverPath = `firewaterRooms_server${currentServers.firewater}`;
+  const roomId = 'fw_' + Date.now();
+  db.ref(`${serverPath}/${roomId}`).set({
+    name: roomName,
+    fire: null,
+    water: null,
+    gameStarted: false,
+    gameState: {
+      fire: { x: 1, y: 1 },
+      water: { x: 8, y: 8 },
+      level: 1
+    },
+    createdBy: username,
+    lastActivity: Date.now()
+  });
+  document.getElementById('new-firewater-room').value = '';
+  showNotification('🔥💧 Oda oluşturuldu!');
+}
+
+window.joinFirewaterRoom = (roomId, room) => {
+  if (room.fire && room.water) {
+    showNotification('Oda dolu!'); return;
+  }
+  
+  firewaterCurrentRoom = roomId;
+  firewaterPlayerRole = !room.fire ? 'fire' : 'water';
+  
+  const playerData = { name: username, ready: false, lastActive: Date.now() };
+  const serverPath = `firewaterRooms_server${currentServers.firewater}`;
+  const update = firewaterPlayerRole === 'fire' ? { fire: playerData } : { water: playerData };
+  db.ref(`${serverPath}/${roomId}`).update(update);
+  
+  if (firewaterListener) db.ref(`${serverPath}/${roomId}`).off('value', firewaterListener);
+  
+  firewaterListener = db.ref(`${serverPath}/${roomId}`).on('value', (snap) => {
+    const data = snap.val();
+    if (!data) return;
+    
+    document.getElementById('fire-player').textContent = data.fire?.name || 'Boş';
+    document.getElementById('water-player').textContent = data.water?.name || 'Boş';
+    document.getElementById('fire-ready').className = data.fire?.ready ? 'ready' : 'not-ready';
+    document.getElementById('water-ready').className = data.water?.ready ? 'ready' : 'not-ready';
+    document.getElementById('firewater-waiting-title').textContent = data.name;
+    
+    if (data.fire?.ready && data.water?.ready && !data.gameStarted) {
+      startFirewaterGame(roomId);
+    }
+    
+    if (data.gameStarted) {
+      document.getElementById('firewater-waiting').style.display = 'none';
+      document.getElementById('firewater-canvas').style.display = 'block';
+      document.getElementById('firewater-controls').style.display = 'flex';
+      firewaterGameState = data.gameState;
+      drawFirewaterGame();
+    }
+  });
+}
+
+window.toggleFirewaterReady = () => {
+  if (!firewaterCurrentRoom || !firewaterPlayerRole) return;
+  firewaterIsReady = !firewaterIsReady;
+  const serverPath = `firewaterRooms_server${currentServers.firewater}`;
+  db.ref(`${serverPath}/${firewaterCurrentRoom}/${firewaterPlayerRole}/ready`).set(firewaterIsReady);
+}
+
+function startFirewaterGame(roomId) {
+  const serverPath = `firewaterRooms_server${currentServers.firewater}`;
+  db.ref(`${serverPath}/${roomId}`).update({ gameStarted: true });
+}
+
+window.leaveFirewaterRoom = () => {
+  if (!firewaterCurrentRoom) return;
+  const serverPath = `firewaterRooms_server${currentServers.firewater}`;
+  db.ref(`${serverPath}/${firewaterCurrentRoom}/${firewaterPlayerRole}`).remove();
+  if (firewaterListener) db.ref(`${serverPath}/${firewaterCurrentRoom}`).off('value', firewaterListener);
+  firewaterCurrentRoom = null;
+  firewaterPlayerRole = null;
+  firewaterIsReady = false;
+  document.getElementById('firewater-waiting').style.display = 'block';
+  document.getElementById('firewater-canvas').style.display = 'none';
+  document.getElementById('firewater-controls').style.display = 'none';
+}
+
+function handleFirewaterKeydown(e) {
+  if (!firewaterCurrentRoom || !firewaterGameState) return;
+  
+  const serverPath = `firewaterRooms_server${currentServers.firewater}`;
+  let dx = 0, dy = 0;
+  
+  switch(e.key.toLowerCase()) {
+    case 'w': dy = -1; break;
+    case 's': dy = 1; break;
+    case 'a': dx = -1; break;
+    case 'd': dx = 1; break;
+    default: return;
+  }
+  
+  e.preventDefault();
+  
+  const player = firewaterGameState[firewaterPlayerRole];
+  const newX = player.x + dx;
+  const newY = player.y + dy;
+  
+  // Sınır kontrolü
+  if (newX < 0 || newX >= 10 || newY < 0 || newY >= 10) return;
+  
+  // Güncelle
+  player.x = newX;
+  player.y = newY;
+  
+  db.ref(`${serverPath}/${firewaterCurrentRoom}/gameState/${firewaterPlayerRole}`).update({ x: newX, y: newY });
+}
+
+function drawFirewaterGame() {
+  if (!firewaterCtx || !firewaterGameState) return;
+  
+  const ctx = firewaterCtx;
+  const cellSize = 60;
+  
+  // Arkaplan
+  ctx.fillStyle = '#1a1a2a';
+  ctx.fillRect(0, 0, 600, 600);
+  
+  // Izgara
+  for (let i = 0; i <= 10; i++) {
+    ctx.strokeStyle = '#2a3a4a';
+    ctx.beginPath();
+    ctx.moveTo(i * cellSize, 0);
+    ctx.lineTo(i * cellSize, 600);
+    ctx.moveTo(0, i * cellSize);
+    ctx.lineTo(600, i * cellSize);
+    ctx.stroke();
+  }
+  
+  // Ateş karakteri
+  ctx.fillStyle = '#ff4a2a';
+  ctx.beginPath();
+  ctx.arc(
+    firewaterGameState.fire.x * cellSize + cellSize/2,
+    firewaterGameState.fire.y * cellSize + cellSize/2,
+    20, 0, 2 * Math.PI
+  );
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.font = '20px Arial';
+  ctx.fillText('🔥', firewaterGameState.fire.x * cellSize + 18, firewaterGameState.fire.y * cellSize + 40);
+  
+  // Su karakteri
+  ctx.fillStyle = '#4a9eff';
+  ctx.beginPath();
+  ctx.arc(
+    firewaterGameState.water.x * cellSize + cellSize/2,
+    firewaterGameState.water.y * cellSize + cellSize/2,
+    20, 0, 2 * Math.PI
+  );
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.fillText('💧', firewaterGameState.water.x * cellSize + 18, firewaterGameState.water.y * cellSize + 40);
+  
+  requestAnimationFrame(drawFirewaterGame);
+}
+
+// XOX Oyunu
+function initTictactoe() {
+  listenTictactoeRooms();
+}
+
+function listenTictactoeRooms() {
+  const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
+  db.ref(serverPath).on('value', (snap) => {
+    const rooms = snap.val() || {};
+    displayTictactoeRooms(rooms);
+  });
+}
+
+function displayTictactoeRooms(rooms) {
+  const container = document.getElementById('tictactoe-rooms-list');
+  container.innerHTML = '';
+  
+  Object.entries(rooms).forEach(([roomId, room]) => {
+    const roomDiv = document.createElement('div');
+    roomDiv.className = 'room-item';
+    roomDiv.onclick = () => joinTictactoeRoom(roomId, room);
+    roomDiv.innerHTML = `
+      <div class="room-name">${room.name || roomId}</div>
+      <div class="room-players">⭕ ${room.x?.name || 'Boş'} | ❌ ${room.o?.name || 'Boş'}</div>
+    `;
+    container.appendChild(roomDiv);
+  });
+}
+
+window.createTictactoeRoom = () => {
+  const roomName = document.getElementById('new-tictactoe-room').value.trim();
+  if (!roomName) { showNotification('Oda adı girin!'); return; }
+  
+  const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
+  const roomId = 'ttt_' + Date.now();
+  db.ref(`${serverPath}/${roomId}`).set({
+    name: roomName,
+    x: null,
+    o: null,
+    gameStarted: false,
+    board: ['', '', '', '', '', '', '', '', ''],
+    currentTurn: 'x',
+    winner: null,
+    createdBy: username,
+    lastActivity: Date.now()
+  });
+  document.getElementById('new-tictactoe-room').value = '';
+  showNotification('⭕❌ Oda oluşturuldu!');
+}
+
+window.joinTictactoeRoom = (roomId, room) => {
+  if (room.x && room.o) {
+    showNotification('Oda dolu!'); return;
+  }
+  
+  tictactoeCurrentRoom = roomId;
+  tictactoePlayerRole = !room.x ? 'x' : 'o';
+  
+  const playerData = { name: username, ready: false, lastActive: Date.now() };
+  const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
+  const update = tictactoePlayerRole === 'x' ? { x: playerData } : { o: playerData };
+  db.ref(`${serverPath}/${roomId}`).update(update);
+  
+  if (tictactoeListener) db.ref(`${serverPath}/${roomId}`).off('value', tictactoeListener);
+  
+  tictactoeListener = db.ref(`${serverPath}/${roomId}`).on('value', (snap) => {
+    const data = snap.val();
+    if (!data) return;
+    
+    document.getElementById('x-player').textContent = data.x?.name || 'Boş';
+    document.getElementById('o-player').textContent = data.o?.name || 'Boş';
+    document.getElementById('x-ready').className = data.x?.ready ? 'ready' : 'not-ready';
+    document.getElementById('o-ready').className = data.o?.ready ? 'ready' : 'not-ready';
+    document.getElementById('tictactoe-waiting-title').textContent = data.name;
+    
+    if (data.x?.ready && data.o?.ready && !data.gameStarted) {
+      startTictactoeGame(roomId);
+    }
+    
+    if (data.gameStarted) {
+      document.getElementById('tictactoe-waiting').style.display = 'none';
+      document.getElementById('tictactoe-board-container').style.display = 'flex';
+      updateTictactoeBoard(data);
+    }
+  });
+}
+
+window.toggleTictactoeReady = () => {
+  if (!tictactoeCurrentRoom || !tictactoePlayerRole) return;
+  tictactoeIsReady = !tictactoeIsReady;
+  const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
+  db.ref(`${serverPath}/${tictactoeCurrentRoom}/${tictactoePlayerRole}/ready`).set(tictactoeIsReady);
+}
+
+function startTictactoeGame(roomId) {
+  const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
+  db.ref(`${serverPath}/${roomId}`).update({ gameStarted: true });
+}
+
+window.leaveTictactoeRoom = () => {
+  if (!tictactoeCurrentRoom) return;
+  const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
+  db.ref(`${serverPath}/${tictactoeCurrentRoom}/${tictactoePlayerRole}`).remove();
+  if (tictactoeListener) db.ref(`${serverPath}/${tictactoeCurrentRoom}`).off('value', tictactoeListener);
+  tictactoeCurrentRoom = null;
+  tictactoePlayerRole = null;
+  tictactoeIsReady = false;
+  document.getElementById('tictactoe-waiting').style.display = 'block';
+  document.getElementById('tictactoe-board-container').style.display = 'none';
+  
+  // Reset board
+  document.querySelectorAll('.tictactoe-cell').forEach(cell => {
+    cell.textContent = '';
+    cell.className = 'tictactoe-cell';
+  });
+}
+
+function updateTictactoeBoard(data) {
+  const cells = document.querySelectorAll('.tictactoe-cell');
+  data.board.forEach((value, index) => {
+    cells[index].textContent = value === 'x' ? '⭕' : value === 'o' ? '❌' : '';
+    cells[index].className = 'tictactoe-cell' + (value ? ' taken ' + value : '');
+  });
+  
+  const status = document.getElementById('tictactoe-status');
+  if (data.winner) {
+    status.textContent = data.winner === 'draw' ? 'Berabere!' : `Kazanan: ${data.winner === 'x' ? '⭕' : '❌'}`;
+  } else {
+    status.textContent = `Sıra: ${data.currentTurn === 'x' ? '⭕' : '❌'}`;
+  }
+}
+
+window.makeTictactoeMove = (index) => {
+  if (!tictactoeCurrentRoom) return;
+  
+  const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
+  db.ref(`${serverPath}/${tictactoeCurrentRoom}`).once('value', (snap) => {
+    const data = snap.val();
+    if (!data || data.board[index] || data.winner || data.currentTurn !== tictactoePlayerRole) return;
+    
+    const newBoard = [...data.board];
+    newBoard[index] = tictactoePlayerRole;
+    
+    // Kazanan kontrolü
+    const winner = checkTictactoeWinner(newBoard);
+    
+    db.ref(`${serverPath}/${tictactoeCurrentRoom}`).update({
+      board: newBoard,
+      currentTurn: tictactoePlayerRole === 'x' ? 'o' : 'x',
+      winner: winner
+    });
+  });
+}
+
+function checkTictactoeWinner(board) {
+  const lines = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+    [0, 4, 8], [2, 4, 6]
+  ];
+  
+  for (let line of lines) {
+    const [a, b, c] = line;
+    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+      return board[a];
+    }
+  }
+  
+  if (board.every(cell => cell !== '')) return 'draw';
+  return null;
+}
+
+window.resetTictactoe = () => {
+  if (!tictactoeCurrentRoom) return;
+  const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
+  db.ref(`${serverPath}/${tictactoeCurrentRoom}`).update({
+    board: ['', '', '', '', '', '', '', '', ''],
+    currentTurn: 'x',
+    winner: null
+  });
 }
 
 // Sayı Tahmin
@@ -2877,30 +3965,27 @@ function loadUserPoints() {
 
 window.openShop = () => {
   const shopItems = document.getElementById('shop-items');
-  const styles = [
-    { id: 1, name: 'Yeşil Enerji', desc: 'Doğal yeşil tonlar', price: 200, style: 'green', emoji: '💚' },
-    { id: 2, name: 'RGB Akış', desc: 'Yumuşak renk geçişleri', price: 300, style: 'rgb', emoji: '🌈' }
-  ];
-  
   shopItems.innerHTML = '';
   
-  styles.forEach(s => {
-    const owned = purchasedStyles.includes(s.style);
+  Object.entries(STYLE_DEFINITIONS).forEach(([styleId, style]) => {
+    if (styleId === 'default') return;
+    
+    const owned = purchasedStyles.includes(styleId);
     const div = document.createElement('div');
     div.className = `shop-item ${owned ? 'disabled' : ''}`;
     div.innerHTML = `
-      <div class="shop-item-preview" style="background: ${s.style === 'green' ? 'linear-gradient(135deg, #2a9a4a, #1a6a3a)' : 'linear-gradient(135deg, #4a6eff, #9a4aff, #ff6a4a)'}">
-        ${s.emoji}
+      <div class="shop-item-preview" style="background: ${style.color}; border: 2px solid ${styleId === 'blackwhite' ? '#fff' : 'transparent'};">
+        ${style.emoji}
       </div>
       <div class="shop-item-info">
-        <h3>${s.name}</h3>
-        <p>${s.desc}</p>
+        <h3>${style.name}</h3>
+        <p>${styleId === 'blackwhite' ? 'Premium Siyah Beyaz Tasarım' : 'Özel sohbet baloncuğu stili'}</p>
       </div>
       <div class="shop-item-price">
-        ${owned ? '✓ SAHİP' : `${s.price}💰`}
+        ${owned ? '✓ SAHİP' : `${style.price}💰`}
       </div>
     `;
-    if (!owned) div.onclick = () => buyStyle(s.style, s.price);
+    if (!owned) div.onclick = () => buyStyle(styleId, style.price);
     shopItems.appendChild(div);
   });
   
@@ -2920,10 +4005,46 @@ window.buyStyle = (style, price) => {
   
   showNotification('✨ Stil satın alındı!');
   closeShop();
+  openInventory();
 }
 
 window.closeShop = () => {
   document.getElementById('shop-panel').style.display = 'none';
+}
+
+// Envanter
+window.openInventory = () => {
+  const inventoryGrid = document.getElementById('inventory-grid');
+  inventoryGrid.innerHTML = '';
+  
+  purchasedStyles.forEach(styleId => {
+    const style = STYLE_DEFINITIONS[styleId];
+    const div = document.createElement('div');
+    div.className = `inventory-item ${currentStyle === styleId ? 'active' : ''}`;
+    div.innerHTML = `
+      <div class="inventory-item-preview" style="background: ${style.color}; border: 2px solid ${styleId === 'blackwhite' ? '#fff' : 'transparent'};">
+        ${style.emoji}
+      </div>
+      <div class="inventory-item-name">${style.name}</div>
+      ${currentStyle === styleId ? '<div class="inventory-item-badge">✓</div>' : ''}
+    `;
+    div.onclick = () => equipStyle(styleId);
+    inventoryGrid.appendChild(div);
+  });
+  
+  document.getElementById('inventory-panel').style.display = 'block';
+  closeMenu();
+}
+
+window.equipStyle = (styleId) => {
+  currentStyle = styleId;
+  db.ref(`users/${username}/activeStyle`).set(styleId);
+  showNotification(`✨ ${STYLE_DEFINITIONS[styleId].name} kuşanıldı!`);
+  openInventory(); // Yenile
+}
+
+window.closeInventory = () => {
+  document.getElementById('inventory-panel').style.display = 'none';
 }
 
 // Geri Bildirim
@@ -3020,4 +4141,4 @@ window.onload = () => {
 </script>
 
 </body>
-  </html>
+</html>
