@@ -6,7 +6,6 @@
 <title>7/D Sohbet + Oyunlar + Premium</title>
 
 <style>
-/* Tüm stiller aynı kalacak - değişiklik yok */
 * {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
@@ -44,7 +43,6 @@ body {
   height: 100%;
 }
 
-/* Animated gradient background */
 body::before {
   content: "";
   position: fixed;
@@ -76,7 +74,7 @@ body::after {
   50% { opacity: 0.7; }
 }
 
-/* Login ekranı */
+/* Login ekranı - Gezegen animasyonlu */
 #login {
   position: fixed;
   inset: 0;
@@ -89,11 +87,73 @@ body::after {
   gap: 16px;
   z-index: 10;
   animation: fadeIn 0.5s ease;
+  overflow: hidden;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+#solar-system {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.planet {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 0 50px rgba(255, 255, 255, 0.3);
+  animation: orbit 20s linear infinite;
+}
+
+.planet:nth-child(1) {
+  background-image: url('0.jpg');
+  width: 120px;
+  height: 120px;
+  top: 20%;
+  left: 10%;
+  animation-duration: 15s;
+  animation-delay: 0s;
+}
+
+.planet:nth-child(2) {
+  background-image: url('1.jpg');
+  width: 180px;
+  height: 180px;
+  top: 50%;
+  right: 15%;
+  animation-duration: 25s;
+  animation-delay: -5s;
+}
+
+.planet:nth-child(3) {
+  background-image: url('2.jpg');
+  width: 100px;
+  height: 100px;
+  bottom: 15%;
+  left: 20%;
+  animation-duration: 18s;
+  animation-delay: -10s;
+}
+
+@keyframes orbit {
+  0% {
+    transform: rotate(0deg) translateX(30px) rotate(0deg);
+  }
+  25% {
+    transform: rotate(90deg) translateX(40px) rotate(-90deg);
+  }
+  50% {
+    transform: rotate(180deg) translateX(30px) rotate(-180deg);
+  }
+  75% {
+    transform: rotate(270deg) translateX(20px) rotate(-270deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(30px) rotate(-360deg);
+  }
 }
 
 #login input {
@@ -102,13 +162,16 @@ body::after {
   max-width: 300px;
   border-radius: 16px;
   border: 2px solid #2a3a4a;
-  background: #1a1f2a;
+  background: rgba(26, 31, 42, 0.8);
   padding: 0 20px;
   font-size: 16px;
   color: #fff;
   transition: all 0.3s ease;
   -webkit-user-select: text;
   user-select: text;
+  backdrop-filter: blur(5px);
+  z-index: 20;
+  position: relative;
 }
 
 #login input:focus {
@@ -120,7 +183,7 @@ body::after {
 
 #login input[type="file"] {
   padding: 12px;
-  background: #1a1f2a;
+  background: rgba(26, 31, 42, 0.8);
   color: #e4e6f0;
   border: 2px dashed #3a4a5a;
   height: auto;
@@ -139,6 +202,8 @@ body::after {
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 8px 24px rgba(42, 110, 255, 0.3);
+  z-index: 20;
+  position: relative;
 }
 
 #login button:hover {
@@ -157,9 +222,10 @@ body::after {
   max-width: 300px;
   text-align: center;
   font-weight: 500;
+  z-index: 20;
+  position: relative;
 }
 
-/* Profil fotoğrafı preview */
 #pfp-preview {
   width: 100px;
   height: 100px;
@@ -171,6 +237,8 @@ body::after {
   display: none;
   box-shadow: 0 12px 30px rgba(42, 110, 255, 0.4);
   animation: float 3s ease-in-out infinite;
+  z-index: 20;
+  position: relative;
 }
 
 @keyframes float {
@@ -282,6 +350,39 @@ body::after {
   font-size: 22px;
   width: 32px;
   opacity: 0.9;
+}
+
+/* Sidebar scroll butonları */
+#sidebar-scroll-up, #sidebar-scroll-down {
+  position: absolute;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #2a6eff, #4a9eff);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(42, 110, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+#sidebar-scroll-up {
+  top: 70px;
+}
+
+#sidebar-scroll-down {
+  bottom: 20px;
+}
+
+#sidebar-scroll-up:hover, #sidebar-scroll-down:hover {
+  transform: scale(1.1);
+  background: linear-gradient(135deg, #1a5eef, #3a8eff);
 }
 
 /* Sidebar overlay */
@@ -652,7 +753,7 @@ body::after {
   border: 2px solid #ff5a5a;
 }
 
-/* Mesaj balonu stilleri - Geçişli ve Animasyonlu */
+/* Mesaj balonu stilleri */
 .msg.style-green {
   background: linear-gradient(135deg, #1a4a2a, #0a3a1a, #2a6a4a, #1a5a3a);
   background-size: 300% 300%;
@@ -979,22 +1080,23 @@ body::after {
 .send-btn {
   padding: 0 28px;
   height: 52px;
-  background: linear-gradient(135deg, #2a6eff, #4a9eff);
+  background: linear-gradient(135deg, #ffaa2a, #ffcc4a);
   border: none;
   border-radius: 26px;
-  color: white;
+  color: #0a0c12;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
   flex-shrink: 0;
-  box-shadow: 0 4px 16px rgba(42, 110, 255, 0.3);
+  box-shadow: 0 4px 16px rgba(255, 170, 42, 0.3);
+  display: none; /* Varsayılan gizli, video butonu görünecek */
 }
 
 .send-btn:hover {
-  background: linear-gradient(135deg, #1a5eef, #3a8eff);
+  background: linear-gradient(135deg, #ff9a1a, #ffbc3a);
   transform: scale(1.05);
-  box-shadow: 0 8px 24px rgba(42, 110, 255, 0.4);
+  box-shadow: 0 8px 24px rgba(255, 170, 42, 0.4);
 }
 
 .send-btn:active {
@@ -1123,7 +1225,7 @@ body::after {
   box-shadow: 0 8px 24px rgba(42, 110, 255, 0.4);
 }
 
-/* Oyun Ekranları - Mobil Optimizasyonlu */
+/* Oyun Ekranları */
 .game-screen {
   width: 100%;
   height: 100%;
@@ -1155,33 +1257,6 @@ body::after {
   font-weight: 700;
 }
 
-.server-selector {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
-  flex-shrink: 0;
-}
-
-.server-btn {
-  flex: 1;
-  padding: 12px;
-  background: rgba(26, 33, 46, 0.8);
-  border: 2px solid #2a3a4a;
-  border-radius: 14px;
-  color: #b4c0d0;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.server-btn.active {
-  background: linear-gradient(135deg, #2a6eff, #4a9eff);
-  border-color: #4a9eff;
-  color: white;
-  box-shadow: 0 4px 16px rgba(42, 110, 255, 0.3);
-}
-
 .game-container {
   flex: 1;
   display: flex;
@@ -1191,60 +1266,7 @@ body::after {
   overflow: hidden;
 }
 
-.game-sidebar {
-  background: rgba(15, 18, 25, 0.98);
-  border: 2px solid #1e2a3a;
-  border-radius: 20px;
-  padding: 16px;
-  overflow-y: auto;
-  flex-shrink: 0;
-  max-height: 30%;
-  backdrop-filter: blur(10px);
-}
-
-.game-sidebar h3 {
-  color: #aab6c8;
-  margin: 0 0 14px 0;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-
-.rooms-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.room-item {
-  padding: 14px;
-  background: rgba(26, 33, 46, 0.8);
-  border: 2px solid #2a3a4a;
-  border-radius: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.room-item:hover, .room-item:active {
-  background: rgba(42, 110, 255, 0.15);
-  border-color: #4a9eff;
-  transform: translateX(6px);
-}
-
-.room-item .room-name {
-  color: #e4e6f0;
-  font-weight: 700;
-  margin-bottom: 6px;
-  font-size: 15px;
-}
-
-.room-item .room-players {
-  font-size: 13px;
-  color: #8892a6;
-  font-weight: 500;
-}
-
-.game-area {
+.game-main-area {
   flex: 1;
   display: flex;
   justify-content: center;
@@ -1257,74 +1279,377 @@ body::after {
   overflow: hidden;
 }
 
-/* Yılan Oyunu */
-#snake-screen canvas {
-  width: 100%;
-  height: 100%;
-  max-width: 600px;
-  max-height: 600px;
+.game-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-shrink: 0;
+}
+
+.game-btn {
+  flex: 1;
+  padding: 16px;
+  background: linear-gradient(135deg, #2a6eff, #4a9eff);
+  border: none;
   border-radius: 16px;
-  background: #0a0a0a;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-}
-
-/* Araba Oyunu */
-#car-screen canvas {
-  width: 100%;
-  height: 100%;
-  border-radius: 16px;
-  background: linear-gradient(180deg, #1a1a2a 0%, #0a0a1a 100%);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-}
-
-/* XOX Oyunu */
-#tictactoe-board {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  width: 100%;
-  max-width: 350px;
-  aspect-ratio: 1;
-}
-
-.tictactoe-cell {
-  background: rgba(26, 33, 46, 0.8);
-  border: 3px solid #2a3a4a;
-  border-radius: 20px;
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(42, 110, 255, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 48px;
+  gap: 8px;
+}
+
+.game-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(42, 110, 255, 0.4);
+}
+
+.game-btn:active {
+  transform: translateY(0);
+}
+
+.find-opponent-btn {
+  background: linear-gradient(135deg, #ffaa2a, #ffcc4a);
+  color: #0a0c12;
+  box-shadow: 0 4px 16px rgba(255, 170, 42, 0.3);
+}
+
+.find-opponent-btn:hover {
+  box-shadow: 0 8px 24px rgba(255, 170, 42, 0.5);
+}
+
+.searching-animation {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.searching-animation i {
+  animation: searchRotate 1s linear infinite;
+}
+
+@keyframes searchRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Battleship (Gemi Savaşı) */
+#battleship-screen .game-main-area {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.battleship-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 4px;
+  aspect-ratio: 1;
+  width: 100%;
+  max-width: 300px;
+}
+
+.battleship-cell {
+  background: rgba(26, 33, 46, 0.8);
+  border: 2px solid #2a3a4a;
+  border-radius: 6px;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.battleship-cell:hover {
+  background: rgba(42, 110, 255, 0.2);
+  border-color: #4a9eff;
+  transform: scale(1.1);
+}
+
+.battleship-cell.ship {
+  background: #2a6eff;
+  border-color: #4a9eff;
+  box-shadow: 0 0 15px rgba(42, 110, 255, 0.5);
+}
+
+.battleship-cell.hit {
+  background: #ff5a5a;
+  border-color: #ff8a8a;
+  box-shadow: 0 0 20px rgba(255, 90, 90, 0.5);
+}
+
+.battleship-cell.miss {
+  background: #4a5a6a;
+  border-color: #6a7a8a;
+}
+
+.battleship-cell.ship.hit {
+  background: #ffaa2a;
+  border-color: #ffcc4a;
+  box-shadow: 0 0 25px rgba(255, 170, 42, 0.7);
+}
+
+/* Connect 4 (Dört Sıra) */
+#connect4-screen .game-main-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.connect4-board {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  background: #1a2a3a;
+  padding: 20px;
+  border-radius: 30px;
+  border: 3px solid #2a6eff;
+}
+
+.connect4-cell {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #0a1a2a;
+  border: 3px solid #2a3a4a;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.connect4-cell:hover {
+  transform: scale(1.1);
+  border-color: #4a9eff;
+}
+
+.connect4-cell.player1 {
+  background: #ff5a5a;
+  border-color: #ff8a8a;
+  box-shadow: 0 0 20px #ff5a5a;
+}
+
+.connect4-cell.player2 {
+  background: #ffaa2a;
+  border-color: #ffcc4a;
+  box-shadow: 0 0 20px #ffaa2a;
+}
+
+/* Chess (Satranç) */
+#chess-screen .game-main-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chess-board {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0;
+  border: 3px solid #2a6eff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.chess-cell {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chess-cell.light {
+  background: #e4e6f0;
+  color: #0a0c12;
+}
+
+.chess-cell.dark {
+  background: #4a5a6a;
+  color: #fff;
+}
+
+.chess-cell:hover {
+  transform: scale(1.1);
+  z-index: 10;
+  box-shadow: 0 0 20px #4a9eff;
+}
+
+.chess-cell.selected {
+  box-shadow: 0 0 0 4px #4aff4a;
+}
+
+/* UNO */
+#uno-screen .game-main-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.uno-hand {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(26, 33, 46, 0.8);
+  border-radius: 20px;
+  border: 2px solid #2a3a4a;
+}
+
+.uno-card {
+  width: 80px;
+  height: 120px;
+  background: #fff;
+  border-radius: 12px;
+  border: 3px solid #2a3a4a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #0a0c12;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.uno-card:hover {
+  transform: translateY(-20px) scale(1.1);
+  z-index: 100;
+}
+
+.uno-card.red { background: #ff5a5a; color: white; }
+.uno-card.blue { background: #4a9eff; color: white; }
+.uno-card.green { background: #4aff4a; color: black; }
+.uno-card.yellow { background: #ffaa2a; color: black; }
+
+.uno-top-card {
+  width: 100px;
+  height: 150px;
+  font-size: 32px;
+  margin: 20px auto;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+}
+
+/* Oda bekleme ekranı */
+.waiting-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 12, 18, 0.95);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+}
+
+.waiting-overlay h2 {
+  color: #e4e6f0;
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.waiting-overlay h2 i {
+  animation: searchRotate 1.5s linear infinite;
+  font-size: 32px;
+}
+
+.player-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 80%;
+  max-width: 400px;
+}
+
+.player-slot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  background: rgba(26, 33, 46, 0.8);
+  border: 3px solid #2a3a4a;
+  border-radius: 20px;
+  font-size: 18px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.player-slot.filled {
+  border-color: #4a9eff;
+  background: rgba(42, 110, 255, 0.1);
+}
+
+.player-slot.ready {
+  border-color: #4aff4a;
+  background: rgba(74, 255, 74, 0.1);
+  animation: readyPulse 1.5s infinite;
+}
+
+@keyframes readyPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(74, 255, 74, 0.4); }
+  50% { box-shadow: 0 0 20px 5px rgba(74, 255, 74, 0.2); }
+}
+
+.ready-btn {
+  margin-top: 30px;
+  padding: 18px 56px;
+  background: linear-gradient(135deg, #2a6eff, #4a9eff);
+  border: none;
+  border-radius: 40px;
+  color: white;
+  font-weight: 800;
+  font-size: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
-  aspect-ratio: 1;
+  box-shadow: 0 8px 24px rgba(42, 110, 255, 0.4);
 }
 
-.tictactoe-cell:hover:not(.taken) {
-  background: rgba(42, 110, 255, 0.15);
-  border-color: #4a9eff;
-  transform: scale(1.05);
+.ready-btn:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 12px 32px rgba(42, 110, 255, 0.5);
 }
 
-.tictactoe-cell.taken {
-  cursor: not-allowed;
+.ready-btn.ready {
+  background: linear-gradient(135deg, #4aff4a, #6aff6a);
+  box-shadow: 0 8px 24px rgba(74, 255, 74, 0.4);
 }
 
-.tictactoe-cell.x {
-  color: #ff5a5a;
-  text-shadow: 0 0 20px rgba(255, 90, 90, 0.6);
-  animation: placeMark 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+.leave-btn {
+  margin-top: 16px;
+  padding: 14px 40px;
+  background: rgba(255, 90, 90, 0.2);
+  border: 2px solid #ff5a5a;
+  border-radius: 30px;
+  color: #ff8a8a;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.tictactoe-cell.o {
-  color: #4a9eff;
-  text-shadow: 0 0 20px rgba(74, 158, 255, 0.6);
-  animation: placeMark 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes placeMark {
-  0% { transform: scale(0) rotate(-180deg); opacity: 0; }
-  100% { transform: scale(1) rotate(0); opacity: 1; }
+.leave-btn:hover {
+  background: #ff5a5a;
+  color: white;
+  transform: translateY(-2px);
 }
 
 /* Sayı Tahmin Oyunu */
@@ -1650,7 +1975,7 @@ body::after {
 #guess-feedback.low { color: #6b6bff; }
 #guess-feedback.correct { color: #6bff6b; }
 
-/* Mağaza Paneli - İki Sekmeli */
+/* Mağaza Paneli - Fontlar eklendi */
 #shop-panel {
   position: fixed;
   top: 50%;
@@ -2341,10 +2666,6 @@ textarea {
     display: none;
   }
   
-  .game-sidebar {
-    max-height: 25%;
-  }
-  
   #guess-submit {
     width: 80px;
     height: 80px;
@@ -2354,193 +2675,23 @@ textarea {
   #inventory-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-}
-
-/* Joystick için özel stiller */
-.joystick-container {
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 160px;
-  height: 160px;
-  background: rgba(26, 33, 46, 0.4);
-  border: 3px solid rgba(74, 158, 255, 0.3);
-  border-radius: 50%;
-  touch-action: none;
-  z-index: 100;
-}
-
-.joystick-base {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(42, 110, 255, 0.1) 0%, transparent 70%);
-}
-
-.joystick-stick {
-  position: absolute;
-  width: 70px;
-  height: 70px;
-  background: linear-gradient(135deg, #2a6eff, #4a9eff);
-  border-radius: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 6px 24px rgba(42, 110, 255, 0.5);
-  cursor: grab;
-  touch-action: none;
-}
-
-.joystick-stick:active {
-  cursor: grabbing;
-  transform: translate(-50%, -50%) scale(1.1);
-}
-
-/* Araba oyunu özel efektler */
-.car-game-hud {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  right: 20px;
-  display: flex;
-  justify-content: space-between;
-  pointer-events: none;
-}
-
-.car-game-stat {
-  background: rgba(0, 0, 0, 0.6);
-  padding: 12px 20px;
-  border-radius: 30px;
-  color: #fff;
-  font-weight: 700;
-  font-size: 18px;
-  border: 2px solid #4a9eff;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-/* Yılan oyunu özel efektler */
-.snake-game-hud {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  right: 20px;
-  display: flex;
-  justify-content: space-between;
-  pointer-events: none;
-}
-
-.snake-score {
-  background: rgba(0, 0, 0, 0.6);
-  padding: 12px 24px;
-  border-radius: 30px;
-  color: #4aff4a;
-  font-weight: 800;
-  font-size: 20px;
-  border: 2px solid #4aff4a;
-  text-shadow: 0 0 10px #4aff4a;
-}
-
-/* Oda bekleme ekranı */
-.waiting-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(10, 12, 18, 0.95);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 20px;
-  z-index: 50;
-  backdrop-filter: blur(10px);
-}
-
-.waiting-overlay h2 {
-  color: #e4e6f0;
-  margin-bottom: 30px;
-  font-size: 28px;
-  font-weight: 700;
-  text-align: center;
-}
-
-.player-slots {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 80%;
-  max-width: 400px;
-}
-
-.player-slot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 18px 24px;
-  background: rgba(26, 33, 46, 0.8);
-  border: 3px solid #2a3a4a;
-  border-radius: 20px;
-  font-size: 18px;
-  font-weight: 700;
-  transition: all 0.3s ease;
-}
-
-.player-slot.filled {
-  border-color: #4a9eff;
-  background: rgba(42, 110, 255, 0.1);
-}
-
-.player-slot.ready {
-  border-color: #4aff4a;
-  background: rgba(74, 255, 74, 0.1);
-  animation: readyPulse 1.5s infinite;
-}
-
-@keyframes readyPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(74, 255, 74, 0.4); }
-  50% { box-shadow: 0 0 20px 5px rgba(74, 255, 74, 0.2); }
-}
-
-.ready-btn {
-  margin-top: 30px;
-  padding: 18px 56px;
-  background: linear-gradient(135deg, #2a6eff, #4a9eff);
-  border: none;
-  border-radius: 40px;
-  color: white;
-  font-weight: 800;
-  font-size: 20px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 24px rgba(42, 110, 255, 0.4);
-}
-
-.ready-btn:hover {
-  transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 12px 32px rgba(42, 110, 255, 0.5);
-}
-
-.ready-btn.ready {
-  background: linear-gradient(135deg, #4aff4a, #6aff6a);
-  box-shadow: 0 8px 24px rgba(74, 255, 74, 0.4);
-}
-
-.leave-btn {
-  margin-top: 16px;
-  padding: 14px 40px;
-  background: rgba(255, 90, 90, 0.2);
-  border: 2px solid #ff5a5a;
-  border-radius: 30px;
-  color: #ff8a8a;
-  font-weight: 700;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.leave-btn:hover {
-  background: #ff5a5a;
-  color: white;
-  transform: translateY(-2px);
+  
+  .connect4-cell {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .chess-cell {
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+  }
+  
+  .uno-card {
+    width: 60px;
+    height: 90px;
+    font-size: 18px;
+  }
 }
 </style>
 
@@ -2552,8 +2703,13 @@ textarea {
 
 <audio id="notify" src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmFgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" preload="auto"></audio>
 
-<!-- Login Ekranı -->
+<!-- Login Ekranı - Gezegen Animasyonlu -->
 <div id="login">
+  <div id="solar-system">
+    <div class="planet"></div>
+    <div class="planet"></div>
+    <div class="planet"></div>
+  </div>
   <img id="pfp-preview" src="" alt="Profil fotoğrafı">
   <input type="text" id="nameInput" placeholder="Kullanıcı adı" autocomplete="off">
   <input type="password" id="codeInput" placeholder="Kod" autocomplete="off">
@@ -2573,6 +2729,7 @@ textarea {
 
 <!-- Sidebar -->
 <div id="sidebar">
+  <button id="sidebar-scroll-up" onclick="scrollSidebar(-1)">▲</button>
   <div id="sidebar-header">
     <h3>MENÜ</h3>
   </div>
@@ -2582,14 +2739,17 @@ textarea {
   <button class="sidebar-btn" onclick="switchScreen('altun')" id="btn-altun">
     <i>🤖</i> Altun.ai
   </button>
-  <button class="sidebar-btn" onclick="switchScreen('snake')" id="btn-snake">
-    <i>🐍</i> Yılan Oyunu
+  <button class="sidebar-btn" onclick="switchScreen('battleship')" id="btn-battleship">
+    <i>🚢</i> Gemi Savaşı
   </button>
-  <button class="sidebar-btn" onclick="switchScreen('car')" id="btn-car">
-    <i>🏎️</i> Araba Yarışı
+  <button class="sidebar-btn" onclick="switchScreen('connect4')" id="btn-connect4">
+    <i>🔴</i> Dört Sıra
   </button>
-  <button class="sidebar-btn" onclick="switchScreen('tictactoe')" id="btn-tictactoe">
-    <i>⭕</i> XOX Oyunu
+  <button class="sidebar-btn" onclick="switchScreen('chess')" id="btn-chess">
+    <i>♟️</i> Satranç
+  </button>
+  <button class="sidebar-btn" onclick="switchScreen('uno')" id="btn-uno">
+    <i>🎴</i> UNO
   </button>
   <button class="sidebar-btn" onclick="switchScreen('guess')" id="btn-guess">
     <i>🔢</i> Sayı Tahmin
@@ -2603,6 +2763,7 @@ textarea {
   <button class="sidebar-btn" onclick="openFeedback()" id="btn-feedback">
     <i>📝</i> Geri Bildirim
   </button>
+  <button id="sidebar-scroll-down" onclick="scrollSidebar(1)">▼</button>
 </div>
 
 <!-- Ana İçerik -->
@@ -2629,12 +2790,12 @@ textarea {
     <div id="chat"></div>
 
     <div id="inputBar">
-      <input type="text" id="text" placeholder="Mesaj yaz..." oninput="onTyping()">
+      <input type="text" id="text" placeholder="Mesaj yaz... (Enter gönder)" oninput="onTyping()" onkeypress="handleEnterKey(event)">
       <label for="imgInput" class="media-btn">📷</label>
       <input type="file" id="imgInput" accept="image/*">
       <label for="videoInput" class="media-btn">🎥</label>
       <input type="file" id="videoInput" accept="video/*">
-      <button class="send-btn" onclick="send()">➤</button>
+      <button class="send-btn" onclick="send()" style="display: none;">➤</button>
     </div>
   </div>
 
@@ -2643,165 +2804,136 @@ textarea {
     <div id="altun-header">Altun.ai Asistan</div>
     <div id="altun-messages"></div>
     <div id="altun-input-area">
-      <input type="text" id="altun-input" placeholder="Bir şey sor..." />
+      <input type="text" id="altun-input" placeholder="Bir şey sor..." onkeypress="handleAltunEnterKey(event)" />
       <button class="altun-btn" onclick="sendToAltun()">➤</button>
     </div>
   </div>
 
-  <!-- Yılan Oyunu -->
-  <div id="snake-screen" class="hidden game-screen">
+  <!-- Gemi Savaşı (Battleship) -->
+  <div id="battleship-screen" class="hidden game-screen">
     <div class="game-header">
-      <h2>🐍 Yılan Oyunu</h2>
-      <div>
-        <input type="text" id="new-snake-room" placeholder="Oda adı" style="padding: 10px 16px; border-radius: 30px; border: 2px solid #2a3a4a; background: #1a212e; color: white; margin-right: 10px; width: 150px;">
-        <button onclick="createSnakeRoom()" style="padding: 10px 20px; background: linear-gradient(135deg, #2a6eff, #4a9eff); border: none; border-radius: 30px; color: white; font-weight: 700; cursor: pointer;">Oda Oluştur</button>
-      </div>
-    </div>
-    
-    <div class="server-selector">
-      <button class="server-btn active" onclick="switchServer('snake', 1)">🖥️ Server 1</button>
-      <button class="server-btn" onclick="switchServer('snake', 2)">🖥️ Server 2</button>
+      <h2>🚢 Gemi Savaşı</h2>
+      <button class="find-opponent-btn game-btn" onclick="findBattleshipOpponent()" id="find-battleship-btn">
+        <span class="searching-animation" id="battleship-search" style="display: none;">
+          <i>🔍</i> Rakip aranıyor...
+        </span>
+        <span id="battleship-btn-text">👥 Rakip Bul</span>
+      </button>
     </div>
     
     <div class="game-container">
-      <div class="game-sidebar">
-        <h3>📋 Aktif Odalar</h3>
-        <div class="rooms-list" id="snake-rooms-list"></div>
+      <div class="game-main-area" id="battleship-game-area">
+        <div class="battleship-grid" id="battleship-my-grid"></div>
+        <div class="battleship-grid" id="battleship-enemy-grid"></div>
+        
+        <div class="waiting-overlay" id="battleship-waiting" style="display: none;">
+          <h2 id="battleship-waiting-title">
+            <i>🔍</i> Rakip Aranıyor...
+          </h2>
+          <button class="leave-btn" onclick="leaveBattleshipGame()">İptal Et</button>
+        </div>
       </div>
       
-      <div class="game-area" id="snake-game-area">
-        <canvas id="snake-canvas" width="600" height="600"></canvas>
-        
-        <div class="joystick-container" id="snake-joystick" style="display: none;">
-          <div class="joystick-base"></div>
-          <div class="joystick-stick" id="snake-joystick-stick"></div>
-        </div>
-        
-        <div class="waiting-overlay" id="snake-waiting">
-          <h2 id="snake-waiting-title">Bekleme Odası</h2>
-          <div class="player-slots">
-            <div class="player-slot" id="snake-player1-slot">
-              <span>🐍 Oyuncu: <span id="snake-player1">Boş</span></span>
-              <span id="snake-player1-status" class="not-ready">Bekliyor</span>
-            </div>
-          </div>
-          <button class="ready-btn" id="snake-ready-btn" onclick="toggleSnakeReady()">HAZIR OL</button>
-          <button class="leave-btn" onclick="leaveSnakeRoom()">ODADAN ÇIK</button>
-        </div>
-        
-        <div class="snake-game-hud" id="snake-hud" style="display: none;">
-          <div class="snake-score">🍎 <span id="snake-score">0</span></div>
-          <div class="snake-score">🏆 <span id="snake-highscore">0</span></div>
-        </div>
+      <div class="game-controls">
+        <button class="game-btn" onclick="randomizeBattleshipShips()">🎲 Rastgele Yerleştir</button>
+        <button class="game-btn" onclick="startBattleshipGame()">⚔️ Savaşa Başla</button>
+        <button class="game-btn" onclick="leaveBattleshipGame()">🚪 Çık</button>
       </div>
     </div>
   </div>
 
-  <!-- Araba Yarışı -->
-  <div id="car-screen" class="hidden game-screen">
+  <!-- Dört Sıra (Connect 4) -->
+  <div id="connect4-screen" class="hidden game-screen">
     <div class="game-header">
-      <h2>🏎️ Araba Yarışı</h2>
-      <div>
-        <input type="text" id="new-car-room" placeholder="Oda adı" style="padding: 10px 16px; border-radius: 30px; border: 2px solid #2a3a4a; background: #1a212e; color: white; margin-right: 10px; width: 150px;">
-        <button onclick="createCarRoom()" style="padding: 10px 20px; background: linear-gradient(135deg, #2a6eff, #4a9eff); border: none; border-radius: 30px; color: white; font-weight: 700; cursor: pointer;">Oda Oluştur</button>
-      </div>
-    </div>
-    
-    <div class="server-selector">
-      <button class="server-btn active" onclick="switchServer('car', 1)">🖥️ Server 1</button>
-      <button class="server-btn" onclick="switchServer('car', 2)">🖥️ Server 2</button>
+      <h2>🔴 Dört Sıra</h2>
+      <button class="find-opponent-btn game-btn" onclick="findConnect4Opponent()" id="find-connect4-btn">
+        <span class="searching-animation" id="connect4-search" style="display: none;">
+          <i>🔍</i> Rakip aranıyor...
+        </span>
+        <span id="connect4-btn-text">👥 Rakip Bul</span>
+      </button>
     </div>
     
     <div class="game-container">
-      <div class="game-sidebar">
-        <h3>📋 Aktif Odalar</h3>
-        <div class="rooms-list" id="car-rooms-list"></div>
+      <div class="game-main-area">
+        <div class="connect4-board" id="connect4-board"></div>
+        
+        <div class="waiting-overlay" id="connect4-waiting" style="display: none;">
+          <h2 id="connect4-waiting-title">
+            <i>🔍</i> Rakip Aranıyor...
+          </h2>
+          <button class="leave-btn" onclick="leaveConnect4Game()">İptal Et</button>
+        </div>
       </div>
       
-      <div class="game-area" id="car-game-area">
-        <canvas id="car-canvas" width="400" height="700"></canvas>
-        
-        <div class="joystick-container" id="car-joystick" style="display: none;">
-          <div class="joystick-base"></div>
-          <div class="joystick-stick" id="car-joystick-stick"></div>
-        </div>
-        
-        <div class="waiting-overlay" id="car-waiting">
-          <h2 id="car-waiting-title">Bekleme Odası</h2>
-          <div class="player-slots">
-            <div class="player-slot" id="car-player1-slot">
-              <span>🏎️ Yarışçı 1: <span id="car-player1">Boş</span></span>
-              <span id="car-player1-status" class="not-ready">Bekliyor</span>
-            </div>
-            <div class="player-slot" id="car-player2-slot">
-              <span>🏎️ Yarışçı 2: <span id="car-player2">Boş</span></span>
-              <span id="car-player2-status" class="not-ready">Bekliyor</span>
-            </div>
-          </div>
-          <button class="ready-btn" id="car-ready-btn" onclick="toggleCarReady()">HAZIR OL</button>
-          <button class="leave-btn" onclick="leaveCarRoom()">ODADAN ÇIK</button>
-        </div>
-        
-        <div class="car-game-hud" id="car-hud" style="display: none;">
-          <div class="car-game-stat">🏆 <span id="car-score">0</span></div>
-          <div class="car-game-stat">⚡ <span id="car-speed">0</span> km/h</div>
-        </div>
+      <div class="game-controls">
+        <button class="game-btn" onclick="resetConnect4()">🔄 Yeni Oyun</button>
+        <button class="game-btn" onclick="leaveConnect4Game()">🚪 Çık</button>
       </div>
     </div>
   </div>
 
-  <!-- XOX Oyunu -->
-  <div id="tictactoe-screen" class="hidden game-screen">
+  <!-- Satranç (Chess) -->
+  <div id="chess-screen" class="hidden game-screen">
     <div class="game-header">
-      <h2>⭕ XOX Oyunu</h2>
-      <div>
-        <input type="text" id="new-tictactoe-room" placeholder="Oda adı" style="padding: 10px 16px; border-radius: 30px; border: 2px solid #2a3a4a; background: #1a212e; color: white; margin-right: 10px; width: 150px;">
-        <button onclick="createTictactoeRoom()" style="padding: 10px 20px; background: linear-gradient(135deg, #2a6eff, #4a9eff); border: none; border-radius: 30px; color: white; font-weight: 700; cursor: pointer;">Oda Oluştur</button>
-      </div>
-    </div>
-    
-    <div class="server-selector">
-      <button class="server-btn active" onclick="switchServer('tictactoe', 1)">🖥️ Server 1</button>
-      <button class="server-btn" onclick="switchServer('tictactoe', 2)">🖥️ Server 2</button>
+      <h2>♟️ Satranç</h2>
+      <button class="find-opponent-btn game-btn" onclick="findChessOpponent()" id="find-chess-btn">
+        <span class="searching-animation" id="chess-search" style="display: none;">
+          <i>🔍</i> Rakip aranıyor...
+        </span>
+        <span id="chess-btn-text">👥 Rakip Bul</span>
+      </button>
     </div>
     
     <div class="game-container">
-      <div class="game-sidebar">
-        <h3>📋 Aktif Odalar</h3>
-        <div class="rooms-list" id="tictactoe-rooms-list"></div>
+      <div class="game-main-area">
+        <div class="chess-board" id="chess-board"></div>
+        
+        <div class="waiting-overlay" id="chess-waiting" style="display: none;">
+          <h2 id="chess-waiting-title">
+            <i>🔍</i> Rakip Aranıyor...
+          </h2>
+          <button class="leave-btn" onclick="leaveChessGame()">İptal Et</button>
+        </div>
       </div>
       
-      <div class="game-area">
-        <div id="tictactoe-board" style="display: none;">
-          <div class="tictactoe-cell" data-index="0" onclick="makeTictactoeMove(0)"></div>
-          <div class="tictactoe-cell" data-index="1" onclick="makeTictactoeMove(1)"></div>
-          <div class="tictactoe-cell" data-index="2" onclick="makeTictactoeMove(2)"></div>
-          <div class="tictactoe-cell" data-index="3" onclick="makeTictactoeMove(3)"></div>
-          <div class="tictactoe-cell" data-index="4" onclick="makeTictactoeMove(4)"></div>
-          <div class="tictactoe-cell" data-index="5" onclick="makeTictactoeMove(5)"></div>
-          <div class="tictactoe-cell" data-index="6" onclick="makeTictactoeMove(6)"></div>
-          <div class="tictactoe-cell" data-index="7" onclick="makeTictactoeMove(7)"></div>
-          <div class="tictactoe-cell" data-index="8" onclick="makeTictactoeMove(8)"></div>
-        </div>
+      <div class="game-controls">
+        <button class="game-btn" onclick="resetChess()">🔄 Yeni Oyun</button>
+        <button class="game-btn" onclick="leaveChessGame()">🚪 Çık</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNO -->
+  <div id="uno-screen" class="hidden game-screen">
+    <div class="game-header">
+      <h2>🎴 UNO</h2>
+      <button class="find-opponent-btn game-btn" onclick="findUnoOpponent()" id="find-uno-btn">
+        <span class="searching-animation" id="uno-search" style="display: none;">
+          <i>🔍</i> Rakip aranıyor...
+        </span>
+        <span id="uno-btn-text">👥 Rakip Bul</span>
+      </button>
+    </div>
+    
+    <div class="game-container">
+      <div class="game-main-area">
+        <div class="uno-hand" id="uno-my-hand"></div>
+        <div class="uno-card uno-top-card" id="uno-top-card">🎴</div>
+        <div class="uno-hand" id="uno-enemy-hand"></div>
         
-        <div class="waiting-overlay" id="tictactoe-waiting">
-          <h2 id="tictactoe-waiting-title">Bekleme Odası</h2>
-          <div class="player-slots">
-            <div class="player-slot" id="tictactoe-x-slot">
-              <span>⭕ X Oyuncu: <span id="tictactoe-x">Boş</span></span>
-              <span id="tictactoe-x-status" class="not-ready">Bekliyor</span>
-            </div>
-            <div class="player-slot" id="tictactoe-o-slot">
-              <span>❌ O Oyuncu: <span id="tictactoe-o">Boş</span></span>
-              <span id="tictactoe-o-status" class="not-ready">Bekliyor</span>
-            </div>
-          </div>
-          <button class="ready-btn" id="tictactoe-ready-btn" onclick="toggleTictactoeReady()">HAZIR OL</button>
-          <button class="leave-btn" onclick="leaveTictactoeRoom()">ODADAN ÇIK</button>
+        <div class="waiting-overlay" id="uno-waiting" style="display: none;">
+          <h2 id="uno-waiting-title">
+            <i>🔍</i> Rakip Aranıyor...
+          </h2>
+          <button class="leave-btn" onclick="leaveUnoGame()">İptal Et</button>
         </div>
-        
-        <div id="tictactoe-status" style="display: none; margin-top: 20px; font-size: 24px; font-weight: 700; color: #e4e6f0;"></div>
-        <button onclick="resetTictactoe()" id="tictactoe-reset" style="display: none; margin-top: 16px; padding: 14px 32px; background: linear-gradient(135deg, #2a6eff, #4a9eff); border: none; border-radius: 30px; color: white; font-weight: 700; cursor: pointer;">Yeniden Başla</button>
+      </div>
+      
+      <div class="game-controls">
+        <button class="game-btn" onclick="drawUnoCard()">🎴 Kart Çek</button>
+        <button class="game-btn" onclick="sayUno()">🗣️ UNO!</button>
+        <button class="game-btn" onclick="leaveUnoGame()">🚪 Çık</button>
       </div>
     </div>
   </div>
@@ -2829,7 +2961,7 @@ textarea {
         </div>
         
         <div id="guess-input-area">
-          <input type="number" id="guess-input" placeholder="Sayı gir" min="1" max="100">
+          <input type="number" id="guess-input" placeholder="Sayı gir" min="1" max="100" onkeypress="handleGuessEnterKey(event)">
           <button id="guess-submit" onclick="makeGuess()">➤</button>
         </div>
         
@@ -2848,18 +2980,15 @@ textarea {
   <div class="shop-tabs">
     <button class="shop-tab active" onclick="switchShopTab('bubbles')">💬 Baloncuklar</button>
     <button class="shop-tab" onclick="switchShopTab('themes')">🎨 Temalar</button>
+    <button class="shop-tab" onclick="switchShopTab('fonts')">🔤 Fontlar</button>
   </div>
   
   <div class="shop-content">
     <button class="scroll-btn up" onclick="scrollShop(-1)">▲</button>
     
-    <div class="shop-section active" id="shop-bubbles">
-      <!-- Baloncuklar buraya dinamik olarak eklenecek -->
-    </div>
-    
-    <div class="shop-section" id="shop-themes">
-      <!-- Temalar buraya dinamik olarak eklenecek -->
-    </div>
+    <div class="shop-section active" id="shop-bubbles"></div>
+    <div class="shop-section" id="shop-themes"></div>
+    <div class="shop-section" id="shop-fonts"></div>
     
     <button class="scroll-btn down" onclick="scrollShop(1)">▼</button>
   </div>
@@ -2873,9 +3002,7 @@ textarea {
   
   <button class="scroll-btn up" onclick="scrollInventory(-1)" style="top: 80px;">▲</button>
   
-  <div id="inventory-grid">
-    <!-- Envanter öğeleri buraya dinamik olarak eklenecek -->
-  </div>
+  <div id="inventory-grid"></div>
   
   <button class="scroll-btn down" onclick="scrollInventory(1)" style="bottom: 80px;">▼</button>
   
@@ -2958,47 +3085,19 @@ let purchasedStyles = ['default'];
 let currentStyle = 'default';
 let purchasedThemes = ['default'];
 let currentTheme = 'default';
+let purchasedFonts = ['default'];
+let currentFont = 'default';
 let typingTimeout = null;
 let mutedUsers = {};
 let bannedUsers = {};
 
-// Server sistemi
-let currentServers = {
-  snake: 1,
-  car: 1,
-  tictactoe: 1
-};
-
 // Oyun değişkenleri
-let gameRooms = {
-  snake: { current: null, player: null, ready: false, listener: null },
-  car: { current: null, player: null, ready: false, listener: null },
-  tictactoe: { current: null, player: null, ready: false, listener: null }
+let currentGame = {
+  battleship: { inQueue: false, opponent: null, gameId: null },
+  connect4: { inQueue: false, opponent: null, gameId: null },
+  chess: { inQueue: false, opponent: null, gameId: null },
+  uno: { inQueue: false, opponent: null, gameId: null }
 };
-
-// Oda temizleme zamanlayıcıları
-let roomCleanupTimers = {};
-
-// Sayı Tahmin Değişkenleri
-let guessTarget = Math.floor(Math.random() * 100) + 1;
-let guessMin = 1, guessMax = 100;
-let guessAttempts = 0;
-let guessScore = 0;
-let guessGameActive = true;
-let guessPlayers = {};
-
-// Geri Bildirim
-let currentFeedbackType = 'feedback';
-
-// AFK
-let lastActivityTime = Date.now();
-let afkKickTimer = null;
-const AFK_WARNING = 90000;
-const AFK_LIMIT = 120000;
-
-// Admin için geçici değişken
-let targetBanUser = '';
-let targetWarnUser = '';
 
 // Stil ve Tema tanımlamaları
 const STYLE_DEFINITIONS = {
@@ -3025,33 +3124,14 @@ const THEME_DEFINITIONS = {
   'cyberpunk': { name: 'Cyberpunk', emoji: '🤖', price: 700, bg: 'linear-gradient(45deg, #1a0a1a, #2a1a3a)' }
 };
 
-// Oda temizleme fonksiyonu
-function startRoomCleanupTimer(roomType, serverNum, roomId) {
-  const timerKey = `${roomType}_${serverNum}_${roomId}`;
-  if (roomCleanupTimers[timerKey]) clearTimeout(roomCleanupTimers[timerKey]);
-  
-  roomCleanupTimers[timerKey] = setTimeout(() => {
-    const serverPath = `${roomType}Rooms_server${serverNum}`;
-    db.ref(`${serverPath}/${roomId}`).once('value', (snap) => {
-      const room = snap.val();
-      if (room && !room.gameStarted) {
-        const lastActive = room.lastActivity || 0;
-        if (Date.now() - lastActive > 40000) {
-          db.ref(`${serverPath}/${roomId}`).remove();
-          console.log(`Oda silindi: ${roomId} (40 saniye hareketsiz)`);
-        }
-      }
-    });
-    delete roomCleanupTimers[timerKey];
-  }, 41000);
-}
-
-// Oda aktivitesini güncelle
-function updateRoomActivity(roomType, serverNum, roomId) {
-  const serverPath = `${roomType}Rooms_server${serverNum}`;
-  db.ref(`${serverPath}/${roomId}/lastActivity`).set(Date.now());
-  startRoomCleanupTimer(roomType, serverNum, roomId);
-}
+const FONT_DEFINITIONS = {
+  'default': { name: 'Varsayılan', emoji: '📝', price: 0, family: 'Inter, sans-serif' },
+  'handwriting': { name: 'El Yazısı', emoji: '✍️', price: 300, family: 'cursive' },
+  'vintage': { name: 'Vintage', emoji: '📜', price: 400, family: 'serif' },
+  'game': { name: 'Oyun', emoji: '🎮', price: 350, family: '"Press Start 2P", cursive' },
+  'elegant': { name: 'Zarif', emoji: '✨', price: 450, family: '"Playfair Display", serif' },
+  'future': { name: 'Fütüristik', emoji: '🤖', price: 500, family: '"Orbitron", sans-serif' }
+};
 
 // Sayfa kaymasını engelle
 document.body.addEventListener('touchmove', function(e) {
@@ -3059,6 +3139,12 @@ document.body.addEventListener('touchmove', function(e) {
     e.preventDefault();
   }
 }, { passive: false });
+
+// Sidebar scroll
+function scrollSidebar(direction) {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.scrollBy({ top: direction * 200, behavior: 'smooth' });
+}
 
 // Menü
 window.toggleMenu = () => {
@@ -3071,24 +3157,26 @@ window.closeMenu = () => {
   document.getElementById('sidebar-overlay').classList.remove('show');
 }
 
-// Server değiştirme
-window.switchServer = (game, serverNum) => {
-  if (gameRooms[game].current) {
-    leaveGameRoom(game);
+// Enter tuşu ile mesaj gönderme
+function handleEnterKey(event) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    send();
   }
-  
-  currentServers[game] = serverNum;
-  
-  const screen = document.getElementById(game + '-screen');
-  screen.querySelectorAll('.server-btn').forEach((btn, idx) => {
-    btn.classList.toggle('active', idx === serverNum - 1);
-  });
-  
-  if (game === 'snake') listenSnakeRooms();
-  else if (game === 'car') listenCarRooms();
-  else if (game === 'tictactoe') listenTictactoeRooms();
-  
-  showNotification(`🖥️ Server ${serverNum}'e geçildi!`);
+}
+
+function handleAltunEnterKey(event) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    sendToAltun();
+  }
+}
+
+function handleGuessEnterKey(event) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    makeGuess();
+  }
 }
 
 // Ekran değiştirme
@@ -3102,17 +3190,19 @@ window.switchScreen = (screen) => {
   
   document.getElementById('chat-screen').classList.add('hidden');
   document.getElementById('altun-screen').classList.add('hidden');
-  document.getElementById('snake-screen').classList.add('hidden');
-  document.getElementById('car-screen').classList.add('hidden');
-  document.getElementById('tictactoe-screen').classList.add('hidden');
+  document.getElementById('battleship-screen').classList.add('hidden');
+  document.getElementById('connect4-screen').classList.add('hidden');
+  document.getElementById('chess-screen').classList.add('hidden');
+  document.getElementById('uno-screen').classList.add('hidden');
   document.getElementById('guess-screen').classList.add('hidden');
   
   document.getElementById(screen + '-screen').classList.remove('hidden');
   
   if (screen === 'altun') loadAltunHistory();
-  else if (screen === 'snake') initSnake();
-  else if (screen === 'car') initCar();
-  else if (screen === 'tictactoe') initTictactoe();
+  else if (screen === 'battleship') initBattleship();
+  else if (screen === 'connect4') initConnect4();
+  else if (screen === 'chess') initChess();
+  else if (screen === 'uno') initUno();
   else if (screen === 'guess') initGuessGame();
   
   closeMenu();
@@ -3133,6 +3223,11 @@ window.previewPFP = () => {
 }
 
 // AFK
+let lastActivityTime = Date.now();
+let afkKickTimer = null;
+const AFK_WARNING = 90000;
+const AFK_LIMIT = 120000;
+
 function startAfkMonitoring() {
   if (afkKickTimer) clearInterval(afkKickTimer);
   afkKickTimer = setInterval(() => {
@@ -3142,9 +3237,6 @@ function startAfkMonitoring() {
     } else if (afkTime >= AFK_LIMIT) {
       document.getElementById('afk-warning').style.display = 'none';
       if (onlineRef) onlineRef.remove();
-      Object.keys(gameRooms).forEach(game => {
-        if (gameRooms[game].current) leaveGameRoom(game);
-      });
       alert('2 dakika hareketsiz kaldığınız için çıkış yapıldı!');
       location.reload();
     }
@@ -3154,12 +3246,6 @@ function startAfkMonitoring() {
 function updateActivity() {
   lastActivityTime = Date.now();
   document.getElementById('afk-warning').style.display = 'none';
-  
-  Object.keys(gameRooms).forEach(game => {
-    if (gameRooms[game].current) {
-      updateRoomActivity(game, currentServers[game], gameRooms[game].current);
-    }
-  });
 }
 
 ['mousedown', 'mousemove', 'keydown', 'touchstart', 'touchmove'].forEach(ev => {
@@ -3259,6 +3345,7 @@ function listenOnline() {
           <button onclick="showWarnPanel('${u.name}')">⚠️ Uyar</button>
           <button onclick="muteUser('${u.name}')">🔇 Mute</button>
           <button onclick="deleteUserMessages('${u.name}')">🗑️ Sil</button>
+          <button onclick="deleteUserRooms('${u.name}')">🚪 Odaları Sil</button>
         `;
         div.appendChild(actions);
       }
@@ -3268,6 +3355,38 @@ function listenOnline() {
     
     document.getElementById('online-count').textContent = count;
   });
+}
+
+// Admin - Kullanıcının odalarını sil
+window.deleteUserRooms = (targetUser) => {
+  if (role !== 'admin') return;
+  
+  // Tüm oyun odalarını kontrol et
+  const games = ['battleship', 'connect4', 'chess', 'uno'];
+  let deletedCount = 0;
+  
+  games.forEach(game => {
+    db.ref(`${game}Queue`).once('value', (snap) => {
+      snap.forEach(child => {
+        if (child.val().player === targetUser) {
+          child.ref.remove();
+          deletedCount++;
+        }
+      });
+    });
+    
+    db.ref(`${game}Games`).once('value', (snap) => {
+      snap.forEach(child => {
+        const gameData = child.val();
+        if (gameData.player1 === targetUser || gameData.player2 === targetUser) {
+          child.ref.remove();
+          deletedCount++;
+        }
+      });
+    });
+  });
+  
+  showNotification(`✅ ${targetUser}'ın ${deletedCount} odası silindi`);
 }
 
 // Yazıyor
@@ -3343,7 +3462,7 @@ window.send = () => {
   const timeStr = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
   
   const messageData = {
-    name: username, role: role, pfp: pfp, text: text, time: Date.now(), timeStr: timeStr, style: currentStyle
+    name: username, role: role, pfp: pfp, text: text, time: Date.now(), timeStr: timeStr, style: currentStyle, font: currentFont
   };
 
   if (imgFile) {
@@ -3373,6 +3492,7 @@ function renderMessage(m, key) {
   if (m.name === username) cls = "msg me";
   if (m.role === "admin") cls = "msg admin";
   if (m.style && m.style !== 'default') cls += ` style-${m.style}`;
+  if (m.font && m.font !== 'default') div.style.fontFamily = FONT_DEFINITIONS[m.font]?.family || 'Inter, sans-serif';
 
   div.className = cls;
   
@@ -3567,1006 +3687,595 @@ window.sendToAltun = async () => {
   }
 }
 
-// Yılan Oyunu - Düzeltilmiş Versiyon
-function initSnake() {
-  listenSnakeRooms();
+// Gemi Savaşı (Battleship)
+function initBattleship() {
+  createBattleshipGrid('battleship-my-grid');
+  createBattleshipGrid('battleship-enemy-grid');
+  randomizeBattleshipShips();
 }
 
-function listenSnakeRooms() {
-  const serverPath = `snakeRooms_server${currentServers.snake}`;
-  db.ref(serverPath).on('value', (snap) => {
-    const rooms = snap.val() || {};
-    displaySnakeRooms(rooms);
-  });
-}
-
-function displaySnakeRooms(rooms) {
-  const container = document.getElementById('snake-rooms-list');
-  container.innerHTML = '';
-  
-  Object.entries(rooms).forEach(([roomId, room]) => {
-    const roomDiv = document.createElement('div');
-    roomDiv.className = 'room-item';
-    roomDiv.onclick = () => joinSnakeRoom(roomId, room);
-    roomDiv.innerHTML = `
-      <div class="room-name">${room.name || roomId}</div>
-      <div class="room-players">🐍 ${room.player?.name || 'Boş'}</div>
-    `;
-    container.appendChild(roomDiv);
-  });
-}
-
-window.createSnakeRoom = () => {
-  const roomName = document.getElementById('new-snake-room').value.trim();
-  if (!roomName) { showNotification('Oda adı girin!'); return; }
-  
-  const serverPath = `snakeRooms_server${currentServers.snake}`;
-  const roomId = 'snake_' + Date.now();
-  db.ref(`${serverPath}/${roomId}`).set({
-    name: roomName,
-    player: null,
-    gameStarted: false,
-    gameState: {
-      snake: [{x: 10, y: 10}],
-      direction: {x: 0, y: 0},
-      apple: {x: 15, y: 15},
-      score: 0,
-      speed: 150,
-      gameOver: false
-    },
-    createdBy: username,
-    lastActivity: Date.now()
-  });
-  document.getElementById('new-snake-room').value = '';
-  startRoomCleanupTimer('snake', currentServers.snake, roomId);
-  showNotification('🐍 Oda oluşturuldu!');
-}
-
-window.joinSnakeRoom = (roomId, room) => {
-  if (room.player) {
-    showNotification('Oda dolu!'); return;
+function createBattleshipGrid(elementId) {
+  const grid = document.getElementById(elementId);
+  grid.innerHTML = '';
+  for (let i = 0; i < 10; i++) {
+    for (let j = 0; j < 10; j++) {
+      const cell = document.createElement('div');
+      cell.className = 'battleship-cell';
+      cell.dataset.row = i;
+      cell.dataset.col = j;
+      cell.onclick = () => battleshipCellClick(elementId, i, j);
+      grid.appendChild(cell);
+    }
   }
-  
-  gameRooms.snake.current = roomId;
-  gameRooms.snake.player = true;
-  
-  const playerData = { name: username, ready: false, lastActive: Date.now() };
-  const serverPath = `snakeRooms_server${currentServers.snake}`;
-  db.ref(`${serverPath}/${roomId}/player`).set(playerData);
-  updateRoomActivity('snake', currentServers.snake, roomId);
-  
-  if (gameRooms.snake.listener) db.ref(`${serverPath}/${roomId}`).off('value', gameRooms.snake.listener);
-  
-  gameRooms.snake.listener = db.ref(`${serverPath}/${roomId}`).on('value', (snap) => {
-    const data = snap.val();
-    if (!data) return;
-    
-    document.getElementById('snake-player1').textContent = data.player?.name || 'Boş';
-    const slot = document.getElementById('snake-player1-slot');
-    const status = document.getElementById('snake-player1-status');
-    
-    if (data.player) {
-      slot.classList.add('filled');
-      if (data.player.ready) {
-        slot.classList.add('ready');
-        status.textContent = 'Hazır!';
-        status.className = 'ready';
-      } else {
-        slot.classList.remove('ready');
-        status.textContent = 'Bekliyor';
-        status.className = 'not-ready';
-      }
-    }
-    
-    document.getElementById('snake-waiting-title').textContent = data.name;
-    
-    if (data.player?.ready && !data.gameStarted) {
-      startSnakeGame(roomId);
-    }
-    
-    if (data.gameStarted && !data.gameState.gameOver) {
-      document.getElementById('snake-waiting').style.display = 'none';
-      document.getElementById('snake-canvas').style.display = 'block';
-      document.getElementById('snake-joystick').style.display = 'block';
-      document.getElementById('snake-hud').style.display = 'flex';
-      document.getElementById('snake-score').textContent = data.gameState.score;
-      initSnakeJoystick();
-      startSnakeLoop(data.gameState, roomId);
-    }
-    
-    if (data.gameState.gameOver) {
-      document.getElementById('snake-waiting').style.display = 'flex';
-      document.getElementById('snake-waiting-title').textContent = 'Oyun Bitti!';
-      document.getElementById('snake-player1-slot').classList.remove('ready');
-      document.getElementById('snake-player1-status').textContent = 'Öldü!';
-      document.getElementById('snake-canvas').style.display = 'none';
-      document.getElementById('snake-joystick').style.display = 'none';
-      document.getElementById('snake-hud').style.display = 'none';
-    }
-    
-    updateRoomActivity('snake', currentServers.snake, roomId);
+}
+
+function randomizeBattleshipShips() {
+  const myGrid = document.getElementById('battleship-my-grid').children;
+  Array.from(myGrid).forEach(cell => {
+    cell.classList.remove('ship');
   });
-}
-
-window.toggleSnakeReady = () => {
-  if (!gameRooms.snake.current) return;
-  gameRooms.snake.ready = !gameRooms.snake.ready;
-  const serverPath = `snakeRooms_server${currentServers.snake}`;
-  db.ref(`${serverPath}/${gameRooms.snake.current}/player/ready`).set(gameRooms.snake.ready);
-  document.getElementById('snake-ready-btn').classList.toggle('ready', gameRooms.snake.ready);
-  updateRoomActivity('snake', currentServers.snake, gameRooms.snake.current);
-}
-
-function startSnakeGame(roomId) {
-  const serverPath = `snakeRooms_server${currentServers.snake}`;
-  db.ref(`${serverPath}/${roomId}`).update({ gameStarted: true });
-}
-
-window.leaveSnakeRoom = () => {
-  leaveGameRoom('snake');
-}
-
-// 360 Derece Joystick
-let joystickActive = false;
-let snakeDirection = {x: 0, y: 0};
-let snakeLoop = null;
-
-function initSnakeJoystick() {
-  const container = document.getElementById('snake-joystick');
-  const stick = document.getElementById('snake-joystick-stick');
   
-  const handleStart = (e) => {
-    e.preventDefault();
-    joystickActive = true;
-  };
-  
-  const handleMove = (e) => {
-    e.preventDefault();
-    if (!joystickActive) return;
-    
-    const rect = container.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    
-    const dx = clientX - centerX;
-    const dy = clientY - centerY;
-    const distance = Math.min(Math.sqrt(dx*dx + dy*dy), 40);
-    
-    if (distance > 15) {
-      const angle = Math.atan2(dy, dx);
-      const x = Math.cos(angle) * distance;
-      const y = Math.sin(angle) * distance;
+  const ships = [5, 4, 3, 3, 2]; // Gemi boyutları
+  ships.forEach(size => {
+    let placed = false;
+    let attempts = 0;
+    while (!placed && attempts < 100) {
+      attempts++;
+      const horizontal = Math.random() > 0.5;
+      const row = Math.floor(Math.random() * 10);
+      const col = Math.floor(Math.random() * 10);
       
-      stick.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
-      
-      const dirAngle = Math.round((angle + Math.PI) / (Math.PI / 4)) % 8;
-      const directions = [
-        {x: 1, y: 0},   // Sağ
-        {x: 1, y: -1},  // Sağ-üst
-        {x: 0, y: -1},  // Üst
-        {x: -1, y: -1}, // Sol-üst
-        {x: -1, y: 0},  // Sol
-        {x: -1, y: 1},  // Sol-alt
-        {x: 0, y: 1},   // Alt
-        {x: 1, y: 1}    // Sağ-alt
-      ];
-      snakeDirection = directions[dirAngle];
-    } else {
-      stick.style.transform = 'translate(-50%, -50%)';
-      snakeDirection = {x: 0, y: 0};
-    }
-  };
-  
-  const handleEnd = () => {
-    joystickActive = false;
-    snakeDirection = {x: 0, y: 0};
-    stick.style.transform = 'translate(-50%, -50%)';
-  };
-  
-  container.addEventListener('touchstart', handleStart, {passive: false});
-  container.addEventListener('touchmove', handleMove, {passive: false});
-  container.addEventListener('touchend', handleEnd);
-  container.addEventListener('mousedown', handleStart);
-  document.addEventListener('mousemove', handleMove);
-  document.addEventListener('mouseup', handleEnd);
-}
-
-function startSnakeLoop(initialState, roomId) {
-  const canvas = document.getElementById('snake-canvas');
-  const ctx = canvas.getContext('2d');
-  const gridSize = 20;
-  const tileCount = canvas.width / gridSize;
-  
-  let snake = initialState.snake.map(seg => ({...seg}));
-  let apple = {...initialState.apple};
-  let score = initialState.score;
-  let speed = initialState.speed;
-  
-  if (snakeLoop) clearInterval(snakeLoop);
-  
-  snakeLoop = setInterval(() => {
-    if (!gameRooms.snake.current) return;
-    
-    db.ref(`snakeRooms_server${currentServers.snake}/${roomId}/gameState`).once('value', (snap) => {
-      const state = snap.val();
-      if (state?.gameOver) {
-        clearInterval(snakeLoop);
-        return;
-      }
-    });
-    
-    if (snakeDirection.x !== 0 || snakeDirection.y !== 0) {
-      const head = {
-        x: snake[0].x + snakeDirection.x,
-        y: snake[0].y + snakeDirection.y
-      };
-      
-      // Duvar kontrolü
-      if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
-        const serverPath = `snakeRooms_server${currentServers.snake}`;
-        db.ref(`${serverPath}/${roomId}/gameState`).update({ gameOver: true });
-        showNotification('💥 Duvara çarptın! Oyun bitti!');
-        clearInterval(snakeLoop);
-        return;
-      }
-      
-      snake.unshift(head);
-      
-      if (head.x === apple.x && head.y === apple.y) {
-        score += 10;
-        speed = Math.max(50, speed - 2);
-        document.getElementById('snake-score').textContent = score;
-        
-        apple = {
-          x: Math.floor(Math.random() * tileCount),
-          y: Math.floor(Math.random() * tileCount)
-        };
-        
-        const serverPath = `snakeRooms_server${currentServers.snake}`;
-        db.ref(`${serverPath}/${roomId}/gameState`).update({
-          snake: snake,
-          apple: apple,
-          score: score,
-          speed: speed
-        });
-      } else {
-        snake.pop();
-      }
-    }
-    
-    // Çizim
-    ctx.fillStyle = '#0a0a0a';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    ctx.strokeStyle = '#1a1a2a';
-    ctx.lineWidth = 1;
-    for (let i = 0; i < tileCount; i++) {
-      ctx.beginPath();
-      ctx.moveTo(i * gridSize, 0);
-      ctx.lineTo(i * gridSize, canvas.height);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(0, i * gridSize);
-      ctx.lineTo(canvas.width, i * gridSize);
-      ctx.stroke();
-    }
-    
-    // Elma
-    ctx.fillStyle = '#ff4444';
-    ctx.shadowBlur = 20;
-    ctx.shadowColor = '#ff4444';
-    ctx.beginPath();
-    ctx.arc(
-      apple.x * gridSize + gridSize/2,
-      apple.y * gridSize + gridSize/2,
-      gridSize/2 - 2,
-      0,
-      Math.PI * 2
-    );
-    ctx.fill();
-    ctx.shadowBlur = 0;
-    
-    // Yaprak
-    ctx.fillStyle = '#4aff4a';
-    ctx.beginPath();
-    ctx.ellipse(
-      apple.x * gridSize + gridSize/2 + 5,
-      apple.y * gridSize + 5,
-      4,
-      8,
-      Math.PI / 4,
-      0,
-      Math.PI * 2
-    );
-    ctx.fill();
-    
-    // Yılan
-    snake.forEach((segment, index) => {
-      const gradient = ctx.createRadialGradient(
-        segment.x * gridSize + gridSize/2,
-        segment.y * gridSize + gridSize/2,
-        0,
-        segment.x * gridSize + gridSize/2,
-        segment.y * gridSize + gridSize/2,
-        gridSize/2
-      );
-      
-      if (index === 0) {
-        gradient.addColorStop(0, '#6aff6a');
-        gradient.addColorStop(1, '#4aff4a');
-        ctx.shadowBlur = 15;
-        ctx.shadowColor = '#4aff4a';
-      } else {
-        const alpha = 1 - (index / snake.length) * 0.5;
-        gradient.addColorStop(0, `rgba(74, 255, 74, ${alpha})`);
-        gradient.addColorStop(1, `rgba(42, 200, 42, ${alpha})`);
-        ctx.shadowBlur = 0;
-      }
-      
-      ctx.fillStyle = gradient;
-      ctx.beginPath();
-      ctx.roundRect(
-        segment.x * gridSize + 1,
-        segment.y * gridSize + 1,
-        gridSize - 2,
-        gridSize - 2,
-        8
-      );
-      ctx.fill();
-      
-      if (index === 0) {
-        ctx.fillStyle = '#000';
-        ctx.shadowBlur = 0;
-        ctx.beginPath();
-        ctx.arc(
-          segment.x * gridSize + gridSize/2 - 4,
-          segment.y * gridSize + gridSize/2 - 2,
-          3,
-          0,
-          Math.PI * 2
-        );
-        ctx.arc(
-          segment.x * gridSize + gridSize/2 + 4,
-          segment.y * gridSize + gridSize/2 - 2,
-          3,
-          0,
-          Math.PI * 2
-        );
-        ctx.fill();
-      }
-    });
-    
-    ctx.shadowBlur = 0;
-  }, speed);
-}
-
-// Araba Oyunu - Düzeltilmiş Versiyon
-function initCar() {
-  listenCarRooms();
-}
-
-function listenCarRooms() {
-  const serverPath = `carRooms_server${currentServers.car}`;
-  db.ref(serverPath).on('value', (snap) => {
-    const rooms = snap.val() || {};
-    displayCarRooms(rooms);
-  });
-}
-
-function displayCarRooms(rooms) {
-  const container = document.getElementById('car-rooms-list');
-  container.innerHTML = '';
-  
-  Object.entries(rooms).forEach(([roomId, room]) => {
-    const count = (room.player1 ? 1 : 0) + (room.player2 ? 1 : 0);
-    const roomDiv = document.createElement('div');
-    roomDiv.className = 'room-item';
-    roomDiv.onclick = () => joinCarRoom(roomId, room);
-    roomDiv.innerHTML = `
-      <div class="room-name">${room.name || roomId}</div>
-      <div class="room-players">🏎️ ${count}/2 Oyuncu</div>
-    `;
-    container.appendChild(roomDiv);
-  });
-}
-
-window.createCarRoom = () => {
-  const roomName = document.getElementById('new-car-room').value.trim();
-  if (!roomName) { showNotification('Oda adı girin!'); return; }
-  
-  const serverPath = `carRooms_server${currentServers.car}`;
-  const roomId = 'car_' + Date.now();
-  db.ref(`${serverPath}/${roomId}`).set({
-    name: roomName,
-    player1: null,
-    player2: null,
-    gameStarted: false,
-    gameState: {
-      cars: [
-        {x: 150, y: 600, lane: 0},
-        {x: 250, y: 600, lane: 1}
-      ],
-      obstacles: [],
-      scores: [0, 0],
-      level: 1,
-      gameSpeed: 5,
-      gameOver: false
-    },
-    createdBy: username,
-    lastActivity: Date.now()
-  });
-  document.getElementById('new-car-room').value = '';
-  startRoomCleanupTimer('car', currentServers.car, roomId);
-  showNotification('🏎️ Oda oluşturuldu!');
-}
-
-window.joinCarRoom = (roomId, room) => {
-  if (room.player1 && room.player2) {
-    showNotification('Oda dolu!'); return;
-  }
-  
-  gameRooms.car.current = roomId;
-  gameRooms.car.player = !room.player1 ? 1 : 2;
-  
-  const playerData = { name: username, ready: false, lastActive: Date.now() };
-  const serverPath = `carRooms_server${currentServers.car}`;
-  const playerKey = gameRooms.car.player === 1 ? 'player1' : 'player2';
-  db.ref(`${serverPath}/${roomId}/${playerKey}`).set(playerData);
-  updateRoomActivity('car', currentServers.car, roomId);
-  
-  if (gameRooms.car.listener) db.ref(`${serverPath}/${roomId}`).off('value', gameRooms.car.listener);
-  
-  gameRooms.car.listener = db.ref(`${serverPath}/${roomId}`).on('value', (snap) => {
-    const data = snap.val();
-    if (!data) return;
-    
-    document.getElementById('car-player1').textContent = data.player1?.name || 'Boş';
-    document.getElementById('car-player2').textContent = data.player2?.name || 'Boş';
-    
-    const slot1 = document.getElementById('car-player1-slot');
-    const slot2 = document.getElementById('car-player2-slot');
-    const status1 = document.getElementById('car-player1-status');
-    const status2 = document.getElementById('car-player2-status');
-    
-    if (data.player1) {
-      slot1.classList.add('filled');
-      if (data.player1.ready) {
-        slot1.classList.add('ready');
-        status1.textContent = 'Hazır!';
-        status1.className = 'ready';
-      } else {
-        slot1.classList.remove('ready');
-        status1.textContent = 'Bekliyor';
-        status1.className = 'not-ready';
-      }
-    }
-    if (data.player2) {
-      slot2.classList.add('filled');
-      if (data.player2.ready) {
-        slot2.classList.add('ready');
-        status2.textContent = 'Hazır!';
-        status2.className = 'ready';
-      } else {
-        slot2.classList.remove('ready');
-        status2.textContent = 'Bekliyor';
-        status2.className = 'not-ready';
-      }
-    }
-    
-    document.getElementById('car-waiting-title').textContent = data.name;
-    
-    if (data.player1?.ready && data.player2?.ready && !data.gameStarted) {
-      startCarGame(roomId);
-    }
-    
-    if (data.gameStarted && !data.gameState.gameOver) {
-      document.getElementById('car-waiting').style.display = 'none';
-      document.getElementById('car-canvas').style.display = 'block';
-      document.getElementById('car-joystick').style.display = 'block';
-      document.getElementById('car-hud').style.display = 'flex';
-      initCarJoystick();
-      startCarLoop(data.gameState, roomId);
-    }
-    
-    if (data.gameState.gameOver) {
-      document.getElementById('car-waiting').style.display = 'flex';
-      document.getElementById('car-waiting-title').textContent = 'Oyun Bitti!';
-      document.getElementById('car-player1-slot').classList.remove('ready');
-      document.getElementById('car-player2-slot').classList.remove('ready');
-      document.getElementById('car-canvas').style.display = 'none';
-      document.getElementById('car-joystick').style.display = 'none';
-      document.getElementById('car-hud').style.display = 'none';
-    }
-    
-    updateRoomActivity('car', currentServers.car, roomId);
-  });
-}
-
-window.toggleCarReady = () => {
-  if (!gameRooms.car.current) return;
-  gameRooms.car.ready = !gameRooms.car.ready;
-  const serverPath = `carRooms_server${currentServers.car}`;
-  const playerKey = gameRooms.car.player === 1 ? 'player1' : 'player2';
-  db.ref(`${serverPath}/${gameRooms.car.current}/${playerKey}/ready`).set(gameRooms.car.ready);
-  document.getElementById('car-ready-btn').classList.toggle('ready', gameRooms.car.ready);
-  updateRoomActivity('car', currentServers.car, gameRooms.car.current);
-}
-
-function startCarGame(roomId) {
-  const serverPath = `carRooms_server${currentServers.car}`;
-  db.ref(`${serverPath}/${roomId}`).update({ gameStarted: true });
-}
-
-window.leaveCarRoom = () => {
-  leaveGameRoom('car');
-}
-
-let carSteering = 0;
-let carLoop = null;
-
-function initCarJoystick() {
-  const container = document.getElementById('car-joystick');
-  const stick = document.getElementById('car-joystick-stick');
-  
-  const handleStart = (e) => {
-    e.preventDefault();
-    joystickActive = true;
-  };
-  
-  const handleMove = (e) => {
-    e.preventDefault();
-    if (!joystickActive) return;
-    
-    const rect = container.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const dx = Math.max(-50, Math.min(50, clientX - centerX));
-    
-    const x = dx;
-    stick.style.transform = `translate(calc(-50% + ${x}px), -50%)`;
-    
-    carSteering = dx / 50;
-  };
-  
-  const handleEnd = () => {
-    joystickActive = false;
-    carSteering = 0;
-    stick.style.transform = 'translate(-50%, -50%)';
-  };
-  
-  container.addEventListener('touchstart', handleStart, {passive: false});
-  container.addEventListener('touchmove', handleMove, {passive: false});
-  container.addEventListener('touchend', handleEnd);
-  container.addEventListener('mousedown', handleStart);
-  document.addEventListener('mousemove', handleMove);
-  document.addEventListener('mouseup', handleEnd);
-}
-
-function startCarLoop(initialState, roomId) {
-  const canvas = document.getElementById('car-canvas');
-  const ctx = canvas.getContext('2d');
-  
-  let gameSpeed = initialState.gameSpeed;
-  let obstacles = initialState.obstacles.map(o => ({...o}));
-  let scores = [...initialState.scores];
-  let level = initialState.level;
-  let myCarIndex = gameRooms.car.player - 1;
-  
-  if (carLoop) cancelAnimationFrame(carLoop);
-  
-  let lastTime = 0;
-  let obstacleTimer = 0;
-  
-  function gameLoop(timestamp) {
-    if (!lastTime) lastTime = timestamp;
-    const deltaTime = timestamp - lastTime;
-    lastTime = timestamp;
-    
-    db.ref(`carRooms_server${currentServers.car}/${roomId}/gameState`).once('value', (snap) => {
-      const state = snap.val();
-      if (state?.gameOver) {
-        cancelAnimationFrame(carLoop);
-        return;
-      }
-    });
-    
-    // Araba pozisyonu
-    const carX = 100 + (myCarIndex * 100) + carSteering * 30;
-    const clampedX = Math.max(80, Math.min(canvas.width - 80, carX));
-    
-    // Engeller
-    obstacleTimer += deltaTime;
-    if (obstacleTimer > 1000) {
-      obstacleTimer = 0;
-      const lane = Math.floor(Math.random() * 3);
-      const x = 80 + lane * 100;
-      obstacles.push({
-        x: x,
-        y: -100,
-        width: 60,
-        height: 100,
-        color: `hsl(${Math.random() * 360}, 70%, 50%)`
-      });
-    }
-    
-    // Engelleri hareket ettir
-    obstacles = obstacles.filter(obs => {
-      obs.y += gameSpeed * 2;
-      
-      // Çarpışma kontrolü
-      if (obs.y + 50 > 550 && obs.y - 50 < 650) {
-        if (Math.abs(obs.x - clampedX) < 50) {
-          const serverPath = `carRooms_server${currentServers.car}`;
-          db.ref(`${serverPath}/${roomId}/gameState`).update({ gameOver: true });
-          showNotification('💥 Çarptın! Oyun bitti!');
-          cancelAnimationFrame(carLoop);
-          return false;
+      if (horizontal && col + size <= 10) {
+        let valid = true;
+        for (let i = 0; i < size; i++) {
+          const index = row * 10 + (col + i);
+          if (myGrid[index].classList.contains('ship')) valid = false;
+        }
+        if (valid) {
+          for (let i = 0; i < size; i++) {
+            const index = row * 10 + (col + i);
+            myGrid[index].classList.add('ship');
+          }
+          placed = true;
+        }
+      } else if (!horizontal && row + size <= 10) {
+        let valid = true;
+        for (let i = 0; i < size; i++) {
+          const index = (row + i) * 10 + col;
+          if (myGrid[index].classList.contains('ship')) valid = false;
+        }
+        if (valid) {
+          for (let i = 0; i < size; i++) {
+            const index = (row + i) * 10 + col;
+            myGrid[index].classList.add('ship');
+          }
+          placed = true;
         }
       }
-      
-      return obs.y < canvas.height + 100;
-    });
-    
-    // Skor
-    scores[myCarIndex] += Math.floor(gameSpeed / 10);
-    document.getElementById('car-score').textContent = scores[myCarIndex];
-    document.getElementById('car-speed').textContent = Math.floor(gameSpeed * 10);
-    
-    if (scores[myCarIndex] > level * 200) {
-      level++;
-      gameSpeed = Math.min(15, gameSpeed + 1);
-      showNotification(`🎉 Seviye ${level}!`);
     }
-    
-    // Çizim
-    ctx.fillStyle = '#1a1a2a';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Yol
-    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, '#2a3a4a');
-    gradient.addColorStop(1, '#0a1a2a');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(20, 0, canvas.width - 40, canvas.height);
-    
-    // Şeritler
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-    ctx.lineWidth = 4;
-    ctx.setLineDash([40, 40]);
-    ctx.lineDashOffset = -Date.now() / 20 * gameSpeed;
-    
-    for (let i = 1; i < 4; i++) {
-      ctx.beginPath();
-      ctx.moveTo(40 + i * 100, 0);
-      ctx.lineTo(40 + i * 100, canvas.height);
-      ctx.stroke();
-    }
-    
-    ctx.setLineDash([]);
-    
-    // Engeller
-    obstacles.forEach(obs => {
-      ctx.fillStyle = obs.color;
-      ctx.shadowBlur = 20;
-      ctx.shadowColor = obs.color;
-      ctx.beginPath();
-      ctx.roundRect(obs.x - obs.width/2, obs.y - obs.height/2, obs.width, obs.height, 15);
-      ctx.fill();
-      
-      ctx.fillStyle = '#4a9eff';
-      ctx.shadowBlur = 0;
-      ctx.beginPath();
-      ctx.roundRect(obs.x - obs.width/3, obs.y - obs.height/3, obs.width/1.5, obs.height/3, 8);
-      ctx.fill();
-    });
-    
-    // Araba
-    const carColors = ['#2a6eff', '#ff5a5a'];
-    ctx.fillStyle = carColors[myCarIndex];
-    ctx.shadowBlur = 30;
-    ctx.shadowColor = carColors[myCarIndex];
-    ctx.beginPath();
-    ctx.roundRect(clampedX - 25, 550, 50, 80, 20);
-    ctx.fill();
-    
-    ctx.fillStyle = '#6a9aff';
-    ctx.shadowBlur = 0;
-    ctx.beginPath();
-    ctx.roundRect(clampedX - 18, 575, 36, 30, 10);
-    ctx.fill();
-    
-    ctx.fillStyle = '#ffffff';
-    ctx.shadowBlur = 20;
-    ctx.shadowColor = '#ffffff';
-    ctx.beginPath();
-    ctx.arc(clampedX - 15, 585, 8, 0, Math.PI * 2);
-    ctx.arc(clampedX + 15, 585, 8, 0, Math.PI * 2);
-    ctx.fill();
-    
-    ctx.fillStyle = '#ff4444';
-    ctx.shadowBlur = 15;
-    ctx.shadowColor = '#ff4444';
-    ctx.beginPath();
-    ctx.arc(clampedX - 15, 655, 6, 0, Math.PI * 2);
-    ctx.arc(clampedX + 15, 655, 6, 0, Math.PI * 2);
-    ctx.fill();
-    
-    ctx.shadowBlur = 0;
-    
-    // HUD
-    ctx.font = 'bold 20px Inter';
-    ctx.fillStyle = '#fff';
-    ctx.shadowBlur = 10;
-    ctx.shadowColor = '#000';
-    ctx.fillText(`Seviye: ${level}`, 20, 40);
-    
-    carLoop = requestAnimationFrame(gameLoop);
-  }
-  
-  carLoop = requestAnimationFrame(gameLoop);
-}
-
-// XOX Oyunu
-function initTictactoe() {
-  listenTictactoeRooms();
-}
-
-function listenTictactoeRooms() {
-  const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
-  db.ref(serverPath).on('value', (snap) => {
-    const rooms = snap.val() || {};
-    displayTictactoeRooms(rooms);
-  });
-}
-
-function displayTictactoeRooms(rooms) {
-  const container = document.getElementById('tictactoe-rooms-list');
-  container.innerHTML = '';
-  
-  Object.entries(rooms).forEach(([roomId, room]) => {
-    const count = (room.x ? 1 : 0) + (room.o ? 1 : 0);
-    const roomDiv = document.createElement('div');
-    roomDiv.className = 'room-item';
-    roomDiv.onclick = () => joinTictactoeRoom(roomId, room);
-    roomDiv.innerHTML = `
-      <div class="room-name">${room.name || roomId}</div>
-      <div class="room-players">⭕❌ ${count}/2 Oyuncu</div>
-    `;
-    container.appendChild(roomDiv);
-  });
-}
-
-window.createTictactoeRoom = () => {
-  const roomName = document.getElementById('new-tictactoe-room').value.trim();
-  if (!roomName) { showNotification('Oda adı girin!'); return; }
-  
-  const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
-  const roomId = 'ttt_' + Date.now();
-  db.ref(`${serverPath}/${roomId}`).set({
-    name: roomName,
-    x: null,
-    o: null,
-    gameStarted: false,
-    board: ['', '', '', '', '', '', '', '', ''],
-    currentTurn: 'x',
-    winner: null,
-    createdBy: username,
-    lastActivity: Date.now()
-  });
-  document.getElementById('new-tictactoe-room').value = '';
-  startRoomCleanupTimer('tictactoe', currentServers.tictactoe, roomId);
-  showNotification('⭕❌ Oda oluşturuldu!');
-}
-
-window.joinTictactoeRoom = (roomId, room) => {
-  if (room.x && room.o) {
-    showNotification('Oda dolu!'); return;
-  }
-  
-  gameRooms.tictactoe.current = roomId;
-  gameRooms.tictactoe.player = !room.x ? 'x' : 'o';
-  
-  const playerData = { name: username, ready: false, lastActive: Date.now() };
-  const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
-  const playerKey = gameRooms.tictactoe.player;
-  db.ref(`${serverPath}/${roomId}/${playerKey}`).set(playerData);
-  updateRoomActivity('tictactoe', currentServers.tictactoe, roomId);
-  
-  if (gameRooms.tictactoe.listener) db.ref(`${serverPath}/${roomId}`).off('value', gameRooms.tictactoe.listener);
-  
-  gameRooms.tictactoe.listener = db.ref(`${serverPath}/${roomId}`).on('value', (snap) => {
-    const data = snap.val();
-    if (!data) return;
-    
-    document.getElementById('tictactoe-x').textContent = data.x?.name || 'Boş';
-    document.getElementById('tictactoe-o').textContent = data.o?.name || 'Boş';
-    
-    const xSlot = document.getElementById('tictactoe-x-slot');
-    const oSlot = document.getElementById('tictactoe-o-slot');
-    const xStatus = document.getElementById('tictactoe-x-status');
-    const oStatus = document.getElementById('tictactoe-o-status');
-    
-    if (data.x) {
-      xSlot.classList.add('filled');
-      if (data.x.ready) {
-        xSlot.classList.add('ready');
-        xStatus.textContent = 'Hazır!';
-        xStatus.className = 'ready';
-      } else {
-        xSlot.classList.remove('ready');
-        xStatus.textContent = 'Bekliyor';
-        xStatus.className = 'not-ready';
-      }
-    }
-    if (data.o) {
-      oSlot.classList.add('filled');
-      if (data.o.ready) {
-        oSlot.classList.add('ready');
-        oStatus.textContent = 'Hazır!';
-        oStatus.className = 'ready';
-      } else {
-        oSlot.classList.remove('ready');
-        oStatus.textContent = 'Bekliyor';
-        oStatus.className = 'not-ready';
-      }
-    }
-    
-    document.getElementById('tictactoe-waiting-title').textContent = data.name;
-    
-    if (data.x?.ready && data.o?.ready && !data.gameStarted) {
-      startTictactoeGame(roomId);
-    }
-    
-    if (data.gameStarted) {
-      document.getElementById('tictactoe-waiting').style.display = 'none';
-      document.getElementById('tictactoe-board').style.display = 'grid';
-      document.getElementById('tictactoe-status').style.display = 'block';
-      document.getElementById('tictactoe-reset').style.display = 'block';
-      updateTictactoeBoard(data);
-    }
-    
-    updateRoomActivity('tictactoe', currentServers.tictactoe, roomId);
-  });
-}
-
-window.toggleTictactoeReady = () => {
-  if (!gameRooms.tictactoe.current) return;
-  gameRooms.tictactoe.ready = !gameRooms.tictactoe.ready;
-  const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
-  const playerKey = gameRooms.tictactoe.player;
-  db.ref(`${serverPath}/${gameRooms.tictactoe.current}/${playerKey}/ready`).set(gameRooms.tictactoe.ready);
-  document.getElementById('tictactoe-ready-btn').classList.toggle('ready', gameRooms.tictactoe.ready);
-  updateRoomActivity('tictactoe', currentServers.tictactoe, gameRooms.tictactoe.current);
-}
-
-function startTictactoeGame(roomId) {
-  const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
-  db.ref(`${serverPath}/${roomId}`).update({ gameStarted: true });
-}
-
-window.leaveTictactoeRoom = () => {
-  leaveGameRoom('tictactoe');
-}
-
-function updateTictactoeBoard(data) {
-  const cells = document.querySelectorAll('.tictactoe-cell');
-  data.board.forEach((value, index) => {
-    cells[index].textContent = value === 'x' ? '⭕' : value === 'o' ? '❌' : '';
-    cells[index].className = 'tictactoe-cell' + (value ? ' taken ' + value : '');
   });
   
-  const status = document.getElementById('tictactoe-status');
-  if (data.winner) {
-    if (data.winner === 'draw') {
-      status.textContent = '🤝 Berabere!';
-      status.style.color = '#ffaa2a';
-    } else {
-      status.textContent = `🎉 Kazanan: ${data.winner === 'x' ? '⭕' : '❌'}`;
-      status.style.color = data.winner === gameRooms.tictactoe.player ? '#4aff4a' : '#ff5a5a';
-    }
+  showNotification('🚢 Gemiler rastgele yerleştirildi!');
+}
+
+function battleshipCellClick(gridId, row, col) {
+  if (gridId === 'battleship-my-grid') {
+    // Kendi gemilerini düzenle
+    const cell = document.getElementById(gridId).children[row * 10 + col];
+    cell.classList.toggle('ship');
   } else {
-    const isMyTurn = data.currentTurn === gameRooms.tictactoe.player;
-    status.textContent = isMyTurn ? '🎯 Sıra sende!' : '⏳ Rakibin sırası...';
-    status.style.color = isMyTurn ? '#4aff4a' : '#8892a6';
+    // Düşmana ateş et
+    if (!currentGame.battleship.opponent) {
+      showNotification('Önce rakip bul!');
+      return;
+    }
+    // Ateş etme mantığı...
   }
 }
 
-window.makeTictactoeMove = (index) => {
-  if (!gameRooms.tictactoe.current) return;
+window.findBattleshipOpponent = () => {
+  const btn = document.getElementById('find-battleship-btn');
+  const search = document.getElementById('battleship-search');
+  const text = document.getElementById('battleship-btn-text');
   
-  const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
-  db.ref(`${serverPath}/${gameRooms.tictactoe.current}`).once('value', (snap) => {
-    const data = snap.val();
-    if (!data || data.board[index] || data.winner || data.currentTurn !== gameRooms.tictactoe.player) return;
-    
-    const newBoard = [...data.board];
-    newBoard[index] = gameRooms.tictactoe.player;
-    
-    const winner = checkTictactoeWinner(newBoard);
-    
-    db.ref(`${serverPath}/${gameRooms.tictactoe.current}`).update({
-      board: newBoard,
-      currentTurn: gameRooms.tictactoe.player === 'x' ? 'o' : 'x',
-      winner: winner,
-      lastActivity: Date.now()
+  search.style.display = 'inline-flex';
+  text.style.display = 'none';
+  btn.disabled = true;
+  
+  currentGame.battleship.inQueue = true;
+  
+  // Kuyruğa ekle
+  const queueRef = db.ref('battleshipQueue').push();
+  queueRef.set({
+    player: username,
+    timestamp: Date.now()
+  });
+  
+  // Rakip bekle
+  const waitForOpponent = setInterval(() => {
+    db.ref('battleshipQueue').once('value', (snap) => {
+      const queue = snap.val() || {};
+      const players = Object.values(queue);
+      if (players.length >= 2 && players[0].player !== players[1].player) {
+        // Rakip bulundu
+        clearInterval(waitForOpponent);
+        
+        const gameRef = db.ref('battleshipGames').push();
+        gameRef.set({
+          player1: players[0].player,
+          player2: players[1].player,
+          player1Grid: null,
+          player2Grid: null,
+          currentTurn: players[0].player,
+          timestamp: Date.now()
+        });
+        
+        currentGame.battleship.opponent = players[0].player === username ? players[1].player : players[0].player;
+        currentGame.battleship.gameId = gameRef.key;
+        
+        document.getElementById('battleship-waiting').style.display = 'none';
+        showNotification(`✅ Rakip bulundu: ${currentGame.battleship.opponent}`);
+        
+        // Kuyruğu temizle
+        Object.keys(queue).forEach(key => db.ref(`battleshipQueue/${key}`).remove());
+      }
     });
-    
-    updateRoomActivity('tictactoe', currentServers.tictactoe, gameRooms.tictactoe.current);
+  }, 2000);
+  
+  document.getElementById('battleship-waiting').style.display = 'flex';
+}
+
+window.leaveBattleshipGame = () => {
+  document.getElementById('battleship-waiting').style.display = 'none';
+  
+  const btn = document.getElementById('find-battleship-btn');
+  const search = document.getElementById('battleship-search');
+  const text = document.getElementById('battleship-btn-text');
+  
+  search.style.display = 'none';
+  text.style.display = 'inline';
+  btn.disabled = false;
+  
+  if (currentGame.battleship.inQueue) {
+    db.ref('battleshipQueue').once('value', (snap) => {
+      snap.forEach(child => {
+        if (child.val().player === username) {
+          child.ref.remove();
+        }
+      });
+    });
+  }
+  
+  if (currentGame.battleship.gameId) {
+    db.ref(`battleshipGames/${currentGame.battleship.gameId}`).remove();
+  }
+  
+  currentGame.battleship = { inQueue: false, opponent: null, gameId: null };
+}
+
+window.startBattleshipGame = () => {
+  if (!currentGame.battleship.opponent) {
+    showNotification('Önce rakip bul!');
+    return;
+  }
+  
+  // Gemileri kaydet
+  const myGrid = [];
+  const cells = document.getElementById('battleship-my-grid').children;
+  Array.from(cells).forEach(cell => {
+    myGrid.push(cell.classList.contains('ship'));
+  });
+  
+  db.ref(`battleshipGames/${currentGame.battleship.gameId}`).update({
+    player1Grid: username === currentGame.battleship.opponent ? null : myGrid,
+    player2Grid: username === currentGame.battleship.opponent ? myGrid : null
+  });
+  
+  showNotification('⚔️ Savaş başladı!');
+}
+
+// Dört Sıra (Connect 4)
+function initConnect4() {
+  createConnect4Board();
+}
+
+function createConnect4Board() {
+  const board = document.getElementById('connect4-board');
+  board.innerHTML = '';
+  for (let i = 0; i < 6; i++) {
+    for (let j = 0; j < 7; j++) {
+      const cell = document.createElement('div');
+      cell.className = 'connect4-cell';
+            cell.dataset.row = i;
+      cell.dataset.col = j;
+      cell.onclick = () => connect4CellClick(i, j);
+      board.appendChild(cell);
+    }
+  }
+}
+
+function connect4CellClick(row, col) {
+  if (!currentGame.connect4.opponent) {
+    showNotification('Önce rakip bul!');
+    return;
+  }
+  
+  // Hücreye tıklama mantığı
+  const board = document.getElementById('connect4-board');
+  const cells = board.children;
+  
+  // En alttaki boş hücreyi bul
+  for (let r = 5; r >= 0; r--) {
+    const index = r * 7 + col;
+    if (!cells[index].classList.contains('player1') && !cells[index].classList.contains('player2')) {
+      cells[index].classList.add('player1');
+      checkConnect4Winner();
+      break;
+    }
+  }
+}
+
+function checkConnect4Winner() {
+  // Kazanan kontrolü
+  const cells = document.getElementById('connect4-board').children;
+  // 4'lü sıra kontrolü...
+}
+
+window.findConnect4Opponent = () => {
+  const btn = document.getElementById('find-connect4-btn');
+  const search = document.getElementById('connect4-search');
+  const text = document.getElementById('connect4-btn-text');
+  
+  search.style.display = 'inline-flex';
+  text.style.display = 'none';
+  btn.disabled = true;
+  
+  currentGame.connect4.inQueue = true;
+  
+  const queueRef = db.ref('connect4Queue').push();
+  queueRef.set({
+    player: username,
+    timestamp: Date.now()
+  });
+  
+  const waitForOpponent = setInterval(() => {
+    db.ref('connect4Queue').once('value', (snap) => {
+      const queue = snap.val() || {};
+      const players = Object.values(queue);
+      if (players.length >= 2 && players[0].player !== players[1].player) {
+        clearInterval(waitForOpponent);
+        
+        const gameRef = db.ref('connect4Games').push();
+        gameRef.set({
+          player1: players[0].player,
+          player2: players[1].player,
+          board: Array(42).fill(null),
+          currentTurn: players[0].player,
+          timestamp: Date.now()
+        });
+        
+        currentGame.connect4.opponent = players[0].player === username ? players[1].player : players[0].player;
+        currentGame.connect4.gameId = gameRef.key;
+        
+        document.getElementById('connect4-waiting').style.display = 'none';
+        showNotification(`✅ Rakip bulundu: ${currentGame.connect4.opponent}`);
+        
+        Object.keys(queue).forEach(key => db.ref(`connect4Queue/${key}`).remove());
+      }
+    });
+  }, 2000);
+  
+  document.getElementById('connect4-waiting').style.display = 'flex';
+}
+
+window.leaveConnect4Game = () => {
+  document.getElementById('connect4-waiting').style.display = 'none';
+  
+  const btn = document.getElementById('find-connect4-btn');
+  const search = document.getElementById('connect4-search');
+  const text = document.getElementById('connect4-btn-text');
+  
+  search.style.display = 'none';
+  text.style.display = 'inline';
+  btn.disabled = false;
+  
+  if (currentGame.connect4.inQueue) {
+    db.ref('connect4Queue').once('value', (snap) => {
+      snap.forEach(child => {
+        if (child.val().player === username) {
+          child.ref.remove();
+        }
+      });
+    });
+  }
+  
+  if (currentGame.connect4.gameId) {
+    db.ref(`connect4Games/${currentGame.connect4.gameId}`).remove();
+  }
+  
+  currentGame.connect4 = { inQueue: false, opponent: null, gameId: null };
+  resetConnect4();
+}
+
+function resetConnect4() {
+  const cells = document.getElementById('connect4-board').children;
+  Array.from(cells).forEach(cell => {
+    cell.classList.remove('player1', 'player2');
   });
 }
 
-function checkTictactoeWinner(board) {
-  const lines = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8],
-    [0, 3, 6], [1, 4, 7], [2, 5, 8],
-    [0, 4, 8], [2, 4, 6]
+// Satranç (Chess)
+function initChess() {
+  createChessBoard();
+}
+
+function createChessBoard() {
+  const board = document.getElementById('chess-board');
+  board.innerHTML = '';
+  
+  const pieces = [
+    ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'],
+    ['♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟'],
+    ['', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', ''],
+    ['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
+    ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖']
   ];
   
-  for (let line of lines) {
-    const [a, b, c] = line;
-    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-      return board[a];
+  for (let i = 0; i < 8; i++) {
+    for (let j = 0; j < 8; j++) {
+      const cell = document.createElement('div');
+      cell.className = `chess-cell ${(i + j) % 2 === 0 ? 'light' : 'dark'}`;
+      cell.textContent = pieces[i][j];
+      cell.dataset.row = i;
+      cell.dataset.col = j;
+      cell.onclick = () => chessCellClick(i, j);
+      board.appendChild(cell);
     }
   }
-  
-  if (board.every(cell => cell !== '')) return 'draw';
-  return null;
 }
 
-window.resetTictactoe = () => {
-  if (!gameRooms.tictactoe.current) return;
-  const serverPath = `tictactoeRooms_server${currentServers.tictactoe}`;
-  db.ref(`${serverPath}/${gameRooms.tictactoe.current}`).update({
-    board: ['', '', '', '', '', '', '', '', ''],
-    currentTurn: 'x',
-    winner: null,
-    lastActivity: Date.now()
+function chessCellClick(row, col) {
+  if (!currentGame.chess.opponent) {
+    showNotification('Önce rakip bul!');
+    return;
+  }
+  // Satranç hamle mantığı...
+}
+
+window.findChessOpponent = () => {
+  const btn = document.getElementById('find-chess-btn');
+  const search = document.getElementById('chess-search');
+  const text = document.getElementById('chess-btn-text');
+  
+  search.style.display = 'inline-flex';
+  text.style.display = 'none';
+  btn.disabled = true;
+  
+  currentGame.chess.inQueue = true;
+  
+  const queueRef = db.ref('chessQueue').push();
+  queueRef.set({
+    player: username,
+    timestamp: Date.now()
   });
-  updateRoomActivity('tictactoe', currentServers.tictactoe, gameRooms.tictactoe.current);
+  
+  const waitForOpponent = setInterval(() => {
+    db.ref('chessQueue').once('value', (snap) => {
+      const queue = snap.val() || {};
+      const players = Object.values(queue);
+      if (players.length >= 2 && players[0].player !== players[1].player) {
+        clearInterval(waitForOpponent);
+        
+        const gameRef = db.ref('chessGames').push();
+        gameRef.set({
+          player1: players[0].player,
+          player2: players[1].player,
+          board: null,
+          currentTurn: players[0].player,
+          timestamp: Date.now()
+        });
+        
+        currentGame.chess.opponent = players[0].player === username ? players[1].player : players[0].player;
+        currentGame.chess.gameId = gameRef.key;
+        
+        document.getElementById('chess-waiting').style.display = 'none';
+        showNotification(`✅ Rakip bulundu: ${currentGame.chess.opponent}`);
+        
+        Object.keys(queue).forEach(key => db.ref(`chessQueue/${key}`).remove());
+      }
+    });
+  }, 2000);
+  
+  document.getElementById('chess-waiting').style.display = 'flex';
 }
 
-// Oda'dan çıkma
-function leaveGameRoom(game) {
-  const room = gameRooms[game];
-  if (!room.current) return;
+window.leaveChessGame = () => {
+  document.getElementById('chess-waiting').style.display = 'none';
   
-  const serverPath = `${game}Rooms_server${currentServers[game]}`;
+  const btn = document.getElementById('find-chess-btn');
+  const search = document.getElementById('chess-search');
+  const text = document.getElementById('chess-btn-text');
   
-  if (game === 'snake') {
-    db.ref(`${serverPath}/${room.current}/player`).remove();
-    if (snakeLoop) clearInterval(snakeLoop);
-    document.getElementById('snake-waiting').style.display = 'flex';
-    document.getElementById('snake-canvas').style.display = 'none';
-    document.getElementById('snake-joystick').style.display = 'none';
-    document.getElementById('snake-hud').style.display = 'none';
-  } else if (game === 'car') {
-    const playerKey = room.player === 1 ? 'player1' : 'player2';
-    db.ref(`${serverPath}/${room.current}/${playerKey}`).remove();
-    if (carLoop) cancelAnimationFrame(carLoop);
-    document.getElementById('car-waiting').style.display = 'flex';
-    document.getElementById('car-canvas').style.display = 'none';
-    document.getElementById('car-joystick').style.display = 'none';
-    document.getElementById('car-hud').style.display = 'none';
-  } else if (game === 'tictactoe') {
-    db.ref(`${serverPath}/${room.current}/${room.player}`).remove();
-    document.getElementById('tictactoe-waiting').style.display = 'flex';
-    document.getElementById('tictactoe-board').style.display = 'none';
-    document.getElementById('tictactoe-status').style.display = 'none';
-    document.getElementById('tictactoe-reset').style.display = 'none';
+  search.style.display = 'none';
+  text.style.display = 'inline';
+  btn.disabled = false;
+  
+  if (currentGame.chess.inQueue) {
+    db.ref('chessQueue').once('value', (snap) => {
+      snap.forEach(child => {
+        if (child.val().player === username) {
+          child.ref.remove();
+        }
+      });
+    });
   }
   
-  updateRoomActivity(game, currentServers[game], room.current);
+  if (currentGame.chess.gameId) {
+    db.ref(`chessGames/${currentGame.chess.gameId}`).remove();
+  }
   
-  if (room.listener) db.ref(`${serverPath}/${room.current}`).off('value', room.listener);
+  currentGame.chess = { inQueue: false, opponent: null, gameId: null };
+  resetChess();
+}
+
+function resetChess() {
+  createChessBoard();
+}
+
+// UNO
+function initUno() {
+  createUnoHand();
+}
+
+function createUnoHand() {
+  const myHand = document.getElementById('uno-my-hand');
+  myHand.innerHTML = '';
   
-  room.current = null;
-  room.player = null;
-  room.ready = false;
-  room.listener = null;
+  // Örnek kartlar
+  const colors = ['red', 'blue', 'green', 'yellow'];
+  for (let i = 0; i < 7; i++) {
+    const card = document.createElement('div');
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const number = Math.floor(Math.random() * 10);
+    card.className = `uno-card ${color}`;
+    card.textContent = number;
+    card.onclick = () => playUnoCard(card);
+    myHand.appendChild(card);
+  }
+  
+  // Düşman eli (gizli)
+  const enemyHand = document.getElementById('uno-enemy-hand');
+  enemyHand.innerHTML = '';
+  for (let i = 0; i < 7; i++) {
+    const card = document.createElement('div');
+    card.className = 'uno-card';
+    card.style.background = '#2a3a4a';
+    card.textContent = '?';
+    enemyHand.appendChild(card);
+  }
+  
+  // Açık kart
+  const topCard = document.getElementById('uno-top-card');
+  const color = colors[Math.floor(Math.random() * colors.length)];
+  const number = Math.floor(Math.random() * 10);
+  topCard.className = `uno-card uno-top-card ${color}`;
+  topCard.textContent = number;
+}
+
+function playUnoCard(card) {
+  if (!currentGame.uno.opponent) {
+    showNotification('Önce rakip bul!');
+    return;
+  }
+  // Kart oynama mantığı
+  card.remove();
+  showNotification('🎴 Kart oynandı!');
+}
+
+window.findUnoOpponent = () => {
+  const btn = document.getElementById('find-uno-btn');
+  const search = document.getElementById('uno-search');
+  const text = document.getElementById('uno-btn-text');
+  
+  search.style.display = 'inline-flex';
+  text.style.display = 'none';
+  btn.disabled = true;
+  
+  currentGame.uno.inQueue = true;
+  
+  const queueRef = db.ref('unoQueue').push();
+  queueRef.set({
+    player: username,
+    timestamp: Date.now()
+  });
+  
+  const waitForOpponent = setInterval(() => {
+    db.ref('unoQueue').once('value', (snap) => {
+      const queue = snap.val() || {};
+      const players = Object.values(queue);
+      if (players.length >= 2 && players[0].player !== players[1].player) {
+        clearInterval(waitForOpponent);
+        
+        const gameRef = db.ref('unoGames').push();
+        gameRef.set({
+          player1: players[0].player,
+          player2: players[1].player,
+          player1Hand: null,
+          player2Hand: null,
+          currentTurn: players[0].player,
+          timestamp: Date.now()
+        });
+        
+        currentGame.uno.opponent = players[0].player === username ? players[1].player : players[0].player;
+        currentGame.uno.gameId = gameRef.key;
+        
+        document.getElementById('uno-waiting').style.display = 'none';
+        showNotification(`✅ Rakip bulundu: ${currentGame.uno.opponent}`);
+        
+        Object.keys(queue).forEach(key => db.ref(`unoQueue/${key}`).remove());
+      }
+    });
+  }, 2000);
+  
+  document.getElementById('uno-waiting').style.display = 'flex';
+}
+
+window.leaveUnoGame = () => {
+  document.getElementById('uno-waiting').style.display = 'none';
+  
+  const btn = document.getElementById('find-uno-btn');
+  const search = document.getElementById('uno-search');
+  const text = document.getElementById('uno-btn-text');
+  
+  search.style.display = 'none';
+  text.style.display = 'inline';
+  btn.disabled = false;
+  
+  if (currentGame.uno.inQueue) {
+    db.ref('unoQueue').once('value', (snap) => {
+      snap.forEach(child => {
+        if (child.val().player === username) {
+          child.ref.remove();
+        }
+      });
+    });
+  }
+  
+  if (currentGame.uno.gameId) {
+    db.ref(`unoGames/${currentGame.uno.gameId}`).remove();
+  }
+  
+  currentGame.uno = { inQueue: false, opponent: null, gameId: null };
+  initUno();
+}
+
+window.drawUnoCard = () => {
+  if (!currentGame.uno.opponent) {
+    showNotification('Önce rakip bul!');
+    return;
+  }
+  
+  const myHand = document.getElementById('uno-my-hand');
+  const colors = ['red', 'blue', 'green', 'yellow'];
+  const card = document.createElement('div');
+  const color = colors[Math.floor(Math.random() * colors.length)];
+  const number = Math.floor(Math.random() * 10);
+  card.className = `uno-card ${color}`;
+  card.textContent = number;
+  card.onclick = () => playUnoCard(card);
+  myHand.appendChild(card);
+  
+  showNotification('🎴 Kart çekildi!');
+}
+
+window.sayUno = () => {
+  showNotification('🗣️ UNO!');
+  userPoints += 50;
+  db.ref(`users/${username}/points`).set(userPoints);
+  document.getElementById('user-points').textContent = userPoints;
 }
 
 // Sayı Tahmin
@@ -4585,6 +4294,13 @@ function initGuessGame() {
     });
   }
 }
+
+let guessTarget = Math.floor(Math.random() * 100) + 1;
+let guessMin = 1, guessMax = 100;
+let guessAttempts = 0;
+let guessScore = 0;
+let guessGameActive = true;
+let guessPlayers = {};
 
 function updateScoreboard() {
   const scoreList = document.getElementById('score-list');
@@ -4711,6 +4427,15 @@ function loadUserData() {
     currentTheme = snap.val() || 'default';
     applyTheme(currentTheme);
   });
+  
+  db.ref(`users/${username}/fonts`).on('value', (snap) => {
+    purchasedFonts = snap.val() || ['default'];
+  });
+  
+  db.ref(`users/${username}/activeFont`).on('value', (snap) => {
+    currentFont = snap.val() || 'default';
+    applyFont(currentFont);
+  });
 }
 
 function applyTheme(themeId) {
@@ -4722,6 +4447,13 @@ function applyTheme(themeId) {
   } else {
     document.body.style.background = theme.bg;
   }
+}
+
+function applyFont(fontId) {
+  const font = FONT_DEFINITIONS[fontId];
+  if (!font) return;
+  
+  document.body.style.fontFamily = font.family;
 }
 
 // Mağaza
@@ -4736,12 +4468,14 @@ window.switchShopTab = (tab) => {
   document.getElementById('shop-' + tab).classList.add('active');
   
   if (tab === 'bubbles') renderBubbleShop();
-  else renderThemeShop();
+  else if (tab === 'themes') renderThemeShop();
+  else renderFontShop();
 }
 
 window.openShop = () => {
   renderBubbleShop();
   renderThemeShop();
+  renderFontShop();
   document.getElementById('shop-panel').style.display = 'flex';
   closeMenu();
 }
@@ -4762,7 +4496,7 @@ function renderBubbleShop() {
       </div>
       <div class="shop-item-info">
         <h3>${style.name}</h3>
-        <p>${styleId === 'blackwhite' ? 'Premium Siyah Beyaz Tasarım' : 'Özel sohbet baloncuğu stili'}</p>
+        <p>Özel sohbet baloncuğu stili</p>
       </div>
       <div class="shop-item-price">
         ${owned ? '✓ SAHİP' : `${style.price}💰`}
@@ -4800,6 +4534,33 @@ function renderThemeShop() {
   });
 }
 
+function renderFontShop() {
+  const container = document.getElementById('shop-fonts');
+  container.innerHTML = '';
+  
+  Object.entries(FONT_DEFINITIONS).forEach(([fontId, font]) => {
+    if (fontId === 'default') return;
+    
+    const owned = purchasedFonts.includes(fontId);
+    const div = document.createElement('div');
+    div.className = `shop-item ${owned ? 'disabled' : ''}`;
+    div.innerHTML = `
+      <div class="shop-item-preview" style="font-family: ${font.family}; font-size: 24px;">
+        ${font.emoji}
+      </div>
+      <div class="shop-item-info">
+        <h3 style="font-family: ${font.family};">${font.name}</h3>
+        <p>Özel yazı tipi</p>
+      </div>
+      <div class="shop-item-price">
+        ${owned ? '✓ SAHİP' : `${font.price}💰`}
+      </div>
+    `;
+    if (!owned) div.onclick = () => buyItem('font', fontId, font.price);
+    container.appendChild(div);
+  });
+}
+
 window.buyItem = (type, id, price) => {
   if (userPoints < price) { showNotification('Yetersiz puan!'); return; }
   
@@ -4812,13 +4573,20 @@ window.buyItem = (type, id, price) => {
     db.ref(`users/${username}/styles`).set(purchasedStyles);
     db.ref(`users/${username}/activeStyle`).set(id);
     renderBubbleShop();
-  } else {
+  } else if (type === 'theme') {
     purchasedThemes.push(id);
     currentTheme = id;
     db.ref(`users/${username}/themes`).set(purchasedThemes);
     db.ref(`users/${username}/activeTheme`).set(id);
     applyTheme(id);
     renderThemeShop();
+  } else {
+    purchasedFonts.push(id);
+    currentFont = id;
+    db.ref(`users/${username}/fonts`).set(purchasedFonts);
+    db.ref(`users/${username}/activeFont`).set(id);
+    applyFont(id);
+    renderFontShop();
   }
   
   showNotification('✨ Satın alındı!');
@@ -4838,6 +4606,7 @@ window.openInventory = () => {
   const grid = document.getElementById('inventory-grid');
   grid.innerHTML = '';
   
+  // Stiller
   purchasedStyles.forEach(styleId => {
     const style = STYLE_DEFINITIONS[styleId];
     const div = document.createElement('div');
@@ -4853,6 +4622,7 @@ window.openInventory = () => {
     grid.appendChild(div);
   });
   
+  // Temalar
   purchasedThemes.forEach(themeId => {
     const theme = THEME_DEFINITIONS[themeId];
     const div = document.createElement('div');
@@ -4868,6 +4638,22 @@ window.openInventory = () => {
     grid.appendChild(div);
   });
   
+  // Fontlar
+  purchasedFonts.forEach(fontId => {
+    const font = FONT_DEFINITIONS[fontId];
+    const div = document.createElement('div');
+    div.className = `inventory-item ${currentFont === fontId ? 'active' : ''}`;
+    div.innerHTML = `
+      <div class="inventory-item-preview" style="font-family: ${font.family}; font-size: 28px;">
+        ${font.emoji}
+      </div>
+      <div class="inventory-item-name" style="font-family: ${font.family};">${font.name}</div>
+      ${currentFont === fontId ? '<div class="inventory-item-badge">✓</div>' : ''}
+    `;
+    div.onclick = () => equipItem('font', fontId);
+    grid.appendChild(div);
+  });
+  
   document.getElementById('inventory-panel').style.display = 'flex';
   closeMenu();
 }
@@ -4876,12 +4662,16 @@ window.equipItem = (type, id) => {
   if (type === 'style') {
     currentStyle = id;
     db.ref(`users/${username}/activeStyle`).set(id);
-  } else {
+  } else if (type === 'theme') {
     currentTheme = id;
     db.ref(`users/${username}/activeTheme`).set(id);
     applyTheme(id);
+  } else {
+    currentFont = id;
+    db.ref(`users/${username}/activeFont`).set(id);
+    applyFont(id);
   }
-  showNotification(`✨ ${type === 'style' ? STYLE_DEFINITIONS[id].name : THEME_DEFINITIONS[id].name} kuşanıldı!`);
+  showNotification(`✨ ${type === 'style' ? STYLE_DEFINITIONS[id].name : type === 'theme' ? THEME_DEFINITIONS[id].name : FONT_DEFINITIONS[id].name} kuşanıldı!`);
   openInventory();
 }
 
@@ -4895,6 +4685,8 @@ window.closeInventory = () => {
 }
 
 // Geri Bildirim
+let currentFeedbackType = 'feedback';
+
 window.openFeedback = () => {
   document.getElementById('feedback-panel').style.display = 'block';
   if (role === 'admin') loadFeedbackHistory();
@@ -4961,49 +4753,33 @@ function showNotification(text) {
   setTimeout(() => notif.remove(), 3000);
 }
 
-// Yardımcı roundRect fonksiyonu
-CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
-  if (w < 2 * r) r = w / 2;
-  if (h < 2 * r) r = h / 2;
-  this.moveTo(x + r, y);
-  this.lineTo(x + w - r, y);
-  this.quadraticCurveTo(x + w, y, x + w, y + r);
-  this.lineTo(x + w, y + h - r);
-  this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-  this.lineTo(x + r, y + h);
-  this.quadraticCurveTo(x, y + h, x, y + h - r);
-  this.lineTo(x, y + r);
-  this.quadraticCurveTo(x, y, x + r, y);
-  return this;
-};
-
 // Sayfa yüklendiğinde
 window.onload = () => {
   switchScreen('chat');
   
-  document.getElementById('guess-input').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') makeGuess();
-  });
-  
-  document.getElementById('altun-input').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendToAltun();
-  });
-  
-  window.addEventListener('beforeunload', () => {
-    if (username) {
-      db.ref(`typing/${username}`).remove();
-      if (onlineRef) onlineRef.remove();
-      Object.keys(gameRooms).forEach(game => {
-        if (gameRooms[game].current) leaveGameRoom(game);
-      });
+  // Sidebar scroll için event listener
+  const sidebar = document.getElementById('sidebar');
+  sidebar.addEventListener('scroll', () => {
+    const upBtn = document.getElementById('sidebar-scroll-up');
+    const downBtn = document.getElementById('sidebar-scroll-down');
+    
+    if (sidebar.scrollTop > 50) {
+      upBtn.style.display = 'flex';
+    } else {
+      upBtn.style.display = 'none';
     }
     
-    Object.values(roomCleanupTimers).forEach(timer => clearTimeout(timer));
+    if (sidebar.scrollTop < sidebar.scrollHeight - sidebar.clientHeight - 50) {
+      downBtn.style.display = 'flex';
+    } else {
+      downBtn.style.display = 'none';
+    }
   });
-  
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('data:text/javascript,').catch(() => {});
-  }
+}
+
+// PWA desteği
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('data:text/javascript,').catch(() => {});
 }
 </script>
 
